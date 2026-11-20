@@ -1,0 +1,2561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="artifact-type" content="narrative">
+<meta name="design-style" content="nocturne">
+<title>Universal Hyperbolic Geometry — Algebraic Trigonometry Over Any Field</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  color-scheme: dark;
+
+  /* 1. Nocturne style tokens */
+  --background: #0a101d;
+  --surface-container-low: #0e1626;
+  --surface-container: #111b2e;
+  --surface-container-high: #17243c;
+
+  --on-surface: #f2ece1;
+  --on-surface-variant: #9ba8bf;
+
+  --outline: #384d73;
+  --outline-variant: #21304d;
+
+  --primary: #dfaa5b;
+  --on-primary: #0a101d;
+  --primary-container: #2b261c;
+  --on-primary-container: #f5dcb0;
+  --secondary: #687a99;
+  --tertiary: #7cc4e8;
+  --error: #f27474;
+  --on-error: #1a0606;
+
+  --data-1: #dfaa5b;
+  --data-2: #7cc4e8;
+  --data-3: #52d19c;
+  --data-4: #e07a5f;
+  --data-context: #4a5d80;
+
+  --font-headline: 'EB Garamond', serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-label: 'JetBrains Mono', monospace;
+
+  --rounded: 0.25rem;
+  --rounded-lg: 0.375rem;
+  --rounded-full: 9999px;
+
+  --hairline: 1px solid var(--outline-variant);
+  --hairline-strong: 1px solid var(--outline);
+  --panel-highlight: inset 0 1px 0 rgba(242, 236, 225, 0.05);
+  --brass-glow: radial-gradient(circle at 88% 12%, rgba(223, 170, 91, 0.08), transparent 45%);
+  --heading-tracking: -0.015em;
+  --label-tracking: 0.06em;
+  --sky-tint: color-mix(in srgb, var(--tertiary) 12%, transparent);
+  --brass-tint: color-mix(in srgb, var(--primary) 14%, transparent);
+  --mint-tint: color-mix(in srgb, var(--data-3) 13%, transparent);
+  --coral-tint: color-mix(in srgb, var(--data-4) 14%, transparent);
+  --sky-border: 1px solid color-mix(in srgb, var(--tertiary) 35%, transparent);
+  --brass-border: 1px solid color-mix(in srgb, var(--primary) 38%, transparent);
+  --mint-border: 1px solid color-mix(in srgb, var(--data-3) 38%, transparent);
+  --coral-border: 1px solid color-mix(in srgb, var(--data-4) 38%, transparent);
+  --primary-hover: color-mix(in srgb, var(--primary) 88%, var(--on-surface));
+  --row-hover: color-mix(in srgb, var(--surface-container-high) 55%, transparent);
+
+  /* 3. Shared tokens */
+  --positive: #52d19c;
+  --warning: #e07a5f;
+  --focus: #dfaa5b;
+
+  /* Narrative type scale */
+  --display-size: clamp(2.75rem, 1.5rem + 4.5vw, 4.75rem);
+  --headline-size: clamp(1.875rem, 1.25rem + 2.2vw, 2.75rem);
+  --subhead-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --body-size: clamp(1.0625rem, 1rem + 0.25vw, 1.15rem);
+  --label-size: clamp(0.75rem, 0.72rem + 0.15vw, 0.8125rem);
+
+  /* Spacing scale (4pt base) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+}
+
+/* Base reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+header { position: static !important; }
+
+.page-grid {
+  display: grid;
+  gap: var(--space-xl);
+  padding: var(--space-lg);
+  max-width: 1180px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.page-grid * { min-width: 0; }
+
+a {
+  color: var(--tertiary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+a:hover { border-bottom-color: var(--tertiary); }
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Typography */
+.title {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: var(--display-size);
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.06;
+  color: var(--on-surface);
+  margin: 0;
+}
+.title em, .section-title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--primary);
+}
+.section-title {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: var(--headline-size);
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.12;
+  color: var(--on-surface);
+  margin: 0;
+}
+.subhead {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: var(--subhead-size);
+  letter-spacing: var(--heading-tracking);
+  line-height: 1.2;
+  color: var(--on-surface);
+  margin: 0;
+}
+.deck-brass {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-top: var(--space-sm);
+}
+.coord-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--tertiary);
+}
+.muted-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.prose {
+  max-width: 65ch;
+  color: var(--on-surface);
+}
+.prose p {
+  margin: 0 0 var(--space-md) 0;
+}
+.prose p:last-child {
+  margin-bottom: 0;
+}
+.prose strong {
+  color: var(--on-surface);
+  font-weight: 600;
+}
+.lede {
+  font-size: clamp(1.125rem, 1.04rem + 0.35vw, 1.28rem);
+  color: var(--on-surface-variant);
+  max-width: 62ch;
+  line-height: 1.58;
+  margin-top: var(--space-md);
+}
+
+/* Panels & Observation Wells */
+.hero-header {
+  background-color: var(--background);
+  background-image: var(--brass-glow);
+  border-bottom: var(--hairline);
+  padding: var(--space-2xl) 0 var(--space-xl) 0;
+}
+.panel {
+  background: var(--surface-container);
+  border: var(--hairline);
+  box-shadow: var(--panel-highlight);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-lg);
+}
+.panel-low {
+  background: var(--surface-container-low);
+  border: var(--hairline);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-lg);
+}
+.observation-well {
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  padding: var(--space-md);
+  font-family: var(--font-label);
+  color: var(--on-surface);
+}
+
+/* Badges */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--sky-tint);
+  color: var(--tertiary);
+  border: var(--sky-border);
+  border-radius: var(--rounded);
+  padding: var(--space-xs) var(--space-sm);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+.badge-brass {
+  background: var(--brass-tint);
+  color: var(--primary);
+  border: var(--brass-border);
+}
+.badge-mint {
+  background: var(--mint-tint);
+  color: var(--data-3);
+  border: var(--mint-border);
+}
+.badge-coral {
+  background: var(--coral-tint);
+  color: var(--data-4);
+  border: var(--coral-border);
+}
+
+/* Hero Metrics & Chapter Index */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-xl);
+}
+.stat-tile {
+  background: var(--surface-container);
+  border: var(--hairline);
+  box-shadow: var(--panel-highlight);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-md) var(--space-lg);
+}
+.stat-num {
+  font-family: var(--font-headline);
+  font-weight: 500;
+  font-size: clamp(2rem, 1.5rem + 1.5vw, 2.75rem);
+  line-height: 1.1;
+  color: var(--on-surface);
+  font-variant-numeric: tabular-nums;
+  margin: var(--space-xs) 0;
+}
+.stat-note {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  line-height: 1.45;
+}
+
+.chapter-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: var(--hairline);
+}
+.chapter-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--rounded);
+  border: var(--hairline);
+  background: var(--surface-container-low);
+  color: var(--on-surface-variant);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: 0.03em;
+  transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+}
+.chapter-link:hover {
+  background: var(--surface-container-high);
+  color: var(--primary);
+  border-color: var(--outline);
+  border-bottom-color: var(--outline);
+}
+
+/* Sections */
+.chapter {
+  display: grid;
+  gap: var(--space-lg);
+  padding-top: var(--space-xl);
+  border-top: var(--hairline);
+}
+.chapter-header {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+/* Formula Callouts */
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr));
+  gap: var(--space-md);
+}
+.formula-card {
+  background: var(--surface-container);
+  border: var(--hairline);
+  box-shadow: var(--panel-highlight);
+  border-radius: var(--rounded-lg);
+  padding: var(--space-md) var(--space-lg);
+  display: grid;
+  gap: var(--space-sm);
+  align-content: start;
+}
+.math-display {
+  font-family: var(--font-headline);
+  font-size: clamp(1.2rem, 1.05rem + 0.45vw, 1.45rem);
+  color: var(--on-surface);
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  padding: var(--space-sm) var(--space-md);
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  line-height: 1.5;
+}
+.math-inline {
+  font-family: var(--font-headline);
+  font-size: 1.12em;
+  color: var(--on-surface);
+  white-space: nowrap;
+}
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 0.18em;
+  font-size: 0.88em;
+  line-height: 1.15;
+}
+.frac > span:first-child {
+  border-bottom: 1px solid var(--on-surface-variant);
+  padding: 0 0.25em 0.12em 0.25em;
+}
+.frac > span:last-child {
+  padding: 0.12em 0.25em 0 0.25em;
+}
+.mono-val {
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* Interactive Workbench Layout */
+.workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(290px, 0.85fr);
+  gap: var(--space-lg);
+  align-items: start;
+}
+.canvas-stage {
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  position: relative;
+  overflow: hidden;
+  min-height: 440px;
+}
+.canvas-stage svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 440px;
+  touch-action: none;
+  user-select: none;
+}
+.stage-hint {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-top: var(--hairline);
+  background: var(--surface-container-low);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+
+/* Controls & Inputs */
+.control-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  align-items: end;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--rounded);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  border: var(--hairline-strong);
+  background: transparent;
+  color: var(--on-surface);
+  transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+.btn:hover {
+  background: var(--surface-container-high);
+  border-color: var(--primary);
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+.btn-active {
+  background: var(--brass-tint);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.field-group {
+  display: grid;
+  gap: var(--space-xs);
+}
+.field-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+input[type="text"],
+input[type="number"],
+select {
+  min-height: 44px;
+  background: var(--background);
+  color: var(--on-surface);
+  border: var(--hairline-strong);
+  border-radius: var(--rounded);
+  padding: var(--space-xs) var(--space-md);
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+}
+select {
+  padding-right: var(--space-xl);
+}
+input[type="range"] {
+  width: 100%;
+  accent-color: var(--primary);
+  min-height: 44px;
+  cursor: pointer;
+}
+.check-row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 44px;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface);
+}
+.check-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* Telemetry Readout List */
+.readout-list {
+  display: grid;
+  gap: var(--space-sm);
+}
+.readout-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: var(--hairline);
+}
+.readout-row:last-child {
+  border-bottom: none;
+}
+.readout-key {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+.readout-val {
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--on-surface);
+  text-align: right;
+}
+.readout-val.is-brass { color: var(--primary); }
+.readout-val.is-sky { color: var(--tertiary); }
+.readout-val.is-mint { color: var(--data-3); }
+.readout-val.is-coral { color: var(--data-4); }
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+  border: var(--hairline);
+  border-radius: var(--rounded-lg);
+  background: var(--surface-container);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+th {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  letter-spacing: var(--label-tracking);
+  text-transform: uppercase;
+  color: var(--tertiary);
+  text-align: left;
+  padding: var(--space-md);
+  border-bottom: var(--hairline-strong);
+  background: var(--surface-container-low);
+}
+td {
+  padding: var(--space-md);
+  border-bottom: var(--hairline);
+  vertical-align: top;
+  color: var(--on-surface);
+}
+tr:last-child td {
+  border-bottom: none;
+}
+tbody tr:hover {
+  background: var(--row-hover);
+}
+.num-col {
+  text-align: right;
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Two-up / Three-up Split */
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: var(--space-lg);
+}
+.three-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: var(--space-md);
+}
+
+/* Law Verification Strip */
+.law-card {
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  padding: var(--space-md);
+  display: grid;
+  gap: var(--space-xs);
+}
+.law-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* Finite Field Matrix */
+.fp-canvas-wrap {
+  background: var(--background);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  padding: var(--space-md);
+  min-height: 400px;
+  display: grid;
+  place-items: center;
+}
+.fp-svg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  min-height: 380px;
+}
+
+/* Theorem Directory */
+.theorem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(260px, 100%), 1fr));
+  gap: var(--space-sm);
+}
+.theorem-item {
+  background: var(--surface-container);
+  border: var(--hairline);
+  border-radius: var(--rounded);
+  padding: var(--space-sm) var(--space-md);
+  display: grid;
+  gap: var(--space-xs);
+  transition: border-color var(--dur-micro) var(--ease-out), background-color var(--dur-micro) var(--ease-out);
+}
+.theorem-item:hover {
+  border-color: var(--outline);
+  background: var(--surface-container-high);
+}
+.theorem-num {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--primary);
+}
+.theorem-name {
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  font-weight: 500;
+  color: var(--on-surface);
+}
+.theorem-desc {
+  font-size: 0.85rem;
+  color: var(--on-surface-variant);
+  line-height: 1.45;
+}
+
+/* Reveal animation */
+.reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Footer */
+.colophon {
+  border-top: var(--hairline);
+  padding: var(--space-xl) 0 var(--space-2xl) 0;
+  color: var(--on-surface-variant);
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-md);
+}
+
+/* Responsive breakpoints */
+@media (max-width: 900px) {
+  .workbench {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 640px) {
+  .page-grid {
+    padding: var(--space-md);
+    gap: var(--space-lg);
+  }
+  .hero-header {
+    padding: var(--space-xl) 0 var(--space-lg) 0;
+  }
+  .canvas-stage {
+    min-height: 340px;
+  }
+  .canvas-stage svg {
+    min-height: 340px;
+  }
+  .panel, .panel-low {
+    padding: var(--space-md);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="page-grid">
+
+  <!-- HERO HEADER -->
+  <header class="hero-header">
+    <div class="coord-label">Projective Relativistic Geometry &middot; Quadratic Form x&sup2; + y&sup2; &minus; z&sup2;</div>
+    <h1 class="title">Universal <em>Hyperbolic</em> Geometry</h1>
+    <div class="deck-brass">Algebraic Trigonometry Without Real Numbers, Calculus, or Transcendental Functions</div>
+    <p class="lede">
+      In classical treatments, hyperbolic geometry relies on differential geometry, logarithms, and the real continuum.
+      N.&thinsp;J. Wildberger&rsquo;s <em>Universal Hyperbolic Geometry</em> rebuilds the entire subject from first principles using pure polynomial algebra, pole&ndash;polar duality, and two rational measurements&mdash;<strong>quadrance</strong> and <strong>spread</strong>&mdash;valid over the rational numbers and finite fields alike.
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat-tile">
+        <div class="coord-label">Fundamental Invariants</div>
+        <div class="stat-num">q &amp; S</div>
+        <div class="stat-note">Quadrance between points and spread between lines replace hyperbolic distance and angle as rational ratios.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="coord-label">Algebraic Canon</div>
+        <div class="stat-num">92</div>
+        <div class="stat-note">Named theorems proven over any field not of characteristic two, including finite prime fields.</div>
+      </div>
+      <div class="stat-tile">
+        <div class="coord-label">Theorem 92 Constants</div>
+        <div class="stat-num">48 &middot; 64</div>
+        <div class="stat-note">For any four null points, the diagonal spreads P, R, T satisfy PR + RT + TP = 48 and PRT = 64.</div>
+      </div>
+    </div>
+
+    <nav class="chapter-nav" aria-label="Chapters">
+      <a class="chapter-link" href="#ch-projective">01 &middot; Projective Plane &amp; Duality</a>
+      <a class="chapter-link" href="#ch-metrics">02 &middot; Quadrance &amp; Spread</a>
+      <a class="chapter-link" href="#ch-laws">03 &middot; Five Trigonometric Laws</a>
+      <a class="chapter-link" href="#ch-null">04 &middot; Null Trigonometry &amp; 48/64</a>
+      <a class="chapter-link" href="#ch-finite">05 &middot; Finite Prime Fields</a>
+      <a class="chapter-link" href="#ch-index">06 &middot; 92-Theorem Compendium</a>
+    </nav>
+  </header>
+
+  <!-- CHAPTER 1: PROJECTIVE RELATIVISTIC GEOMETRY & POLE-POLAR DUALITY -->
+  <section id="ch-projective" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 01 &middot; Points, Lines, Duality &amp; Couples</div>
+      <h2 class="section-title">Hyperbolic Geometry Is <em>Projective</em> Relativistic Geometry</h2>
+    </div>
+
+    <div class="two-col">
+      <div class="prose">
+        <p>
+          Work over any field <em>F</em> with characteristic not equal to two. A <strong>hyperbolic point</strong> is a 3-proportion <span class="mono-val">a &equiv; [x : y : z]</span> representing a central line through the origin in relativistic space <em>F</em><sup>3</sup>; a <strong>hyperbolic line</strong> is a 3-proportion <span class="mono-val">L &equiv; (l : m : n)</span> representing the central plane <span class="mono-val">lx + my &minus; nz = 0</span>.
+        </p>
+        <p>
+          In the extended Beltrami&ndash;Klein view (<span class="mono-val">z = 1</span>), every point maps to <span class="mono-val">[X, Y] = [x/z, y/z]</span> and every line to <span class="mono-val">lX + mY = n</span>. Unlike classical hyperbolic geometry, points outside the unit circle <span class="mono-val">X&sup2; + Y&sup2; = 1</span> are treated on equal footing with interior points: the interior models the hyperboloid of two sheets (<span class="mono-val">x&sup2; + y&sup2; &minus; z&sup2; = &minus;1</span>), the unit circle is the <strong>null cone</strong>, and the exterior models the hyperboloid of one sheet (<span class="mono-val">+1</span>).
+        </p>
+      </div>
+
+      <div class="panel-low">
+        <div class="muted-label">Core Duality &amp; Perpendicularity Rules</div>
+        <div class="readout-list" style="margin-top: var(--space-sm);">
+          <div class="readout-row">
+            <span class="readout-key">Pole&ndash;Polar Duality</span>
+            <span class="readout-val is-brass">a = [x:y:z] &harr; a&perp; = (x:y:z)</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-key">Incidence (a lies on L)</span>
+            <span class="readout-val">lx + my &minus; nz = 0</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-key">Null Point / Null Line</span>
+            <span class="readout-val is-coral">x&sup2; + y&sup2; &minus; z&sup2; = 0</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-key">Perpendicularity (a<sub>1</sub> &perp; a<sub>2</sub>)</span>
+            <span class="readout-val is-sky">x<sub>1</sub>x<sub>2</sub> + y<sub>1</sub>y<sub>2</sub> &minus; z<sub>1</sub>z<sub>2</sub> = 0</span>
+          </div>
+          <div class="readout-row">
+            <span class="readout-key">Unique Parallel (Theorem 13)</span>
+            <span class="readout-val is-mint">R = a(a&perp;L)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE LAB 1: EXTENDED BELTRAMI-KLEIN & POLE-POLAR LAB -->
+    <div class="panel">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div>
+          <div class="coord-label">Interactive Observatory I &middot; Extended Beltrami&ndash;Klein Model</div>
+          <h3 class="subhead">Drag Points Across the Null Circle &amp; Inspect Pole&ndash;Polar Constructions</h3>
+        </div>
+        <div class="control-bar">
+          <button type="button" class="btn btn-active" id="lab1-preset-interior" onclick="setLab1Preset('interior')">Interior Pair</button>
+          <button type="button" class="btn" id="lab1-preset-mixed" onclick="setLab1Preset('mixed')">Inside + Outside</button>
+          <button type="button" class="btn" id="lab1-preset-external" onclick="setLab1Preset('external')">External Pair</button>
+          <button type="button" class="btn" id="lab1-preset-null" onclick="setLab1Preset('null')">Null Chord</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div>
+          <div class="canvas-stage" id="lab1-stage">
+            <svg id="lab1-svg" viewBox="-260 -260 520 520" role="img" aria-label="Interactive Extended Beltrami-Klein plane showing unit null circle, points, join line, dual polars, perpendicular point, and couple constructions"></svg>
+          </div>
+          <div class="stage-hint">
+            <span>Drag handles <strong>a<sub>1</sub></strong>, <strong>a<sub>2</sub></strong>, or <strong>a<sub>3</sub></strong> directly inside, on, or outside the unit circle.</span>
+            <div class="control-bar">
+              <label class="check-row"><input type="checkbox" id="lab1-show-polars" checked onchange="renderLab1()"> Dual polars a<sub>i</sub>&perp; &amp; p = L&perp;</label>
+              <label class="check-row"><input type="checkbox" id="lab1-show-opposites" checked onchange="renderLab1()"> Opposite points o<sub>1</sub>, o<sub>2</sub></label>
+              <label class="check-row"><input type="checkbox" id="lab1-show-couple" checked onchange="renderLab1()"> Couple a<sub>3</sub>L (altitude, base, parallel)</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="observation-well">
+          <div class="coord-label">Live Algebraic Telemetry</div>
+          <div id="lab1-telemetry" class="readout-list" style="margin-top: var(--space-sm);"></div>
+          <div style="margin-top: var(--space-md); padding-top: var(--space-sm); border-top: var(--hairline); font-size: 0.82rem; color: var(--on-surface-variant); line-height: 1.5;">
+            Notice <strong>Euclid&rsquo;s Parallel Postulate</strong> (Theorem 13): for any non-dual couple <em>a<sub>3</sub>L</em>, there is a <em>unique</em> parallel line <em>R = a<sub>3</sub>(a<sub>3</sub>&perp;L)</em> through <em>a<sub>3</sub></em> perpendicular to the altitude line <em>N</em>.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 2: QUADRANCE, SPREAD & CROSS RATIOS -->
+  <section id="ch-metrics" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 02 &middot; Fundamental Metrical Measurements</div>
+      <h2 class="section-title">Quadrance and Spread Replace <em>Distance</em> and <em>Angle</em></h2>
+    </div>
+
+    <div class="prose">
+      <p>
+        Instead of taking square roots, inverse hyperbolic cosines, or logarithms, universal hyperbolic geometry measures separation between two non-null points <span class="mono-val">a<sub>1</sub>, a<sub>2</sub></span> by <strong>quadrance</strong> <span class="mono-val">q(a<sub>1</sub>, a<sub>2</sub>)</span>, and separation between two non-null lines <span class="mono-val">L<sub>1</sub>, L<sub>2</sub></span> by <strong>spread</strong> <span class="mono-val">S(L<sub>1</sub>, L<sub>2</sub>)</span>. Both are rational functions of the coordinates—and completely dual to one another: <span class="mono-val">q(a<sub>1</sub>, a<sub>2</sub>) = S(a<sub>1</sub>&perp;, a<sub>2</sub>&perp;)</span> (Theorem 36).
+      </p>
+    </div>
+
+    <div class="formula-grid">
+      <div class="formula-card">
+        <div class="coord-label">Definition &middot; Quadrance (Theorem 32)</div>
+        <div class="math-display">
+          <span><i>q</i>(<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>) &equiv; 1 &minus;</span>
+          <span class="frac">
+            <span>(<i>x</i><sub>1</sub><i>x</i><sub>2</sub> + <i>y</i><sub>1</sub><i>y</i><sub>2</sub> &minus; <i>z</i><sub>1</sub><i>z</i><sub>2</sub>)&sup2;</span>
+            <span>(<i>x</i><sub>1</sub>&sup2; + <i>y</i><sub>1</sub>&sup2; &minus; <i>z</i><sub>1</sub>&sup2;)(<i>x</i><sub>2</sub>&sup2; + <i>y</i><sub>2</sub>&sup2; &minus; <i>z</i><sub>2</sub>&sup2;)</span>
+          </span>
+        </div>
+        <p style="margin:0; font-size:0.9rem; color:var(--on-surface-variant);">
+          Equals <strong>1</strong> when <em>a</em><sub>1</sub> &perp; <em>a</em><sub>2</sub>, and <strong>0</strong> precisely when <em>a</em><sub>1</sub> = <em>a</em><sub>2</sub> or the join line <em>a</em><sub>1</sub><em>a</em><sub>2</sub> is a <strong>null line</strong> (Theorem 33). Over &#8477; inside the unit disk, <em>q</em> = &minus;sinh&sup2;(<em>d</em>).
+        </p>
+      </div>
+
+      <div class="formula-card">
+        <div class="coord-label">Definition &middot; Spread (Theorem 34)</div>
+        <div class="math-display">
+          <span><i>S</i>(<i>L</i><sub>1</sub>, <i>L</i><sub>2</sub>) &equiv; 1 &minus;</span>
+          <span class="frac">
+            <span>(<i>l</i><sub>1</sub><i>l</i><sub>2</sub> + <i>m</i><sub>1</sub><i>m</i><sub>2</sub> &minus; <i>n</i><sub>1</sub><i>n</i><sub>2</sub>)&sup2;</span>
+            <span>(<i>l</i><sub>1</sub>&sup2; + <i>m</i><sub>1</sub>&sup2; &minus; <i>n</i><sub>1</sub>&sup2;)(<i>l</i><sub>2</sub>&sup2; + <i>m</i><sub>2</sub>&sup2; &minus; <i>n</i><sub>2</sub>&sup2;)</span>
+          </span>
+        </div>
+        <p style="margin:0; font-size:0.9rem; color:var(--on-surface-variant);">
+          Equals <strong>1</strong> when <em>L</em><sub>1</sub> &perp; <em>L</em><sub>2</sub>, and <strong>0</strong> precisely when <em>L</em><sub>1</sub> = <em>L</em><sub>2</sub> or the meet point <em>L</em><sub>1</sub><em>L</em><sub>2</sub> is a <strong>null point</strong> (Theorem 35). Over &#8477; at an internal vertex, <em>S</em> = sin&sup2;(&theta;).
+        </p>
+      </div>
+
+      <div class="formula-card">
+        <div class="coord-label">Projective Invariance (Theorem 37)</div>
+        <div class="math-display">
+          <span><i>q</i>(<i>a</i><sub>1</sub>, <i>a</i><sub>2</sub>) = (<i>a</i><sub>1</sub>, <i>o</i><sub>2</sub> : <i>a</i><sub>2</sub>, <i>o</i><sub>1</sub>)</span>
+        </div>
+        <p style="margin:0; font-size:0.9rem; color:var(--on-surface-variant);">
+          Without logarithms or requiring <em>a</em><sub>1</sub><em>a</em><sub>2</sub> to meet the null circle, quadrance is directly a projective cross-ratio with the opposite points <em>o</em><sub>1</sub> = (<em>a</em><sub>1</sub><em>a</em><sub>2</sub>)<em>a</em><sub>1</sub>&perp; and <em>o</em><sub>2</sub> = (<em>a</em><sub>1</sub><em>a</em><sub>2</sub>)<em>a</em><sub>2</sub>&perp;.
+        </p>
+      </div>
+    </div>
+
+    <!-- Interactive Curve Comparison + Comparison Table -->
+    <div class="two-col">
+      <div class="panel">
+        <div class="coord-label">Classical Bridge &middot; Equations (7) &amp; (8)</div>
+        <h3 class="subhead" style="margin-top: var(--space-xs);">How Quadrance Deforms Euclidean Distance</h3>
+        <p style="font-size: 0.92rem; color: var(--on-surface-variant); margin: var(--space-sm) 0 var(--space-md) 0;">
+          Inside the unit disk over &#8477;, classical hyperbolic distance <em>d</em> maps to negative quadrance <span class="mono-val">q = &minus;sinh&sup2;(d)</span>. Slide <em>d</em> below to compare Euclidean <span class="mono-val">Q = d&sup2;</span> against hyperbolic <span class="mono-val">q = &minus;sinh&sup2;(d)</span>.
+        </p>
+        <div class="field-group" style="margin-bottom: var(--space-md);">
+          <label class="field-label" for="bridge-d-slider">Hyperbolic Distance d (0.00 to 2.20)</label>
+          <input type="range" id="bridge-d-slider" min="0" max="2.2" step="0.05" value="1.0" oninput="updateBridgeChart(this.value)">
+        </div>
+        <div class="canvas-stage" style="min-height: 250px;">
+          <svg id="bridge-svg" viewBox="0 0 480 250" style="min-height: 250px;" role="img" aria-label="Comparison plot of Euclidean quadrance d squared versus hyperbolic quadrance minus sinh squared d"></svg>
+        </div>
+        <div id="bridge-readout" class="readout-list" style="margin-top: var(--space-sm);"></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Concept</th>
+              <th>Classical Hyperbolic</th>
+              <th>Universal Hyperbolic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Underlying Field</strong></td>
+              <td>Real continuum &#8477; only</td>
+              <td>Any field <em>F</em> (char &ne; 2): &#8474;, &#120125;<sub>p</sub>, &#8477;</td>
+            </tr>
+            <tr>
+              <td><strong>Separation of Points</strong></td>
+              <td>Distance <em>d</em> via log cross-ratio</td>
+              <td>Quadrance <em>q</em> = &minus;sinh&sup2;(<em>d</em>)</td>
+            </tr>
+            <tr>
+              <td><strong>Separation of Lines</strong></td>
+              <td>Angle &theta; (interior intersections only)</td>
+              <td>Spread <em>S</em> = sin&sup2;(&theta;) (all lines)</td>
+            </tr>
+            <tr>
+              <td><strong>Ideal / Boundary Objects</strong></td>
+              <td>Points at &infin; excluded from metrics</td>
+              <td>Null points/lines parametrized via (<em>t</em> : <em>u</em>)</td>
+            </tr>
+            <tr>
+              <td><strong>Exterior of Disk</strong></td>
+              <td>Outside the model</td>
+              <td>Hyperboloid of 1 sheet; full duality</td>
+            </tr>
+            <tr>
+              <td><strong>Parallels (a not on L)</strong></td>
+              <td>Infinitely many non-intersecting lines</td>
+              <td>Unique parallel <em>R</em> = <em>a</em>(<em>a</em>&perp;<em>L</em>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 3: THE FIVE FUNDAMENTAL LAWS & SPREAD POLYNOMIALS -->
+  <section id="ch-laws" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 03 &middot; Exact Polynomial Identities</div>
+      <h2 class="section-title">The Five Laws of <em>Hyperbolic</em> Trigonometry</h2>
+    </div>
+
+    <div class="prose">
+      <p>
+        Every trigonometric law in universal hyperbolic geometry is an algebraic deformation of planar rational trigonometry. Defining <strong>product</strong> <span class="mono-val">p = 1 &minus; q</span> and <strong>cross</strong> <span class="mono-val">C = 1 &minus; S</span> turns Pythagoras&rsquo; theorem into a simple product identity <span class="mono-val">p<sub>3</sub> = p<sub>1</sub>p<sub>2</sub></span>, while the <strong>Cross Law</strong> governs all non-nil triangles.
+      </p>
+    </div>
+
+    <!-- INTERACTIVE LAB 2: TRIANGLE LAW VERIFIER -->
+    <div class="panel">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div>
+          <div class="coord-label">Interactive Observatory II &middot; Triangle &amp; Trilateral Verifier</div>
+          <h3 class="subhead">Test the Five Main Laws on Live Triangles</h3>
+        </div>
+        <div class="control-bar">
+          <button type="button" class="btn btn-active" id="lab2-preset-right" onclick="setLab2Preset('right')">Right (&pi;/6, &pi;/4, &pi;/2)</button>
+          <button type="button" class="btn" id="lab2-preset-equilateral" onclick="setLab2Preset('equilateral')">Equilateral (q = &minus;3)</button>
+          <button type="button" class="btn" id="lab2-preset-collinear" onclick="setLab2Preset('collinear')">Collinear Triple</button>
+          <button type="button" class="btn" id="lab2-preset-general" onclick="setLab2Preset('general')">General Asymmetric</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div>
+          <div class="canvas-stage">
+            <svg id="lab2-svg" viewBox="-260 -260 520 520" role="img" aria-label="Interactive triangle and associated trilateral inside and outside the null circle"></svg>
+          </div>
+          <div class="stage-hint">
+            <span>Drag vertices <strong>a<sub>1</sub></strong>, <strong>a<sub>2</sub></strong>, <strong>a<sub>3</sub></strong> to observe how quadrances, spreads, quadrea <em>A</em>, and quadreal &#8466; respond in real time.</span>
+          </div>
+        </div>
+
+        <div class="observation-well">
+          <div class="coord-label">Measurements &amp; Identity Checks</div>
+          <div id="lab2-metrics" class="readout-list" style="margin-top: var(--space-xs);"></div>
+          <div id="lab2-laws" style="display: grid; gap: var(--space-sm); margin-top: var(--space-md);"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SPREAD POLYNOMIALS -->
+    <div class="panel-low">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div>
+          <div class="coord-label">Section 3.16 &middot; Theorem 61 (Recursive Spreads)</div>
+          <h3 class="subhead">Spread Polynomials S<sub>n</sub>(x) Replace Chebyshev Polynomials</h3>
+        </div>
+        <div class="control-bar">
+          <div class="field-group" style="min-width: 150px;">
+            <label class="field-label" for="sp-n-select">Highlighted Degree n</label>
+            <select id="sp-n-select" onchange="updateSpreadPolyChart()">
+              <option value="2">n = 2 &middot; S&#8322;(x)</option>
+              <option value="3" selected>n = 3 &middot; S&#8323;(x)</option>
+              <option value="4">n = 4 &middot; S&#8324;(x)</option>
+              <option value="5">n = 5 &middot; S&#8325;(x)</option>
+              <option value="6">n = 6 &middot; S&#8326;(x)</option>
+              <option value="7">n = 7 &middot; S&#8327;(x)</option>
+            </select>
+          </div>
+          <div class="field-group" style="min-width: 180px;">
+            <label class="field-label" for="sp-x-slider">Probe x = <span id="sp-x-val">0.25</span></label>
+            <input type="range" id="sp-x-slider" min="-0.2" max="1.2" step="0.02" value="0.25" oninput="updateSpreadPolyChart()">
+          </div>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div class="canvas-stage" style="min-height: 290px;">
+          <svg id="sp-svg" viewBox="0 0 560 290" style="min-height: 290px;" role="img" aria-label="Plot of spread polynomials S1 through S7 over x from -0.2 to 1.2"></svg>
+        </div>
+        <div class="observation-well">
+          <div class="coord-label">Recursive Law &amp; Formula</div>
+          <div id="sp-details" style="margin-top: var(--space-sm); display: grid; gap: var(--space-sm);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 4: NULL TRIGONOMETRY & 48/64 -->
+  <section id="ch-null" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 04 &middot; Null Trigonometry &amp; Universal Constants</div>
+      <h2 class="section-title">When Vertices Lie on the Null Cone: <em>Thinness</em> &amp; the <em>48/64</em> Theorem</h2>
+    </div>
+
+    <div class="prose">
+      <p>
+        In classical hyperbolic geometry, ideal triangles have vertices &ldquo;at infinity&rdquo; with undefined side lengths. In universal hyperbolic geometry, every null point is explicitly parametrized by a rational proportion via Pythagorean triples:
+        <span class="mono-val">&alpha;(t : u) &equiv; [t&sup2; &minus; u&sup2; : 2tu : t&sup2; + u&sup2;]</span> (Theorem 21), and the join of two null points is <span class="mono-val">L(t<sub>1</sub>:u<sub>1</sub>|t<sub>2</sub>:u<sub>2</sub>) = (t<sub>1</sub>t<sub>2</sub> &minus; u<sub>1</sub>u<sub>2</sub> : t<sub>1</sub>u<sub>2</sub> + t<sub>2</sub>u<sub>1</sub> : t<sub>1</sub>t<sub>2</sub> + u<sub>1</sub>u<sub>2</sub>)</span> (Theorem 23). This unlocks astonishing universal invariants that hold identically for <em>any</em> choice of null points.
+      </p>
+    </div>
+
+    <!-- INTERACTIVE LAB 3: TRIPLY-NIL & 48/64 LAB -->
+    <div class="panel">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div>
+          <div class="coord-label">Interactive Observatory III &middot; Null Polygons</div>
+          <h3 class="subhead" id="lab3-heading">Four Null Points: Self-Polar Diagonals &amp; the 48/64 Constants</h3>
+        </div>
+        <div class="control-bar">
+          <button type="button" class="btn btn-active" id="lab3-mode-quad" onclick="setLab3Mode('quad')">48/64 Null Quadrangle (Thms 91&ndash;92)</button>
+          <button type="button" class="btn" id="lab3-mode-tri" onclick="setLab3Mode('tri')">Triply-Nil Triangle &amp; Thinness (Thms 82&ndash;86)</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div>
+          <div class="canvas-stage">
+            <svg id="lab3-svg" viewBox="-260 -260 520 520" role="img" aria-label="Interactive null polygon laboratory on the unit circle showing invariant constants"></svg>
+          </div>
+          <div class="stage-hint" id="lab3-hint">
+            <span>Drag the 4 null points <strong>&alpha;<sub>1</sub>, &alpha;<sub>2</sub>, &alpha;<sub>3</sub>, &alpha;<sub>4</sub></strong> along the unit circle.</span>
+            <div class="control-bar">
+              <button type="button" class="btn" onclick="resetLab3Preset('square')">Square (&minus;8, 1, &minus;8)</button>
+              <button type="button" class="btn" onclick="resetLab3Preset('asymmetric')">Asymmetric</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="observation-well">
+          <div class="coord-label">Universal Invariant Telemetry</div>
+          <div id="lab3-telemetry" class="readout-list" style="margin-top: var(--space-sm);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 5: FINITE FIELDS -->
+  <section id="ch-finite" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 05 &middot; Geometry Without Pictures</div>
+      <h2 class="section-title">Exact Hyperbolic Trigonometry Over <em>Finite Prime Fields</em></h2>
+    </div>
+
+    <div class="prose">
+      <p>
+        Because every definition and law in universal hyperbolic geometry is purely polynomial, the entire theory works over finite prime fields <span class="mono-val">&#120125;<sub>p</sub></span> (<span class="mono-val">p &gt; 2</span>). Here, a point <span class="mono-val">[x : y : z]</span> is <strong>null</strong> if <span class="mono-val">x&sup2; + y&sup2; &minus; z&sup2; &equiv; 0 (mod p)</span>, <strong>external</strong> if <span class="mono-val">x&sup2; + y&sup2; &minus; z&sup2;</span> is a non-zero square mod <em>p</em> (lying on 2 null lines), and <strong>internal</strong> if it is a non-square mod <em>p</em> (lying on 0 null lines).
+      </p>
+      <p>
+        In Example 17 of the paper, Wildberger constructs the hyperbolic right triangle with spreads <span class="mono-val">1/4, 1/2, 1</span> (classical &pi;/6, &pi;/4, &pi;/2) entirely inside <span class="mono-val">&#120125;<sub>23</sub></span> using the three internal points <span class="mono-val">a<sub>1</sub> = [14 : 0 : 1]</span>, <span class="mono-val">a<sub>2</sub> = [0 : 10 : 1]</span>, and <span class="mono-val">a<sub>3</sub> = [0 : 0 : 1]</span>, since <span class="mono-val">5&sup2; &equiv; 2</span> and <span class="mono-val">7&sup2; &equiv; 3 (mod 23)</span>.
+      </p>
+    </div>
+
+    <div class="panel">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div>
+          <div class="coord-label">Interactive Observatory IV &middot; Modular Plane &#120125;<sub>p</sub>&sup2; (z = 1 slice)</div>
+          <h3 class="subhead">Inspect Internal, Null &amp; External Points Over &#120125;<sub>p</sub></h3>
+        </div>
+        <div class="control-bar">
+          <div class="field-group">
+            <label class="field-label" for="fp-prime-select">Prime Field &#120125;<sub>p</sub></label>
+            <select id="fp-prime-select" onchange="setFpPrime(this.value)">
+              <option value="5">p = 5 (31 pts in P&sup2;)</option>
+              <option value="7">p = 7 (57 pts in P&sup2;)</option>
+              <option value="11">p = 11 (133 pts in P&sup2;)</option>
+              <option value="13">p = 13 (183 pts in P&sup2;)</option>
+              <option value="17">p = 17 (307 pts in P&sup2;)</option>
+              <option value="23" selected>p = 23 (553 pts &middot; Ex. 17)</option>
+            </select>
+          </div>
+          <button type="button" class="btn" onclick="loadEx17InFp()">Highlight Example 17 (p = 23)</button>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <div>
+          <div class="fp-canvas-wrap">
+            <svg id="fp-svg" class="fp-svg" viewBox="0 0 440 440" role="img" aria-label="Grid of affine points in Fp squared colored by internal, null, and external hyperbolic type"></svg>
+          </div>
+          <div class="stage-hint">
+            <span>Click any two points in the <span class="mono-val">z = 1</span> grid to compute their exact join line and modular quadrance <span class="mono-val">q (mod p)</span>.</span>
+            <div class="control-bar">
+              <span class="badge badge-sky">Internal (0 null lines)</span>
+              <span class="badge badge-coral">Null (x&sup2;+y&sup2;&equiv;1)</span>
+              <span class="badge badge-brass">External (2 null lines)</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="observation-well">
+          <div class="coord-label">Projective Census &amp; Exact Pair Calculation</div>
+          <div id="fp-telemetry" class="readout-list" style="margin-top: var(--space-sm);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHAPTER 6: 92 THEOREMS COMPENDIUM -->
+  <section id="ch-index" class="chapter reveal">
+    <div class="chapter-header">
+      <div class="coord-label">Section 06 &middot; Complete Reference Index</div>
+      <h2 class="section-title">All <em>92 Theorems</em> of Universal Hyperbolic Geometry I</h2>
+    </div>
+
+    <div class="panel-low">
+      <div class="control-bar" style="justify-content: space-between; margin-bottom: var(--space-md);">
+        <div class="field-group" style="flex: 1 1 240px;">
+          <label class="field-label" for="thm-search">Filter by Theorem Name, Number, or Concept</label>
+          <input type="text" id="thm-search" placeholder="Search e.g. Pythagoras, 48/64, orthocenter, cross ratio" oninput="filterTheorems()">
+        </div>
+        <div class="field-group">
+          <label class="field-label" for="thm-section-filter">Paper Section</label>
+          <select id="thm-section-filter" onchange="filterTheorems()">
+            <option value="all">All 92 Theorems</option>
+            <option value="sec2">Sec 2 &middot; Points, Lines &amp; Nulls (1&ndash;31)</option>
+            <option value="sec3">Sec 3 &middot; Quadrance, Spread &amp; Laws (32&ndash;61)</option>
+            <option value="sec4">Sec 4 &middot; Special Triangles (62&ndash;79)</option>
+            <option value="sec5">Sec 5 &middot; Null Trigonometry (80&ndash;92)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="thm-count" class="muted-label" style="margin-bottom: var(--space-md);">Showing 92 of 92 theorems</div>
+      <div id="thm-grid" class="theorem-grid"></div>
+    </div>
+  </section>
+
+  <footer class="colophon">
+    <span>Source: N.&thinsp;J. Wildberger, <em>Universal Hyperbolic Geometry I: Trigonometry</em>, School of Mathematics and Statistics, UNSW Sydney.</span>
+    <span class="coord-label">Exact Polynomial Algebra &middot; Char(F) &ne; 2</span>
+  </footer>
+
+</div>
+
+<script>
+// =========================================================================
+// THEME TOKENS FOR CANVAS / SVG GENERATION
+// =========================================================================
+function getToken(name, fallback) {
+  const val = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  return val || fallback;
+}
+
+const SVG_NS = `http://www.w3.org/2000/svg`;
+
+function svgEl(tag, attrs, text) {
+  const el = document.createElementNS(SVG_NS, tag);
+  if (attrs) {
+    Object.keys(attrs).forEach(function (k) {
+      el.setAttribute(k, String(attrs[k]));
+    });
+  }
+  if (text !== undefined) el.textContent = text;
+  return el;
+}
+
+// =========================================================================
+// EXACT HYPERBOLIC ALGEBRA HELPERS (OVER R / Q)
+// =========================================================================
+function hDot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] - a[2] * b[2];
+}
+function hNorm(a) {
+  return a[0] * a[0] + a[1] * a[1] - a[2] * a[2];
+}
+function hCross(a, b) {
+  return [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[1] * b[0] - a[0] * b[1]
+  ];
+}
+function hDet(a, b, c) {
+  return (
+    a[0] * b[1] * c[2] - a[0] * b[2] * c[1] +
+    a[1] * b[2] * c[0] - a[2] * b[1] * c[0] +
+    a[2] * b[0] * c[1] - a[1] * b[0] * c[2]
+  );
+}
+function hQuad(a, b) {
+  const na = hNorm(a), nb = hNorm(b);
+  if (Math.abs(na) < 1e-10 || Math.abs(nb) < 1e-10) return null;
+  const d = hDot(a, b);
+  return 1 - (d * d) / (na * nb);
+}
+function hSpread(L1, L2) {
+  return hQuad(L1, L2);
+}
+function hQuadrea(a1, a2, a3) {
+  const n1 = hNorm(a1), n2 = hNorm(a2), n3 = hNorm(a3);
+  if (Math.abs(n1) < 1e-10 || Math.abs(n2) < 1e-10 || Math.abs(n3) < 1e-10) return null;
+  const det = hDet(a1, a2, a3);
+  return -(det * det) / (n1 * n2 * n3);
+}
+function tripleSpreadFn(a, b, c) {
+  return (a + b + c) * (a + b + c) - 2 * (a * a + b * b + c * c) - 4 * a * b * c;
+}
+function fmtNum(v, digits) {
+  if (v === null || v === undefined || !Number.isFinite(v)) return `undefined`;
+  const d = digits === undefined ? 4 : digits;
+  const rounded = Math.abs(v) < 1e-9 ? 0 : v;
+  return rounded.toFixed(d);
+}
+function classifyPoint(a) {
+  const n = hNorm(a);
+  if (Math.abs(n) < 1e-5) return `NULL`;
+  return n < 0 ? `INTERNAL` : `EXTERNAL`;
+}
+function classifyLine(L) {
+  const n = hNorm(L);
+  if (Math.abs(n) < 1e-5) return `NULL`;
+  return n > 0 ? `INTERNAL` : `EXTERNAL`;
+}
+
+// Convert planar [X, Y] <-> SVG coords (scale 115 px = 1 unit)
+const SCALE = 115;
+function toSvgX(X) { return X * SCALE; }
+function toSvgY(Y) { return -Y * SCALE; }
+function fromSvgX(px) { return px / SCALE; }
+function fromSvgY(py) { return -py / SCALE; }
+
+// Draw an infinite line (l : m : n) clipped to bounding box [-2.4, 2.4]
+function clipLineSegment(L, bound) {
+  const l = L[0], m = L[1], n = L[2];
+  const len2 = l * l + m * m;
+  if (len2 < 1e-12) return null;
+  const x0 = (l * n) / len2;
+  const y0 = (m * n) / len2;
+  const dx = -m / Math.sqrt(len2);
+  const dy = l / Math.sqrt(len2);
+  const t = bound * 2.2;
+  return {
+    x1: x0 - dx * t,
+    y1: y0 - dy * t,
+    x2: x0 + dx * t,
+    y2: y0 + dy * t
+  };
+}
+
+function drawLineSvg(svg, L, attrs) {
+  const seg = clipLineSegment(L, 2.5);
+  if (!seg) return;
+  svg.appendChild(svgEl(`line`, Object.assign({
+    x1: toSvgX(seg.x1),
+    y1: toSvgY(seg.y1),
+    x2: toSvgX(seg.x2),
+    y2: toSvgY(seg.y2)
+  }, attrs)));
+}
+
+function drawPointSvg(svg, pt, label, colorVar, r, draggableId) {
+  if (Math.abs(pt[2]) < 1e-7) return;
+  const X = pt[0] / pt[2];
+  const Y = pt[1] / pt[2];
+  if (Math.abs(X) > 2.35 || Math.abs(Y) > 2.35) return;
+  const cx = toSvgX(X);
+  const cy = toSvgY(Y);
+  const g = svgEl(`g`, {
+    style: draggableId ? `cursor: grab;` : `pointer-events: none;`
+  });
+  if (draggableId) {
+    g.setAttribute(`data-drag-id`, draggableId);
+    const hit = svgEl(`circle`, {
+      cx: cx, cy: cy, r: 22,
+      fill: `transparent`
+    });
+    g.appendChild(hit);
+  }
+  const c = svgEl(`circle`, {
+    cx: cx, cy: cy, r: r || 6,
+    fill: colorVar,
+    stroke: `var(--background)`,
+    'stroke-width': 2
+  });
+  g.appendChild(c);
+  if (label) {
+    const lbl = svgEl(`text`, {
+      x: cx + 10,
+      y: cy - 9,
+      fill: colorVar,
+      'font-family': `var(--font-label)`,
+      'font-size': `12`,
+      'font-weight': `600`
+    }, label);
+    g.appendChild(lbl);
+  }
+  svg.appendChild(g);
+}
+
+function drawGridBase(svg) {
+  // Subtle coordinate axes & unit null circle
+  for (let i = -2; i <= 2; i++) {
+    if (i === 0) continue;
+    const pos = i * SCALE;
+    svg.appendChild(svgEl(`line`, {
+      x1: -260, y1: pos, x2: 260, y2: pos,
+      stroke: `var(--outline-variant)`, 'stroke-width': 0.7, 'stroke-dasharray': `3 4`, opacity: 0.5
+    }));
+    svg.appendChild(svgEl(`line`, {
+      x1: pos, y1: -260, x2: pos, y2: 260,
+      stroke: `var(--outline-variant)`, 'stroke-width': 0.7, 'stroke-dasharray': `3 4`, opacity: 0.5
+    }));
+  }
+  svg.appendChild(svgEl(`line`, {
+    x1: -260, y1: 0, x2: 260, y2: 0,
+    stroke: `var(--outline-variant)`, 'stroke-width': 1
+  }));
+  svg.appendChild(svgEl(`line`, {
+    x1: 0, y1: -260, x2: 0, y2: 260,
+    stroke: `var(--outline-variant)`, 'stroke-width': 1
+  }));
+  // Null Circle X^2 + Y^2 = 1
+  svg.appendChild(svgEl(`circle`, {
+    cx: 0, cy: 0, r: SCALE,
+    fill: `color-mix(in srgb, var(--surface-container) 35%, transparent)`,
+    stroke: `var(--data-4)`,
+    'stroke-width': 1.8,
+    'stroke-dasharray': `5 4`
+  }));
+  svg.appendChild(svgEl(`text`, {
+    x: toSvgX(0.72), y: toSvgY(-0.78),
+    fill: `var(--data-4)`,
+    'font-family': `var(--font-label)`,
+    'font-size': `10`,
+    opacity: 0.9
+  }, `X² + Y² = 1 (null)`));
+}
+
+function svgPointerCoords(svg, clientX, clientY) {
+  const rect = svg.getBoundingClientRect();
+  const vb = svg.viewBox.baseVal;
+  const sx = vb.x + ((clientX - rect.left) / rect.width) * vb.width;
+  const sy = vb.y + ((clientY - rect.top) / rect.height) * vb.height;
+  return [fromSvgX(sx), fromSvgY(sy)];
+}
+
+// =========================================================================
+// LAB 1: EXTENDED BELTRAMI-KLEIN & POLE-POLAR DUALITY
+// =========================================================================
+const lab1State = {
+  a1: [-0.45, -0.25],
+  a2: [0.55, 0.35],
+  a3: [-0.55, 0.62],
+  dragging: null
+};
+
+function setLab1Preset(mode) {
+  const btns = [`interior`, `mixed`, `external`, `null`];
+  btns.forEach(function (b) {
+    const el = document.getElementById(`lab1-preset-` + b);
+    if (el) el.classList.toggle(`btn-active`, b === mode);
+  });
+  if (mode === `interior`) {
+    lab1State.a1 = [-0.45, -0.25];
+    lab1State.a2 = [0.55, 0.35];
+    lab1State.a3 = [-0.55, 0.62];
+  } else if (mode === `mixed`) {
+    lab1State.a1 = [-0.35, -0.20];
+    lab1State.a2 = [1.35, 0.55];
+    lab1State.a3 = [-0.70, 0.95];
+  } else if (mode === `external`) {
+    lab1State.a1 = [-1.25, -0.45];
+    lab1State.a2 = [1.30, 0.40];
+    lab1State.a3 = [-0.30, 1.35];
+  } else if (mode === `null`) {
+    lab1State.a1 = [0.60, 0.80];
+    lab1State.a2 = [-0.80, 0.60];
+    lab1State.a3 = [0.15, -0.45];
+  }
+  renderLab1();
+}
+
+function renderLab1() {
+  const svg = document.getElementById(`lab1-svg`);
+  const tel = document.getElementById(`lab1-telemetry`);
+  if (!svg || !tel) return;
+
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  drawGridBase(svg);
+
+  const a1 = [lab1State.a1[0], lab1State.a1[1], 1];
+  const a2 = [lab1State.a2[0], lab1State.a2[1], 1];
+  const a3 = [lab1State.a3[0], lab1State.a3[1], 1];
+  const L = hCross(a1, a2);
+  const p = L; // L^\perp has identical 3-proportion
+
+  const showPolars = document.getElementById(`lab1-show-polars`) && document.getElementById(`lab1-show-polars`).checked;
+  const showOpp = document.getElementById(`lab1-show-opposites`) && document.getElementById(`lab1-show-opposites`).checked;
+  const showCouple = document.getElementById(`lab1-show-couple`) && document.getElementById(`lab1-show-couple`).checked;
+
+  // Dual polar lines
+  if (showPolars) {
+    drawLineSvg(svg, a1, { stroke: `var(--tertiary)`, 'stroke-width': 1.2, 'stroke-dasharray': `4 3`, opacity: 0.75 });
+    drawLineSvg(svg, a2, { stroke: `var(--tertiary)`, 'stroke-width': 1.2, 'stroke-dasharray': `4 3`, opacity: 0.75 });
+  }
+
+  // Main join line L = a1 a2
+  const lType = classifyLine(L);
+  drawLineSvg(svg, L, {
+    stroke: lType === `NULL` ? `var(--data-4)` : `var(--primary)`,
+    'stroke-width': 2.2
+  });
+
+  // Opposite points o1, o2 (Theorem 9)
+  const n1 = hNorm(a1), n2 = hNorm(a2), d12 = hDot(a1, a2);
+  const o1 = [
+    d12 * a1[0] - n1 * a2[0],
+    d12 * a1[1] - n1 * a2[1],
+    d12 * a1[2] - n1 * a2[2]
+  ];
+  const o2 = [
+    n2 * a1[0] - d12 * a2[0],
+    n2 * a1[1] - d12 * a2[1],
+    n2 * a1[2] - d12 * a2[2]
+  ];
+  if (showOpp) {
+    drawPointSvg(svg, o1, `o₁`, `var(--on-surface-variant)`, 4.5);
+    drawPointSvg(svg, o2, `o₂`, `var(--on-surface-variant)`, 4.5);
+  }
+
+  // Couple a3 L constructions: Altitude line N, Base point b, Parallel line R
+  let bPt = null, Nline = null, Rline = null;
+  if (showCouple) {
+    Nline = hCross(a3, p);
+    bPt = hCross(Nline, L);
+    const nPt = hCross(a3, L); // altitude point a3^\perp L
+    Rline = hCross(a3, nPt); // unique parallel line R = a3(a3^\perp L)
+    drawLineSvg(svg, Nline, { stroke: `var(--data-3)`, 'stroke-width': 1.4, opacity: 0.85 });
+    drawLineSvg(svg, Rline, { stroke: `var(--data-3)`, 'stroke-width': 1.6, 'stroke-dasharray': `7 4` });
+    drawPointSvg(svg, bPt, `b`, `var(--data-3)`, 5);
+    drawPointSvg(svg, a3, `a₃`, `var(--data-3)`, 7, `a3`);
+  }
+
+  if (showPolars) {
+    drawPointSvg(svg, p, `p = L⊥`, `var(--tertiary)`, 5.5);
+  }
+
+  drawPointSvg(svg, a1, `a₁`, `var(--primary)`, 7, `a1`);
+  drawPointSvg(svg, a2, `a₂`, `var(--primary)`, 7, `a2`);
+
+  // Compute quadrance and cross-ratio
+  const q12 = hQuad(a1, a2);
+  let crossRatioVal = null;
+  if (q12 !== null && Math.abs(hNorm(L)) > 1e-6) {
+    // Express o1 = z1*a1 + w1*a2, o2 = z2*a1 + w2*a2 via Theorem 9 vectors
+    const z1 = d12, w1 = -n1;
+    const z2 = n2, w2 = -d12;
+    // (a1, a2 : o2, o1) = (w2/z2) / (w1/z1), and (a1, o2 : a2, o1) = 1 - (a1, a2 : o2, o1)
+    if (Math.abs(z2 * w1) > 1e-10) {
+      const crBase = (w2 * z1) / (z2 * w1);
+      crossRatioVal = 1 - crBase;
+    }
+  }
+
+  const rows = [
+    { k: `a₁ [${fmtNum(a1[0], 2)} : ${fmtNum(a1[1], 2)} : 1]`, v: classifyPoint(a1), cls: classifyPoint(a1) === `NULL` ? `is-coral` : `is-brass` },
+    { k: `a₂ [${fmtNum(a2[0], 2)} : ${fmtNum(a2[1], 2)} : 1]`, v: classifyPoint(a2), cls: classifyPoint(a2) === `NULL` ? `is-coral` : `is-brass` },
+    { k: `Join L = a₁a₂`, v: `(${fmtNum(L[0], 2)} : ${fmtNum(L[1], 2)} : ${fmtNum(L[2], 2)}) · ${lType}`, cls: lType === `NULL` ? `is-coral` : `is-sky` },
+    { k: `Quadrance q(a₁, a₂)`, v: q12 === null ? `undefined (null pt)` : fmtNum(q12, 4), cls: `is-brass` },
+    { k: `Cross-Ratio (a₁, o₂ : a₂, o₁)`, v: crossRatioVal === null ? `—` : fmtNum(crossRatioVal, 4), cls: `is-sky` }
+  ];
+  if (showCouple && bPt) {
+    const qCouple = hQuad(a3, bPt);
+    rows.push({
+      k: `Couple q(a₃L) = q(a₃, b)`,
+      v: qCouple === null ? `undefined` : fmtNum(qCouple, 4),
+      cls: `is-mint`
+    });
+  }
+
+  tel.innerHTML = rows.map(function (r) {
+    return `<div class="readout-row"><span class="readout-key">${r.k}</span><span class="readout-val ${r.cls}">${r.v}</span></div>`;
+  }).join(``);
+}
+
+// =========================================================================
+// BRIDGE CHART: CLASSICAL d vs QUADRANCE q = -sinh^2(d)
+// =========================================================================
+function updateBridgeChart(val) {
+  const dVal = parseFloat(val);
+  const svg = document.getElementById(`bridge-svg`);
+  const readout = document.getElementById(`bridge-readout`);
+  if (!svg || !readout) return;
+
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const padL = 52, padR = 24, padT = 20, padB = 34;
+  const W = 480, H = 250;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const dMax = 2.2;
+  const yMin = -20, yMax = 6;
+
+  function pxX(d) { return padL + (d / dMax) * plotW; }
+  function pxY(y) { return padT + ((yMax - y) / (yMax - yMin)) * plotH; }
+
+  // Gridlines
+  [-15, -10, -5, 0, 5].forEach(function (yv) {
+    const yy = pxY(yv);
+    svg.appendChild(svgEl(`line`, {
+      x1: padL, y1: yy, x2: W - padR, y2: yy,
+      stroke: yv === 0 ? `var(--outline)` : `var(--outline-variant)`,
+      'stroke-width': yv === 0 ? 1.2 : 0.8,
+      'stroke-dasharray': yv === 0 ? `none` : `3 3`
+    }));
+    svg.appendChild(svgEl(`text`, {
+      x: padL - 8, y: yy + 4,
+      'text-anchor': `end`,
+      fill: `var(--on-surface-variant)`,
+      'font-family': `var(--font-label)`,
+      'font-size': `10`
+    }, String(yv)));
+  });
+
+  // Euclidean Q = d^2 curve
+  let ptsEuc = [];
+  let ptsHyp = [];
+  for (let i = 0; i <= 88; i++) {
+    const d = (i / 88) * dMax;
+    const euc = d * d;
+    const hyp = -Math.pow(Math.sinh(d), 2);
+    ptsEuc.push(`${pxX(d).toFixed(1)},${pxY(euc).toFixed(1)}`);
+    if (hyp >= yMin) ptsHyp.push(`${pxX(d).toFixed(1)},${pxY(hyp).toFixed(1)}`);
+  }
+
+  svg.appendChild(svgEl(`polyline`, {
+    points: ptsEuc.join(` `),
+    fill: `none`,
+    stroke: `var(--data-2)`,
+    'stroke-width': 1.8,
+    'stroke-dasharray': `5 3`
+  }));
+  svg.appendChild(svgEl(`polyline`, {
+    points: ptsHyp.join(` `),
+    fill: `none`,
+    stroke: `var(--primary)`,
+    'stroke-width': 2.5
+  }));
+
+  // Direct labels
+  svg.appendChild(svgEl(`text`, {
+    x: pxX(1.75), y: pxY(3.8),
+    fill: `var(--data-2)`,
+    'font-family': `var(--font-label)`,
+    'font-size': `11`
+  }, `Q = d² (Euclidean)`));
+  svg.appendChild(svgEl(`text`, {
+    x: pxX(1.32), y: pxY(-11.5),
+    fill: `var(--primary)`,
+    'font-family': `var(--font-label)`,
+    'font-size': `11`
+  }, `q = −sinh²(d)`));
+
+  // Marker at dVal
+  const eucNow = dVal * dVal;
+  const hypNow = -Math.pow(Math.sinh(dVal), 2);
+  const mx = pxX(dVal);
+  svg.appendChild(svgEl(`line`, {
+    x1: mx, y1: padT, x2: mx, y2: H - padB,
+    stroke: `var(--tertiary)`, 'stroke-width': 1, 'stroke-dasharray': `2 2`
+  }));
+  svg.appendChild(svgEl(`circle`, { cx: mx, cy: pxY(eucNow), r: 4.5, fill: `var(--data-2)` }));
+  if (hypNow >= yMin) {
+    svg.appendChild(svgEl(`circle`, { cx: mx, cy: pxY(hypNow), r: 5, fill: `var(--primary)` }));
+  }
+
+  svg.appendChild(svgEl(`text`, {
+    x: padL + plotW / 2, y: H - 8,
+    'text-anchor': `middle`,
+    fill: `var(--on-surface-variant)`,
+    'font-family': `var(--font-label)`,
+    'font-size': `10`
+  }, `Hyperbolic distance d (0 to 2.2)`));
+
+  readout.innerHTML = `
+    <div class="readout-row"><span class="readout-key">Distance d</span><span class="readout-val is-sky">${fmtNum(dVal, 2)}</span></div>
+    <div class="readout-row"><span class="readout-key">Euclidean Q = d&sup2;</span><span class="readout-val is-sky">${fmtNum(eucNow, 4)}</span></div>
+    <div class="readout-row"><span class="readout-key">Hyperbolic q = &minus;sinh&sup2;(d)</span><span class="readout-val is-brass">${fmtNum(hypNow, 4)}</span></div>
+    <div class="readout-row"><span class="readout-key">Product p = 1 &minus; q = cosh&sup2;(d)</span><span class="readout-val is-mint">${fmtNum(1 - hypNow, 4)}</span></div>
+  `;
+}
+
+// =========================================================================
+// LAB 2: FIVE FUNDAMENTAL LAWS & TRIANGLE VERIFIER
+// =========================================================================
+const lab2State = {
+  a1: [1 / Math.SQRT2, 0],
+  a2: [0, 1 / Math.SQRT3],
+  a3: [0, 0],
+  dragging: null
+};
+
+function setLab2Preset(mode) {
+  [`right`, `equilateral`, `collinear`, `general`].forEach(function (b) {
+    const el = document.getElementById(`lab2-preset-` + b);
+    if (el) el.classList.toggle(`btn-active`, b === mode);
+  });
+  if (mode === `right`) {
+    // Example 16: S1 = 1/4, S2 = 1/2, S3 = 1 -> q1 = -1/2, q2 = -1, q3 = -2, A = 1/2
+    lab2State.a1 = [1 / Math.SQRT2, 0];
+    lab2State.a2 = [0, 1 / Math.SQRT3];
+    lab2State.a3 = [0, 0];
+  } else if (mode === `equilateral`) {
+    // Example 15 (second equilateral triangle): q1 = q2 = q3 = -3, S1 = S2 = S3 = 5/9
+    // a1 = [sqrt(2) : 0 : sqrt(5)], a2 = [-1 : sqrt(3) : sqrt(10)], a3 = [-1 : -sqrt(3) : sqrt(10)]
+    lab2State.a1 = [Math.sqrt(2 / 5), 0];
+    lab2State.a2 = [-1 / Math.sqrt(10), Math.sqrt(3 / 10)];
+    lab2State.a3 = [-1 / Math.sqrt(10), -Math.sqrt(3 / 10)];
+  } else if (mode === `collinear`) {
+    lab2State.a1 = [-0.65, -0.20];
+    lab2State.a2 = [0.05, 0.15];
+    lab2State.a3 = [0.75, 0.50];
+  } else if (mode === `general`) {
+    lab2State.a1 = [-0.55, -0.35];
+    lab2State.a2 = [0.60, -0.15];
+    lab2State.a3 = [0.15, 0.65];
+  }
+  renderLab2();
+}
+
+function renderLab2() {
+  const svg = document.getElementById(`lab2-svg`);
+  const metEl = document.getElementById(`lab2-metrics`);
+  const lawEl = document.getElementById(`lab2-laws`);
+  if (!svg || !metEl || !lawEl) return;
+
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  drawGridBase(svg);
+
+  const a1 = [lab2State.a1[0], lab2State.a1[1], 1];
+  const a2 = [lab2State.a2[0], lab2State.a2[1], 1];
+  const a3 = [lab2State.a3[0], lab2State.a3[1], 1];
+
+  const L1 = hCross(a2, a3);
+  const L2 = hCross(a1, a3);
+  const L3 = hCross(a1, a2);
+
+  // Triangle fill
+  svg.appendChild(svgEl(`polygon`, {
+    points: `${toSvgX(a1[0])},${toSvgY(a1[1])} ${toSvgX(a2[0])},${toSvgY(a2[1])} ${toSvgX(a3[0])},${toSvgY(a3[1])}`,
+    fill: `var(--brass-tint)`,
+    stroke: `none`
+  }));
+
+  drawLineSvg(svg, L1, { stroke: `var(--outline)`, 'stroke-width': 1, opacity: 0.7 });
+  drawLineSvg(svg, L2, { stroke: `var(--outline)`, 'stroke-width': 1, opacity: 0.7 });
+  drawLineSvg(svg, L3, { stroke: `var(--outline)`, 'stroke-width': 1, opacity: 0.7 });
+
+  // Triangle segments
+  const segs = [[a2, a3], [a1, a3], [a1, a2]];
+  segs.forEach(function (pair) {
+    svg.appendChild(svgEl(`line`, {
+      x1: toSvgX(pair[0][0]), y1: toSvgY(pair[0][1]),
+      x2: toSvgX(pair[1][0]), y2: toSvgY(pair[1][1]),
+      stroke: `var(--primary)`, 'stroke-width': 2.2
+    }));
+  });
+
+  drawPointSvg(svg, a1, `a₁`, `var(--primary)`, 7, `a1`);
+  drawPointSvg(svg, a2, `a₂`, `var(--tertiary)`, 7, `a2`);
+  drawPointSvg(svg, a3, `a₃`, `var(--data-3)`, 7, `a3`);
+
+  const q1 = hQuad(a2, a3), q2 = hQuad(a1, a3), q3 = hQuad(a1, a2);
+  const S1 = hSpread(L2, L3), S2 = hSpread(L1, L3), S3 = hSpread(L1, L2);
+  const A = hQuadrea(a1, a2, a3);
+  const Lquad = hQuadrea(L1, L2, L3);
+
+  metEl.innerHTML = `
+    <div class="readout-row"><span class="readout-key">Quadrances (q₁, q₂, q₃)</span><span class="readout-val is-brass">${fmtNum(q1, 3)}, ${fmtNum(q2, 3)}, ${fmtNum(q3, 3)}</span></div>
+    <div class="readout-row"><span class="readout-key">Spreads (S₁, S₂, S₃)</span><span class="readout-val is-sky">${fmtNum(S1, 3)}, ${fmtNum(S2, 3)}, ${fmtNum(S3, 3)}</span></div>
+    <div class="readout-row"><span class="readout-key">Quadrea A &amp; Quadreal &#8466;</span><span class="readout-val is-mint">A = ${fmtNum(A, 4)} &middot; &#8466; = ${fmtNum(Lquad, 4)}</span></div>
+  `;
+
+  const cards = [];
+
+  // 1. Cross Law
+  if (q1 !== null && q2 !== null && q3 !== null && S1 !== null) {
+    const lhs = Math.pow(q2 * q3 * S1 - q1 - q2 - q3 + 2, 2);
+    const rhs = 4 * (1 - q1) * (1 - q2) * (1 - q3);
+    const diff = Math.abs(lhs - rhs);
+    cards.push({
+      title: `Cross Law (Thm 50)`,
+      badge: diff < 1e-6 ? `VERIFIED` : `DIFF ${fmtNum(diff, 4)}`,
+      badgeCls: `badge-mint`,
+      detail: `LHS = ${fmtNum(lhs, 4)} &nbsp;|&nbsp; RHS = ${fmtNum(rhs, 4)}`
+    });
+  }
+
+  // 2. Spread Law & Quadrea
+  if (q1 && q2 && q3 && S1 !== null && S2 !== null && S3 !== null && Math.abs(q1) > 1e-6 && Math.abs(q2) > 1e-6 && Math.abs(q3) > 1e-6) {
+    const r1 = S1 / q1, r2 = S2 / q2, r3 = S3 / q3;
+    cards.push({
+      title: `Spread Law (Thm 45)`,
+      badge: `S₁/q₁ = S₂/q₂ = S₃/q₃`,
+      badgeCls: `badge-sky`,
+      detail: `${fmtNum(r1, 4)} = ${fmtNum(r2, 4)} = ${fmtNum(r3, 4)}`
+    });
+  }
+
+  // 3. Pythagoras (when right) or Triple Quad (when collinear)
+  const isCollinear = Math.abs(hDet(a1, a2, a3)) < 1e-4;
+  const maxS = Math.max(S1 || 0, S2 || 0, S3 || 0);
+  if (isCollinear && q1 !== null && q2 !== null && q3 !== null) {
+    const tqf = tripleSpreadFn(q1, q2, q3);
+    cards.push({
+      title: `Triple Quad Formula (Thm 38)`,
+      badge: `COLLINEAR · S(q₁,q₂,q₃) = 0`,
+      badgeCls: `badge-brass`,
+      detail: `S(q₁, q₂, q₃) = ${fmtNum(tqf, 6)}`
+    });
+  } else if (S3 !== null && Math.abs(S3 - 1) < 1e-3 && q1 !== null && q2 !== null && q3 !== null) {
+    const pyth = q1 + q2 - q1 * q2;
+    cards.push({
+      title: `Pythagoras (Thm 42 · S₃ = 1)`,
+      badge: `RIGHT TRIANGLE`,
+      badgeCls: `badge-brass`,
+      detail: `q₃ = ${fmtNum(q3, 4)} &nbsp;|&nbsp; q₁ + q₂ &minus; q₁q₂ = ${fmtNum(pyth, 4)}`
+    });
+  } else if (A !== null && Lquad !== null && q1 !== null) {
+    const prod = q1 * q2 * q3 * S1 * S2 * S3;
+    cards.push({
+      title: `Quadrea–Quadreal Product (Thm 49)`,
+      badge: `A&#8466; = q₁q₂q₃S₁S₂S₃`,
+      badgeCls: `badge-mint`,
+      detail: `A&#8466; = ${fmtNum(A * Lquad, 4)} &nbsp;|&nbsp; Product = ${fmtNum(prod, 4)}`
+    });
+  }
+
+  lawEl.innerHTML = cards.map(function (c) {
+    return `<div class="law-card">
+      <div class="law-head">
+        <span class="coord-label" style="color:var(--on-surface);">${c.title}</span>
+        <span class="badge ${c.badgeCls}">${c.badge}</span>
+      </div>
+      <div class="mono-val" style="font-size:0.84rem; color:var(--on-surface-variant);">${c.detail}</div>
+    </div>`;
+  }).join(``);
+}
+
+// =========================================================================
+// SPREAD POLYNOMIALS S_n(x)
+// =========================================================================
+const SPREAD_FORMULAS = {
+  2: `4x(1 − x)`,
+  3: `x(3 − 4x)²`,
+  4: `16x(1 − x)(1 − 2x)²`,
+  5: `x(5 − 20x + 16x²)²`,
+  6: `4x(1 − x)(3 − 4x)²(1 − 4x)²`,
+  7: `x(7 − 56x + 112x² − 64x³)²`
+};
+
+function evalSpreadPoly(n, x) {
+  if (n === 0) return 0;
+  if (n === 1) return x;
+  let sPrev = 0, sCurr = x;
+  for (let k = 2; k <= n; k++) {
+    const sNext = 2 * (1 - 2 * x) * sCurr - sPrev + 2 * x;
+    sPrev = sCurr;
+    sCurr = sNext;
+  }
+  return sCurr;
+}
+
+function updateSpreadPolyChart() {
+  const nSel = document.getElementById(`sp-n-select`);
+  const xSlider = document.getElementById(`sp-x-slider`);
+  const xLabel = document.getElementById(`sp-x-val`);
+  const svg = document.getElementById(`sp-svg`);
+  const details = document.getElementById(`sp-details`);
+  if (!nSel || !xSlider || !svg || !details) return;
+
+  const nFocus = parseInt(nSel.value, 10);
+  const xProbe = parseFloat(xSlider.value);
+  if (xLabel) xLabel.textContent = xProbe.toFixed(2);
+
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const padL = 48, padR = 24, padT = 18, padB = 34;
+  const W = 560, H = 290;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const xMin = -0.2, xMax = 1.2, yMin = -0.4, yMax = 1.4;
+
+  function pxX(x) { return padL + ((x - xMin) / (xMax - xMin)) * plotW; }
+  function pxY(y) { return padT + ((yMax - y) / (yMax - yMin)) * plotH; }
+
+  // Grid
+  [0, 0.5, 1.0].forEach(function (yv) {
+    svg.appendChild(svgEl(`line`, {
+      x1: padL, y1: pxY(yv), x2: W - padR, y2: pxY(yv),
+      stroke: yv === 0 ? `var(--outline)` : `var(--outline-variant)`,
+      'stroke-width': yv === 0 ? 1.2 : 0.8,
+      'stroke-dasharray': yv === 0 ? `none` : `3 3`
+    }));
+    svg.appendChild(svgEl(`text`, {
+      x: padL - 8, y: pxY(yv) + 4,
+      'text-anchor': `end`,
+      fill: `var(--on-surface-variant)`,
+      'font-family': `var(--font-label)`,
+      'font-size': `10`
+    }, yv.toFixed(1)));
+  });
+
+  [0, 0.25, 0.5, 0.75, 1.0].forEach(function (xv) {
+    svg.appendChild(svgEl(`line`, {
+      x1: pxX(xv), y1: padT, x2: pxX(xv), y2: H - padB,
+      stroke: xv === 0 ? `var(--outline)` : `var(--outline-variant)`,
+      'stroke-width': 0.8,
+      'stroke-dasharray': `3 3`
+    }));
+    svg.appendChild(svgEl(`text`, {
+      x: pxX(xv), y: H - padB + 16,
+      'text-anchor': `middle`,
+      fill: `var(--on-surface-variant)`,
+      'font-family': `var(--font-label)`,
+      'font-size': `10`
+    }, xv.toFixed(2)));
+  });
+
+  // Draw context polynomials first, then focal n
+  for (let deg = 1; deg <= 7; deg++) {
+    if (deg === nFocus) continue;
+    let pts = [];
+    for (let i = 0; i <= 140; i++) {
+      const x = xMin + (i / 140) * (xMax - xMin);
+      const y = evalSpreadPoly(deg, x);
+      if (y >= yMin - 0.15 && y <= yMax + 0.15) {
+        pts.push(`${pxX(x).toFixed(1)},${pxY(y).toFixed(1)}`);
+      }
+    }
+    if (pts.length > 1) {
+      svg.appendChild(svgEl(`polyline`, {
+        points: pts.join(` `),
+        fill: `none`,
+        stroke: `var(--data-context)`,
+        'stroke-width': 1.2,
+        opacity: 0.65
+      }));
+    }
+  }
+
+  // Focal polynomial S_nFocus(x)
+  let focusPts = [];
+  for (let i = 0; i <= 180; i++) {
+    const x = xMin + (i / 180) * (xMax - xMin);
+    const y = evalSpreadPoly(nFocus, x);
+    if (y >= yMin - 0.2 && y <= yMax + 0.2) {
+      focusPts.push(`${pxX(x).toFixed(1)},${pxY(y).toFixed(1)}`);
+    }
+  }
+  svg.appendChild(svgEl(`polyline`, {
+    points: focusPts.join(` `),
+    fill: `none`,
+    stroke: `var(--primary)`,
+    'stroke-width': 2.6
+  }));
+
+  // Probe line & dot
+  const yProbe = evalSpreadPoly(nFocus, xProbe);
+  const yPrev = evalSpreadPoly(nFocus - 1, xProbe);
+  const recurResidual = tripleSpreadFn(xProbe, yPrev, yProbe);
+
+  svg.appendChild(svgEl(`line`, {
+    x1: pxX(xProbe), y1: padT, x2: pxX(xProbe), y2: H - padB,
+    stroke: `var(--tertiary)`, 'stroke-width': 1, 'stroke-dasharray': `2 2`
+  }));
+  if (yProbe >= yMin && yProbe <= yMax) {
+    svg.appendChild(svgEl(`circle`, {
+      cx: pxX(xProbe), cy: pxY(yProbe), r: 5.5,
+      fill: `var(--primary)`, stroke: `var(--background)`, 'stroke-width': 1.5
+    }));
+  }
+
+  details.innerHTML = `
+    <div class="readout-row"><span class="readout-key">Polynomial S<sub>${nFocus}</sub>(x)</span><span class="readout-val is-brass">${SPREAD_FORMULAS[nFocus]}</span></div>
+    <div class="readout-row"><span class="readout-key">S<sub>${nFocus}</sub>(${xProbe.toFixed(2)})</span><span class="readout-val is-brass">${fmtNum(yProbe, 5)}</span></div>
+    <div class="readout-row"><span class="readout-key">S<sub>${nFocus - 1}</sub>(${xProbe.toFixed(2)})</span><span class="readout-val is-sky">${fmtNum(yPrev, 5)}</span></div>
+    <div class="readout-row"><span class="readout-key">Triple Spread S(x, S<sub>${nFocus - 1}</sub>, S<sub>${nFocus}</sub>)</span><span class="readout-val is-mint">${fmtNum(recurResidual, 8)}</span></div>
+  `;
+}
+
+// =========================================================================
+// LAB 3: NULL TRIGONOMETRY (48/64 QUADRANGLE & TRIPLY-NIL TRIANGLE)
+// =========================================================================
+const lab3State = {
+  mode: `quad`,
+  angles: [0, Math.PI / 2, Math.PI, 1.5 * Math.PI],
+  triAngles: [0.35, 2.15, 4.35],
+  freePt: [0.22, -0.18],
+  dragging: null
+};
+
+function nullPtFromAngle(theta) {
+  return [Math.cos(theta), Math.sin(theta), 1];
+}
+
+function setLab3Mode(mode) {
+  lab3State.mode = mode;
+  const bQuad = document.getElementById(`lab3-mode-quad`);
+  const bTri = document.getElementById(`lab3-mode-tri`);
+  const heading = document.getElementById(`lab3-heading`);
+  const hint = document.getElementById(`lab3-hint`);
+  if (bQuad) bQuad.classList.toggle(`btn-active`, mode === `quad`);
+  if (bTri) bTri.classList.toggle(`btn-active`, mode === `tri`);
+  if (heading) {
+    heading.innerHTML = mode === `quad`
+      ? `Four Null Points: Self-Polar Diagonals &amp; the 48/64 Constants`
+      : `Triply-Nil Triangle: Universal Quadreal &minus;4, Orthocenter &amp; Thinness`;
+  }
+  if (hint) {
+    hint.innerHTML = mode === `quad`
+      ? `<span>Drag the 4 null points <strong>&alpha;<sub>1</sub>, &alpha;<sub>2</sub>, &alpha;<sub>3</sub>, &alpha;<sub>4</sub></strong> along the unit circle.</span>
+         <div class="control-bar">
+           <button type="button" class="btn" onclick="resetLab3Preset('square')">Square (&minus;8, 1, &minus;8)</button>
+           <button type="button" class="btn" onclick="resetLab3Preset('asymmetric')">Asymmetric</button>
+         </div>`
+      : `<span>Drag null vertices <strong>&alpha;<sub>1</sub>, &alpha;<sub>2</sub>, &alpha;<sub>3</sub></strong> on the unit circle and free point <strong>a</strong> anywhere.</span>
+         <div class="control-bar">
+           <button type="button" class="btn" onclick="resetLab3Preset('tri')">Reset Symmetric</button>
+         </div>`;
+  }
+  renderLab3();
+}
+
+function resetLab3Preset(name) {
+  if (name === `square`) {
+    lab3State.angles = [0, Math.PI / 2, Math.PI, 1.5 * Math.PI];
+  } else if (name === `asymmetric`) {
+    lab3State.angles = [0.25, 1.35, 2.95, 4.85];
+  } else if (name === `tri`) {
+    lab3State.triAngles = [0.35, 2.15, 4.35];
+    lab3State.freePt = [0.22, -0.18];
+  }
+  renderLab3();
+}
+
+function renderLab3() {
+  const svg = document.getElementById(`lab3-svg`);
+  const tel = document.getElementById(`lab3-telemetry`);
+  if (!svg || !tel) return;
+
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+  drawGridBase(svg);
+
+  if (lab3State.mode === `quad`) {
+    const pts = lab3State.angles.map(nullPtFromAngle);
+    const L12 = hCross(pts[0], pts[1]), L34 = hCross(pts[2], pts[3]);
+    const L13 = hCross(pts[0], pts[2]), L24 = hCross(pts[1], pts[3]);
+    const L14 = hCross(pts[0], pts[3]), L23 = hCross(pts[1], pts[2]);
+
+    const d = hCross(L12, L34);
+    const e = hCross(L13, L24);
+    const f = hCross(L14, L23);
+
+    const P = hSpread(L12, L34);
+    const R = hSpread(L13, L24);
+    const T = hSpread(L14, L23);
+
+    // Draw the 6 chord lines
+    [L12, L34, L14, L23].forEach(function (L) {
+      drawLineSvg(svg, L, { stroke: `var(--outline)`, 'stroke-width': 1.1, opacity: 0.65 });
+    });
+    drawLineSvg(svg, L13, { stroke: `var(--tertiary)`, 'stroke-width': 1.6 });
+    drawLineSvg(svg, L24, { stroke: `var(--tertiary)`, 'stroke-width': 1.6 });
+
+    // Self-polar diagonal triangle d-e-f
+    const defLines = [hCross(e, f), hCross(d, f), hCross(d, e)];
+    defLines.forEach(function (L) {
+      drawLineSvg(svg, L, { stroke: `var(--data-3)`, 'stroke-width': 1.3, 'stroke-dasharray': `5 3` });
+    });
+
+    drawPointSvg(svg, d, `d`, `var(--data-3)`, 5.5);
+    drawPointSvg(svg, e, `e`, `var(--data-3)`, 5.5);
+    drawPointSvg(svg, f, `f`, `var(--data-3)`, 5.5);
+
+    pts.forEach(function (p, idx) {
+      drawPointSvg(svg, p, `α${idx + 1}`, `var(--primary)`, 7.5, `q${idx}`);
+    });
+
+    const sumPair = P * R + R * T + T * P;
+    const prodAll = P * R * T;
+    const recipSum = 1 / P + 1 / R + 1 / T;
+
+    tel.innerHTML = `
+      <div class="readout-row"><span class="readout-key">P = S(&alpha;₁&alpha;₂, &alpha;₃&alpha;₄)</span><span class="readout-val is-brass">${fmtNum(P, 4)}</span></div>
+      <div class="readout-row"><span class="readout-key">R = S(&alpha;₁&alpha;₃, &alpha;₂&alpha;₄)</span><span class="readout-val is-sky">${fmtNum(R, 4)}</span></div>
+      <div class="readout-row"><span class="readout-key">T = S(&alpha;₁&alpha;₄, &alpha;₂&alpha;₃)</span><span class="readout-val is-brass">${fmtNum(T, 4)}</span></div>
+      <div class="readout-row"><span class="readout-key">PR + RT + TP (Thm 92)</span><span class="readout-val is-mint">${fmtNum(sumPair, 6)} &equiv; 48</span></div>
+      <div class="readout-row"><span class="readout-key">P &middot; R &middot; T (Thm 92)</span><span class="readout-val is-mint">${fmtNum(prodAll, 6)} &equiv; 64</span></div>
+      <div class="readout-row"><span class="readout-key">1/P + 1/R + 1/T</span><span class="readout-val is-mint">${fmtNum(recipSum, 6)} &equiv; 3/4</span></div>
+      <div class="readout-row"><span class="readout-key">Self-Polar d &perp; e &perp; f (Thm 91)</span><span class="readout-val is-mint">q(d,e)=${fmtNum(hQuad(d,e),3)}, q(e,f)=${fmtNum(hQuad(e,f),3)}</span></div>
+    `;
+  } else {
+    // Triply-Nil Triangle mode (Theorems 82-86)
+    const pts = lab3State.triAngles.map(nullPtFromAngle);
+    const aFree = [lab3State.freePt[0], lab3State.freePt[1], 1];
+    const L1 = hCross(pts[1], pts[2]); // a2 a3
+    const L2 = hCross(pts[0], pts[2]); // a1 a3
+    const L3 = hCross(pts[0], pts[1]); // a1 a2
+
+    drawLineSvg(svg, L1, { stroke: `var(--primary)`, 'stroke-width': 1.8 });
+    drawLineSvg(svg, L2, { stroke: `var(--primary)`, 'stroke-width': 1.8 });
+    drawLineSvg(svg, L3, { stroke: `var(--primary)`, 'stroke-width': 1.8 });
+
+    // Altitudes of triply-nil triangle -> orthocenter o and base triangle b1, b2, b3
+    const N1 = hCross(pts[0], L1);
+    const N2 = hCross(pts[1], L2);
+    const N3 = hCross(pts[2], L3);
+    const o = hCross(N1, N2);
+    const b1 = hCross(N1, L1);
+    const b2 = hCross(N2, L2);
+    const b3 = hCross(N3, L3);
+
+    [N1, N2, N3].forEach(function (N) {
+      drawLineSvg(svg, N, { stroke: `var(--outline)`, 'stroke-width': 1, 'stroke-dasharray': `3 3` });
+    });
+
+    // Base triangle b1 b2 b3
+    svg.appendChild(svgEl(`polygon`, {
+      points: `${toSvgX(b1[0]/b1[2])},${toSvgY(b1[1]/b1[2])} ${toSvgX(b2[0]/b2[2])},${toSvgY(b2[1]/b2[2])} ${toSvgX(b3[0]/b3[2])},${toSvgY(b3[1]/b3[2])}`,
+      fill: `var(--sky-tint)`,
+      stroke: `var(--tertiary)`,
+      'stroke-width': 1.5
+    }));
+
+    // Cevian points from aFree
+    const c1 = hCross(hCross(aFree, pts[0]), L1);
+    const c2 = hCross(hCross(aFree, pts[1]), L2);
+    const c3 = hCross(hCross(aFree, pts[2]), L3);
+
+    // Altitude bases from aFree
+    const ab1 = hCross(hCross(aFree, L1), L1);
+    const ab2 = hCross(hCross(aFree, L2), L2);
+    const ab3 = hCross(hCross(aFree, L3), L3);
+
+    drawPointSvg(svg, o, `o`, `var(--tertiary)`, 5.5);
+    drawPointSvg(svg, b1, `b₁`, `var(--tertiary)`, 4.5);
+    drawPointSvg(svg, b2, `b₂`, `var(--tertiary)`, 4.5);
+    drawPointSvg(svg, b3, `b₃`, `var(--tertiary)`, 4.5);
+    drawPointSvg(svg, c1, `c₁`, `var(--data-3)`, 4.5);
+    drawPointSvg(svg, c2, `c₂`, `var(--data-3)`, 4.5);
+    drawPointSvg(svg, c3, `c₃`, `var(--data-3)`, 4.5);
+
+    pts.forEach(function (p, idx) {
+      drawPointSvg(svg, p, `α${idx + 1}`, `var(--primary)`, 7.5, `t${idx}`);
+    });
+    drawPointSvg(svg, aFree, `a`, `var(--data-3)`, 7, `tfree`);
+
+    const quadrealL = hQuadrea(L1, L2, L3);
+    const qb = hQuad(b1, b2);
+    const Sb = hSpread(hCross(b1, b2), hCross(b1, b3));
+    const qob = hQuad(o, b1);
+    const A_cev = hQuadrea(c1, c2, c3);
+    const A_alt = hQuadrea(ab1, ab2, ab3);
+
+    tel.innerHTML = `
+      <div class="readout-row"><span class="readout-key">Quadreal &#8466;(&alpha;₁&alpha;₂&alpha;₃) (Thm 82)</span><span class="readout-val is-mint">${fmtNum(quadrealL, 5)} &equiv; &minus;4</span></div>
+      <div class="readout-row"><span class="readout-key">Base Equilateral q(b<sub>i</sub>, b<sub>j</sub>) (Thm 84)</span><span class="readout-val is-sky">${fmtNum(qb, 4)} &equiv; &minus;5/4</span></div>
+      <div class="readout-row"><span class="readout-key">Base Spread S(b<sub>i</sub>) (Thm 84)</span><span class="readout-val is-sky">${fmtNum(Sb, 4)} &equiv; 16/25</span></div>
+      <div class="readout-row"><span class="readout-key">Orthocenter q(o, b<sub>i</sub>) (Thm 84)</span><span class="readout-val is-sky">${fmtNum(qob, 4)} &equiv; &minus;1/3</span></div>
+      <div class="readout-row"><span class="readout-key">Cevian Thinness A(c₁,c₂,c₃) (Thm 85)</span><span class="readout-val is-mint">${fmtNum(A_cev, 5)} &equiv; 1</span></div>
+      <div class="readout-row"><span class="readout-key">Altitude Thinness A(b'₁,b'₂,b'₃) (Thm 86)</span><span class="readout-val is-mint">${fmtNum(A_alt, 5)} &equiv; 1</span></div>
+    `;
+  }
+}
+
+// =========================================================================
+// UNIFIED POINTER DRAG FOR LAB 1, LAB 2, LAB 3
+// =========================================================================
+function attachSvgDrag(svgId, onDragMove) {
+  const svg = document.getElementById(svgId);
+  if (!svg) return;
+  let activeId = null;
+
+  svg.addEventListener(`pointerdown`, function (e) {
+    const target = e.target && e.target.closest ? e.target.closest(`[data-drag-id]`) : null;
+    if (!target) return;
+    activeId = target.getAttribute(`data-drag-id`);
+    svg.setPointerCapture(e.pointerId);
+    e.preventDefault();
+  });
+
+  svg.addEventListener(`pointermove`, function (e) {
+    if (!activeId) return;
+    const coords = svgPointerCoords(svg, e.clientX, e.clientY);
+    const clampedX = Math.max(-2.1, Math.min(2.1, coords[0]));
+    const clampedY = Math.max(-2.1, Math.min(2.1, coords[1]));
+    onDragMove(activeId, clampedX, clampedY);
+  });
+
+  function stopDrag(e) {
+    if (!activeId) return;
+    activeId = null;
+    if (svg.hasPointerCapture(e.pointerId)) svg.releasePointerCapture(e.pointerId);
+  }
+  svg.addEventListener(`pointerup`, stopDrag);
+  svg.addEventListener(`pointercancel`, stopDrag);
+}
+
+// =========================================================================
+// LAB 4: FINITE PRIME FIELD F_p EXPLORER
+// =========================================================================
+const fpState = {
+  p: 23,
+  selA: [14, 0],
+  selB: [0, 10]
+};
+
+function modP(val, p) {
+  return ((val % p) + p) % p;
+}
+function modInv(a, p) {
+  let m = modP(a, p);
+  if (m === 0) return null;
+  for (let x = 1; x < p; x++) {
+    if ((m * x) % p === 1) return x;
+  }
+  return null;
+}
+function isSquareModP(val, p) {
+  const v = modP(val, p);
+  if (v === 0) return `zero`;
+  for (let x = 1; x < p; x++) {
+    if ((x * x) % p === v) return `square`;
+  }
+  return `nonsquare`;
+}
+function classifyFpPoint(x, y, z, p) {
+  const n = modP(x * x + y * y - z * z, p);
+  const sq = isSquareModP(n, p);
+  if (sq === `zero`) return `null`;
+  return sq === `square` ? `external` : `internal`;
+}
+
+function setFpPrime(pStr) {
+  fpState.p = parseInt(pStr, 10);
+  if (fpState.p === 23) {
+    fpState.selA = [14, 0];
+    fpState.selB = [0, 10];
+  } else {
+    fpState.selA = [1, 0];
+    fpState.selB = [0, 1];
+  }
+  renderFpLab();
+}
+
+function loadEx17InFp() {
+  const sel = document.getElementById(`fp-prime-select`);
+  if (sel) sel.value = `23`;
+  fpState.p = 23;
+  fpState.selA = [14, 0];
+  fpState.selB = [0, 10];
+  renderFpLab();
+}
+
+function selectFpGridPoint(x, y) {
+  fpState.selB = fpState.selA.slice();
+  fpState.selA = [x, y];
+  renderFpLab();
+}
+
+function renderFpLab() {
+  const svg = document.getElementById(`fp-svg`);
+  const tel = document.getElementById(`fp-telemetry`);
+  if (!svg || !tel) return;
+
+  const p = fpState.p;
+  while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+  const pad = 34;
+  const size = 440 - 2 * pad;
+  const step = size / p;
+
+  // Census across all P^2(F_p): (x,y,1), (x,1,0), (1,0,0)
+  let cntNull = 0, cntExt = 0, cntInt = 0;
+  for (let x = 0; x < p; x++) {
+    for (let y = 0; y < p; y++) {
+      const c = classifyFpPoint(x, y, 1, p);
+      if (c === `null`) cntNull++;
+      else if (c === `external`) cntExt++;
+      else cntInt++;
+    }
+  }
+  for (let x = 0; x < p; x++) {
+    const c = classifyFpPoint(x, 1, 0, p);
+    if (c === `null`) cntNull++;
+    else if (c === `external`) cntExt++;
+    else cntInt++;
+  }
+  const cInf = classifyFpPoint(1, 0, 0, p);
+  if (cInf === `null`) cntNull++;
+  else if (cInf === `external`) cntExt++;
+  else cntInt++;
+
+  // Draw affine slice F_p^2 (z = 1)
+  const rDot = Math.max(3.5, Math.min(11, step * 0.34));
+  for (let x = 0; x < p; x++) {
+    for (let y = 0; y < p; y++) {
+      const cls = classifyFpPoint(x, y, 1, p);
+      const cx = pad + (x + 0.5) * step;
+      const cy = 440 - pad - (y + 0.5) * step;
+      const isA = fpState.selA[0] === x && fpState.selA[1] === y;
+      const isB = fpState.selB[0] === x && fpState.selB[1] === y;
+
+      let fillCol = `var(--tertiary)`;
+      if (cls === `null`) fillCol = `var(--data-4)`;
+      else if (cls === `external`) fillCol = `var(--primary)`;
+
+      const g = svgEl(`g`, { style: `cursor: pointer;` });
+      g.addEventListener(`click`, function () { selectFpGridPoint(x, y); });
+
+      g.appendChild(svgEl(`circle`, {
+        cx: cx, cy: cy, r: isA || isB ? rDot * 1.45 : rDot,
+        fill: fillCol,
+        opacity: cls === `null` ? 1 : 0.82,
+        stroke: isA ? `var(--data-3)` : (isB ? `var(--on-surface)` : `none`),
+        'stroke-width': isA || isB ? 2.5 : 0
+      }));
+      svg.appendChild(g);
+    }
+  }
+
+  // Axis labels
+  const labelStride = p > 13 ? 4 : 2;
+  for (let i = 0; i < p; i += labelStride) {
+    svg.appendChild(svgEl(`text`, {
+      x: pad + (i + 0.5) * step, y: 440 - 12,
+      'text-anchor': `middle`, fill: `var(--on-surface-variant)`,
+      'font-family': `var(--font-label)`, 'font-size': `10`
+    }, String(i)));
+    svg.appendChild(svgEl(`text`, {
+      x: 18, y: 440 - pad - (i + 0.5) * step + 3,
+      'text-anchor': `end`, fill: `var(--on-surface-variant)`,
+      'font-family': `var(--font-label)`, 'font-size': `10`
+    }, String(i)));
+  }
+
+  // Modular calculation for selected pair selA, selB
+  const A = [fpState.selA[0], fpState.selA[1], 1];
+  const B = [fpState.selB[0], fpState.selB[1], 1];
+  const joinL = hCross(A, B).map(function (v) { return modP(v, p); });
+  const nA = modP(hNorm(A), p);
+  const nB = modP(hNorm(B), p);
+  const dotAB = modP(hDot(A, B), p);
+  let qMod = `undefined (null point)`;
+  if (nA !== 0 && nB !== 0) {
+    const inv = modInv(nA * nB, p);
+    if (inv !== null) {
+      qMod = String(modP(1 - dotAB * dotAB * inv, p));
+    }
+  }
+  const typeA = classifyFpPoint(A[0], A[1], 1, p).toUpperCase();
+  const typeB = classifyFpPoint(B[0], B[1], 1, p).toUpperCase();
+  const normL = modP(joinL[0] * joinL[0] + joinL[1] * joinL[1] - joinL[2] * joinL[2], p);
+
+  let extraEx17 = ``;
+  if (p === 23 && A[0] === 14 && A[1] === 0 && B[0] === 0 && B[1] === 10) {
+    extraEx17 = `<div class="readout-row"><span class="readout-key">Example 17 Triangle w/ [0:0:1]</span><span class="readout-val is-mint">S₁=6 (1/4), S₂=12 (1/2), S₃=1</span></div>`;
+  }
+
+  tel.innerHTML = `
+    <div class="readout-row"><span class="readout-key">Total Points in P&sup2;(&#120125;<sub>${p}</sub>)</span><span class="readout-val">${p * p + p + 1} (= p&sup2; + p + 1)</span></div>
+    <div class="readout-row"><span class="readout-key">Null Points (p + 1)</span><span class="readout-val is-coral">${cntNull}</span></div>
+    <div class="readout-row"><span class="readout-key">Internal Points p(p&minus;1)/2</span><span class="readout-val is-sky">${cntInt}</span></div>
+    <div class="readout-row"><span class="readout-key">External Points p(p+1)/2</span><span class="readout-val is-brass">${cntExt}</span></div>
+    <div class="readout-row"><span class="readout-key">Selected a₁ = [${A[0]} : ${A[1]} : 1]</span><span class="readout-val is-mint">${typeA}</span></div>
+    <div class="readout-row"><span class="readout-key">Selected a₂ = [${B[0]} : ${B[1]} : 1]</span><span class="readout-val">${typeB}</span></div>
+    <div class="readout-row"><span class="readout-key">Join L = a₁a₂ (mod ${p})</span><span class="readout-val is-sky">(${joinL[0]} : ${joinL[1]} : ${joinL[2]}) · ${normL === 0 ? `NULL` : `NON-NULL`}</span></div>
+    <div class="readout-row"><span class="readout-key">Quadrance q(a₁, a₂) (mod ${p})</span><span class="readout-val is-brass">${qMod}</span></div>
+    ${extraEx17}
+  `;
+}
+
+// =========================================================================
+// ALL 92 THEOREMS INDEX
+// =========================================================================
+const THEOREMS_DATA = [
+  { n: 1, sec: `sec2`, name: `Join of points`, desc: `Unique line a₁a₂ through distinct points via hyperbolic cross product J.` },
+  { n: 2, sec: `sec2`, name: `Meet of lines`, desc: `Unique point L₁L₂ common to distinct lines, dual to Join of points.` },
+  { n: 3, sec: `sec2`, name: `Collinear points`, desc: `Three points lie on one line precisely when their 3×3 determinant is zero.` },
+  { n: 4, sec: `sec2`, name: `Concurrent lines`, desc: `Three lines meet at one point precisely when their 3×3 determinant is zero.` },
+  { n: 5, sec: `sec2`, name: `Line through null points`, desc: `Any line L passes through at most two null points.` },
+  { n: 6, sec: `sec2`, name: `Point on null lines`, desc: `Any point a lies on at most two null lines (defining internal vs external).` },
+  { n: 7, sec: `sec2`, name: `Perpendicular point`, desc: `Unique point p = a₁⊥a₂⊥ = (a₁a₂)⊥ perpendicular to both points of a side.` },
+  { n: 8, sec: `sec2`, name: `Perpendicular line`, desc: `Unique line P = L₁⊥L₂⊥ = (L₁L₂)⊥ perpendicular to both lines of a vertex.` },
+  { n: 9, sec: `sec2`, name: `Opposite points`, desc: `On non-null side a₁a₂, unique points o₁ = (a₁a₂)a₁⊥ and o₂ = (a₁a₂)a₂⊥.` },
+  { n: 10, sec: `sec2`, name: `Opposite lines`, desc: `Through non-null vertex L₁L₂, unique lines O₁ = (L₁L₂)L₁⊥ and O₂ = (L₁L₂)L₂⊥.` },
+  { n: 11, sec: `sec2`, name: `Altitude line`, desc: `Unique line N = aL⊥ passing through a and perpendicular to L.` },
+  { n: 12, sec: `sec2`, name: `Altitude point`, desc: `Unique point n = a⊥L lying on L and perpendicular to a.` },
+  { n: 13, sec: `sec2`, name: `Parallel line`, desc: `Unique parallel R = a(a⊥L) to L through a (Euclid’s parallel postulate holds).` },
+  { n: 14, sec: `sec2`, name: `Parallel point`, desc: `Unique parallel point r = a⊥(aL⊥) dual to the parallel line.` },
+  { n: 15, sec: `sec2`, name: `Base point`, desc: `Unique foot b = (aL⊥)L of the altitude from a onto L.` },
+  { n: 16, sec: `sec2`, name: `Base line`, desc: `Unique line B = (a⊥L)L⊥ passing through L⊥ and altitude point n.` },
+  { n: 17, sec: `sec2`, name: `Parametrizing a line`, desc: `Points on (l:m:n) parametrized as [np−ms : ls+nr : lp+mr].` },
+  { n: 18, sec: `sec2`, name: `Parametrizing a point`, desc: `Lines through [x:y:z] parametrized as (zp−ys : xs+zr : xp+yr).` },
+  { n: 19, sec: `sec2`, name: `Parametrizing a join`, desc: `Any point on [v₁][v₂] has unique proportion [tv₁ + uv₂].` },
+  { n: 20, sec: `sec2`, name: `Parametrizing a meet`, desc: `Any line through (v₁)(v₂) has unique proportion (tv₁ + uv₂).` },
+  { n: 21, sec: `sec2`, name: `Parametrization of null points`, desc: `Every null point has unique α(t:u) = [t²−u² : 2tu : t²+u²].` },
+  { n: 22, sec: `sec2`, name: `Parametrization of null lines`, desc: `Every null line has unique Λ(t:u) = (t²−u² : 2tu : t²+u²).` },
+  { n: 23, sec: `sec2`, name: `Join of null points`, desc: `Join α(t₁:u₁)α(t₂:u₂) = (t₁t₂−u₁u₂ : t₁u₂+t₂u₁ : t₁t₂+u₁u₂).` },
+  { n: 24, sec: `sec2`, name: `Meet of null lines`, desc: `Meet Λ(t₁:u₁)Λ(t₂:u₂) = [t₁t₂−u₁u₂ : t₁u₂+t₂u₁ : t₁t₂+u₁u₂].` },
+  { n: 25, sec: `sec2`, name: `Null diagonal point`, desc: `Explicit coordinates for the meet of two null chords.` },
+  { n: 26, sec: `sec2`, name: `Null diagonal line`, desc: `Explicit coordinates for the join of two null meets.` },
+  { n: 27, sec: `sec2`, name: `Perpendicular null line`, desc: `If a₁ is null, a₁a₂ is a null line iff a₁ ⊥ a₂ (so a₁a₂ = a₁⊥).` },
+  { n: 28, sec: `sec2`, name: `Perpendicular null point`, desc: `If L₁ is null, L₁L₂ is a null point iff L₁ ⊥ L₂ (so L₁L₂ = L₁⊥).` },
+  { n: 29, sec: `sec2`, name: `Parametrizing a null line`, desc: `Points on Λ(t:u) parametrized by r:s for both t²+u² ≠ 0 and = 0.` },
+  { n: 30, sec: `sec2`, name: `Parametrizing a null point`, desc: `Lines through α(t:u) parametrized by r:s, dual to Theorem 29.` },
+  { n: 31, sec: `sec2`, name: `Triangle trilateral duality`, desc: `Points, lines, sides, vertices, couples of △ dualize to ▽.` },
+
+  { n: 32, sec: `sec3`, name: `Quadrance`, desc: `Minus-signed quadratic ratio q(a₁,a₂) via generalized Fibonacci identity.` },
+  { n: 33, sec: `sec3`, name: `Zero quadrance`, desc: `For distinct non-null a₁, a₂, q(a₁, a₂) = 0 iff a₁a₂ is a null line.` },
+  { n: 34, sec: `sec3`, name: `Spread`, desc: `Dual rational measure S(L₁, L₂) between two non-null lines.` },
+  { n: 35, sec: `sec3`, name: `Zero spread`, desc: `For distinct non-null L₁, L₂, S(L₁, L₂) = 0 iff L₁L₂ is a null point.` },
+  { n: 36, sec: `sec3`, name: `Quadrance spread duality`, desc: `q(a₁, a₂) = S(a₁⊥, a₂⊥) for any two non-null points.` },
+  { n: 37, sec: `sec3`, name: `Quadrance cross ratio`, desc: `q(a₁, a₂) equals the projective cross-ratio (a₁, o₂ : a₂, o₁).` },
+  { n: 38, sec: `sec3`, name: `Triple quad formula`, desc: `Collinear points satisfy S(q₁, q₂, q₃) = 0.` },
+  { n: 39, sec: `sec3`, name: `Triple spread formula`, desc: `Concurrent lines satisfy S(S₁, S₂, S₃) = 0.` },
+  { n: 40, sec: `sec3`, name: `Complementary quadrances spreads`, desc: `If S(a, b, c) = 0 and c = 1, then a + b = 1.` },
+  { n: 41, sec: `sec3`, name: `Equal quadrances spreads`, desc: `If S(a, b, c) = 0 and a = b, then c = 0 or c = 4a(1 − a).` },
+  { n: 42, sec: `sec3`, name: `Pythagoras`, desc: `If a₁a₃ ⊥ a₂a₃, then q₃ = q₁ + q₂ − q₁q₂ (equivalently p₃ = p₁p₂).` },
+  { n: 43, sec: `sec3`, name: `Pythagoras’ dual`, desc: `If L₁L₃ ⊥ L₂L₃, then S₃ = S₁ + S₂ − S₁S₂ (equivalently C₃ = C₁C₂).` },
+  { n: 44, sec: `sec3`, name: `Spread formula`, desc: `Explicit determinant-squared formula for S₁ = S(a₁a₂, a₁a₃).` },
+  { n: 45, sec: `sec3`, name: `Spread law`, desc: `S₁/q₁ = S₂/q₂ = S₃/q₃ for any non-null, non-nil triangle.` },
+  { n: 46, sec: `sec3`, name: `Spread dual law`, desc: `q₁/S₁ = q₂/S₂ = q₃/S₃ for any non-null, non-nil trilateral.` },
+  { n: 47, sec: `sec3`, name: `Quadrea`, desc: `q₂q₃S₁ = A, where A is the hyperbolic quadrea of a₁a₂a₃.` },
+  { n: 48, sec: `sec3`, name: `Quadreal`, desc: `S₂S₃q₁ = ℒ, where ℒ is the hyperbolic quadreal of L₁L₂L₃.` },
+  { n: 49, sec: `sec3`, name: `Quadrea quadreal product`, desc: `Aℒ = q₁q₂q₃S₁S₂S₃ links triangle quadrea and trilateral quadreal.` },
+  { n: 50, sec: `sec3`, name: `Cross law`, desc: `(q₂q₃S₁ − q₁ − q₂ − q₃ + 2)² = 4(1 − q₁)(1 − q₂)(1 − q₃).` },
+  { n: 51, sec: `sec3`, name: `Cross dual law`, desc: `(S₂S₃q₁ − S₁ − S₂ − S₃ + 2)² = 4(1 − S₁)(1 − S₂)(1 − S₃).` },
+  { n: 52, sec: `sec3`, name: `Triple product relation`, desc: `A + p₁ + p₂ + p₃ − 1 = 2P relates quadrea, products, and triple product.` },
+  { n: 53, sec: `sec3`, name: `Triple cross relation`, desc: `ℒ + C₁ + C₂ + C₃ − 1 = 2C dual to the triple product relation.` },
+  { n: 54, sec: `sec3`, name: `Midpoints`, desc: `a₁a₂ has two perpendicular midpoints iff p(a₁, a₂) is a square.` },
+  { n: 55, sec: `sec3`, name: `Midlines`, desc: `L₁L₂ has two perpendicular midlines iff C(L₁, L₂) is a square.` },
+  { n: 56, sec: `sec3`, name: `Triple quad mid`, desc: `Midpoint substitution factors S(q₁,q₂,q₃) into S(p₁,p₂,p₃)·S(1−p₁,1−p₂,1−p₃).` },
+  { n: 57, sec: `sec3`, name: `Pythagoras mid`, desc: `Half-quadrance factorization of Pythagoras’ theorem.` },
+  { n: 58, sec: `sec3`, name: `Cross mid`, desc: `Existence of midpoints turns the quadratic Cross law into two linear equations.` },
+  { n: 59, sec: `sec3`, name: `Couple quadrance spread`, desc: `q(aL) = S(aL) = (lx+my−nz)² / ((x²+y²−z²)(l²+m²−n²)).` },
+  { n: 60, sec: `sec3`, name: `Three equal quadrances`, desc: `If S(a, 4a(1−a), c) = 0, then c = a or c = a(3−4a)² = S₃(a).` },
+  { n: 61, sec: `sec3`, name: `Recursive spreads`, desc: `Spread polynomials satisfy S(x, Sₙ₋₁(x), Sₙ(x)) = 0 for all n ≥ 1.` },
+
+  { n: 62, sec: `sec4`, name: `Thales`, desc: `In a right triangle with S₃ = 1, S₁ = q₁/q₃ and S₂ = q₂/q₃.` },
+  { n: 63, sec: `sec4`, name: `Thales’ dual`, desc: `In a right trilateral with q₃ = 1, q₁ = S₁/S₃ and q₂ = S₂/S₃.` },
+  { n: 64, sec: `sec4`, name: `Right parallax`, desc: `Right triangle with null point a₁ (S₁ = 0, S₃ = 1) has q₁ = (S − 1)/S.` },
+  { n: 65, sec: `sec4`, name: `Right parallax dual`, desc: `Right trilateral with q₁ = 0, q₃ = 1 has S₁ = (q − 1)/q.` },
+  { n: 66, sec: `sec4`, name: `Napier’s rules`, desc: `Any 2 of {S₁, S₂, q₁, q₂, q₃} in a right triangle determine the other 3.` },
+  { n: 67, sec: `sec4`, name: `Napier’s dual rules`, desc: `Dual version for right trilaterals with q₃ = 1.` },
+  { n: 68, sec: `sec4`, name: `Pons Asinorum`, desc: `q₁ = q₂ precisely when S₁ = S₂ when all quantities are defined.` },
+  { n: 69, sec: `sec4`, name: `Isosceles right`, desc: `If S₁ = S₂ = 1 in non-nil triangle, then q₁ = q₂ = 1 and S₃ = q₃.` },
+  { n: 70, sec: `sec4`, name: `Isosceles mid`, desc: `Altitude to base gives r₃ = Sq and r₁ = r₂ = q(1−S)/(1−Sq).` },
+  { n: 71, sec: `sec4`, name: `Isosceles triangle`, desc: `Base quadrance q₃ = 4(1−S)q(1−q)/(1−Sq)² and 1−q₃ is a square.` },
+  { n: 72, sec: `sec4`, name: `Isosceles parallax`, desc: `Null-apex isosceles triangle with spreads S has base quadrance q = 4(S−1)/S².` },
+  { n: 73, sec: `sec4`, name: `Equilateral`, desc: `Common q and S satisfy symmetric Equilateral relation (1−Sq)² = 4(1−S)(1−q).` },
+  { n: 74, sec: `sec4`, name: `Equilateral mid`, desc: `Midpoint/midline factorization of the Equilateral relation.` },
+  { n: 75, sec: `sec4`, name: `Triangle proportions`, desc: `Cevian point d on a₁a₂ gives R₁/R₂ = (S₁/S₂)(r₁/r₂) = (q₁/q₂)(r₁/r₂).` },
+  { n: 76, sec: `sec4`, name: `Menelaus`, desc: `Line meeting three sides gives product equality r₁r₂r₃ = t₁t₂t₃.` },
+  { n: 77, sec: `sec4`, name: `Menelaus’ dual`, desc: `Point joining three vertices gives spread equality R₁R₂R₃ = T₁T₂T₃.` },
+  { n: 78, sec: `sec4`, name: `Ceva`, desc: `Concurrent cevians through a₀ satisfy r₁r₂r₃ = t₁t₂t₃.` },
+  { n: 79, sec: `sec4`, name: `Ceva’s dual`, desc: `Collinear joins with A₀ satisfy R₁R₂R₃ = T₁T₂T₃.` },
+
+  { n: 80, sec: `sec5`, name: `Nil cross law`, desc: `Singly-nil triangle with null a₃ satisfies quadratic in q₃ and (1−2S₁)(1−2S₂) is square.` },
+  { n: 81, sec: `sec5`, name: `Doubly nil triangle`, desc: `Couple quadrance h = q(a₃(a₁a₂)) gives S₃ = −4h / (1 − h)².` },
+  { n: 82, sec: `sec5`, name: `Triply nil quadreal`, desc: `Any triply-nil triangle α₁α₂α₃ has constant quadreal ℒ(α₁α₂α₃) = −4.` },
+  { n: 83, sec: `sec5`, name: `Triply nil balance`, desc: `Point d on α₁α₂ has perpendicular bases b₁, b₂ with q(d,b₁)q(d,b₂) = 1.` },
+  { n: 84, sec: `sec5`, name: `Triply nil orthocenter`, desc: `Altitudes concur at o; base triangle is equilateral with q = −5/4, S = 16/25, q(o,bᵢ) = −1/3.` },
+  { n: 85, sec: `sec5`, name: `Triply nil Cevian thinness`, desc: `Cevian intersection triangle c₁c₂c₃ from any point a has quadrea A(c₁,c₂,c₃) = 1.` },
+  { n: 86, sec: `sec5`, name: `Triply nil Altitude thinness`, desc: `Altitude base triangle b₁b₂b₃ from any point a has quadrea A(b₁,b₂,b₃) = 1.` },
+  { n: 87, sec: `sec5`, name: `Singly null singly nil Thales`, desc: `If a₂a₃ is null line and a₃ is null point, then q₃S₁ = 1.` },
+  { n: 88, sec: `sec5`, name: `Singly null singly nil orthocenter`, desc: `Three lines concur at o with q(a₁,o) + q(o,b₁) = 1.` },
+  { n: 89, sec: `sec5`, name: `Null perspective`, desc: `Perspective projection from d on α₁α₃ preserves quadrance q(x,y) = q(z,w).` },
+  { n: 90, sec: `sec5`, name: `Null subtended quadrance`, desc: `Line M cutting α₁α₃, α₂α₃ gives q(a₁,a₂)S(L,M) = 1 independent of α₃.` },
+  { n: 91, sec: `sec5`, name: `Fully nil quadrangle diagonal`, desc: `Diagonal meets d, e, f of 4 null points form a self-polar triangle (d⊥ = ef).` },
+  { n: 92, sec: `sec5`, name: `48/64`, desc: `Diagonal spreads P, R, T of 4 null points always satisfy PR + RT + TP = 48 and PRT = 64.` }
+];
+
+function filterTheorems() {
+  const qInput = document.getElementById(`thm-search`);
+  const secSelect = document.getElementById(`thm-section-filter`);
+  const grid = document.getElementById(`thm-grid`);
+  const cnt = document.getElementById(`thm-count`);
+  if (!grid || !cnt) return;
+
+  const query = qInput ? qInput.value.trim().toLowerCase() : ``;
+  const sec = secSelect ? secSelect.value : `all`;
+
+  const filtered = THEOREMS_DATA.filter(function (t) {
+    if (sec !== `all` && t.sec !== sec) return false;
+    if (!query) return true;
+    return (
+      String(t.n).includes(query) ||
+      t.name.toLowerCase().includes(query) ||
+      t.desc.toLowerCase().includes(query)
+    );
+  });
+
+  cnt.textContent = `Showing ${filtered.length} of ${THEOREMS_DATA.length} theorems`;
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="panel" style="grid-column: 1 / -1;"><div class="coord-label">No Matching Theorems</div><p style="margin: var(--space-xs) 0 0 0; color: var(--on-surface-variant);">Try clearing the search query or switching to All 92 Theorems.</p></div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(function (t) {
+    return `<article class="theorem-item">
+      <div class="theorem-num">THEOREM ${t.n}</div>
+      <div class="theorem-name">${t.name}</div>
+      <div class="theorem-desc">${t.desc}</div>
+    </article>`;
+  }).join(``);
+}
+
+// =========================================================================
+// INITIALIZATION & SCROLL REVEALS
+// =========================================================================
+document.addEventListener(`DOMContentLoaded`, function () {
+  renderLab1();
+  updateBridgeChart(1.0);
+  renderLab2();
+  updateSpreadPolyChart();
+  renderLab3();
+  renderFpLab();
+  filterTheorems();
+
+  attachSvgDrag(`lab1-svg`, function (id, x, y) {
+    if (id === `a1`) lab1State.a1 = [x, y];
+    else if (id === `a2`) lab1State.a2 = [x, y];
+    else if (id === `a3`) lab1State.a3 = [x, y];
+    renderLab1();
+  });
+
+  attachSvgDrag(`lab2-svg`, function (id, x, y) {
+    if (id === `a1`) lab2State.a1 = [x, y];
+    else if (id === `a2`) lab2State.a2 = [x, y];
+    else if (id === `a3`) lab2State.a3 = [x, y];
+    renderLab2();
+  });
+
+  attachSvgDrag(`lab3-svg`, function (id, x, y) {
+    if (id.startsWith(`q`)) {
+      const idx = parseInt(id.slice(1), 10);
+      lab3State.angles[idx] = Math.atan2(y, x);
+    } else if (id === `tfree`) {
+      lab3State.freePt = [x, y];
+    } else if (id.startsWith(`t`)) {
+      const idx = parseInt(id.slice(1), 10);
+      lab3State.triAngles[idx] = Math.atan2(y, x);
+    }
+    renderLab3();
+  });
+
+  // Scroll reveal observer
+  const reveals = document.querySelectorAll(`.reveal`);
+  if (`IntersectionObserver` in window) {
+    const obs = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add(`is-visible`);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    reveals.forEach(function (el) { obs.observe(el); });
+  } else {
+    reveals.forEach(function (el) { el.classList.add(`is-visible`); });
+  }
+});
+</script>
+</body>
+</html>
