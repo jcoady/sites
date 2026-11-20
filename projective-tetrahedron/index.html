@@ -1,0 +1,2350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="nocturne">
+  <title>Projective Trigonometry of the Tetrahedron</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js"></script>
+  <script defer src="https://unpkg.com/lucide@1.43.0/dist/umd/lucide.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* 1. Nocturne style tokens */
+      --background: #0a101d;
+      --surface-container-low: #0e1626;
+      --surface-container: #111b2e;
+      --surface-container-high: #17243c;
+
+      --on-surface: #f2ece1;
+      --on-surface-variant: #9ba8bf;
+
+      --outline: #384d73;
+      --outline-variant: #21304d;
+
+      --primary: #dfaa5b;
+      --on-primary: #0a101d;
+      --primary-container: #2b261c;
+      --on-primary-container: #f5dcb0;
+      --secondary: #687a99;
+      --tertiary: #7cc4e8;
+      --error: #f27474;
+      --on-error: #1a0606;
+
+      --data-1: #dfaa5b;
+      --data-2: #7cc4e8;
+      --data-3: #52d19c;
+      --data-4: #e07a5f;
+      --data-context: #4a5d80;
+
+      --font-headline: 'EB Garamond', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'JetBrains Mono', monospace;
+
+      --rounded: 0.25rem;
+      --rounded-lg: 0.375rem;
+      --rounded-full: 9999px;
+
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-highlight: inset 0 1px 0 rgba(242, 236, 225, 0.05);
+      --brass-glow: radial-gradient(circle at 88% 12%, rgba(223, 170, 91, 0.08), transparent 45%);
+      --heading-tracking: -0.015em;
+      --label-tracking: 0.06em;
+      --sky-tint: color-mix(in srgb, var(--tertiary) 12%, transparent);
+      --brass-tint: color-mix(in srgb, var(--primary) 14%, transparent);
+      --mint-tint: color-mix(in srgb, var(--data-3) 12%, transparent);
+      --coral-tint: color-mix(in srgb, var(--data-4) 12%, transparent);
+      --error-tint: color-mix(in srgb, var(--error) 14%, transparent);
+      --sky-border: color-mix(in srgb, var(--tertiary) 35%, transparent);
+      --brass-border: color-mix(in srgb, var(--primary) 38%, transparent);
+      --mint-border: color-mix(in srgb, var(--data-3) 35%, transparent);
+      --error-border: color-mix(in srgb, var(--error) 40%, transparent);
+
+      /* 2. Shared semantic & focus tokens */
+      --positive: #52d19c;
+      --warning: #dfaa5b;
+      --focus: #dfaa5b;
+
+      /* 3. Narrative type scale (adjusted slightly up for EB Garamond x-height) */
+      --display-size: clamp(2.5rem, 1.5rem + 4vw, 4.5rem);
+      --headline-size: clamp(1.875rem, 1.25rem + 2.1vw, 2.75rem);
+      --subhead-size: clamp(1.25rem, 1.05rem + 0.65vw, 1.55rem);
+      --body-size: clamp(1.03rem, 0.98rem + 0.22vw, 1.125rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* 4. Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 5.5rem;
+
+      /* 5. Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header { position: static !important; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Layout container */
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Hero header with celestial radial wash */
+    .hero-header {
+      background-color: var(--background);
+      background-image: var(--brass-glow);
+      border-bottom: var(--hairline);
+      padding: var(--space-2xl) var(--space-lg) var(--space-xl);
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      gap: var(--space-lg);
+    }
+
+    .coord-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+    }
+
+    .title {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: var(--display-size);
+      letter-spacing: var(--heading-tracking);
+      line-height: 1.07;
+      color: var(--on-surface);
+      margin: 0;
+      max-width: 22ch;
+    }
+    .title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--primary);
+    }
+
+    .deck-brass {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .hero-lede {
+      max-width: 65ch;
+      color: var(--on-surface-variant);
+      margin: 0;
+      font-size: var(--subhead-size);
+      line-height: 1.48;
+      font-family: var(--font-headline);
+    }
+
+    /* Section typography & rhythm */
+    .chapter {
+      display: grid;
+      gap: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: var(--hairline);
+    }
+    .chapter:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+
+    .chapter-head {
+      display: grid;
+      gap: var(--space-xs);
+      max-width: 68ch;
+    }
+    .chapter-title {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: var(--headline-size);
+      letter-spacing: var(--heading-tracking);
+      line-height: 1.12;
+      color: var(--on-surface);
+      margin: 0;
+    }
+    .chapter-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--primary);
+    }
+
+    .prose {
+      max-width: 65ch;
+      margin: 0;
+      color: var(--on-surface);
+    }
+    .prose-muted {
+      max-width: 65ch;
+      margin: 0;
+      color: var(--on-surface-variant);
+    }
+    .prose strong {
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+
+    /* Midnight panel with catchlight */
+    .panel {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .panel-low {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+
+    /* Recessed observation well */
+    .observation-well {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      font-family: var(--font-label);
+      color: var(--on-surface);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--sky-tint);
+      color: var(--tertiary);
+      border: 1px solid var(--sky-border);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      width: fit-content;
+    }
+    .badge-brass {
+      background: var(--brass-tint);
+      color: var(--primary);
+      border-color: var(--brass-border);
+    }
+    .badge-mint {
+      background: var(--mint-tint);
+      color: var(--data-3);
+      border-color: var(--mint-border);
+    }
+    .badge-error {
+      background: var(--error-tint);
+      color: var(--error);
+      border-color: var(--error-border);
+    }
+
+    /* Grids */
+    .hero-anchors {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .anchor-card {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .anchor-val {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: clamp(1.35rem, 1.1rem + 0.7vw, 1.7rem);
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.2;
+    }
+    .anchor-note {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+
+    .split-asymmetric {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-balanced {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+
+    /* Theorem / formula blocks */
+    .theorem-box {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .theorem-head {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: var(--space-sm);
+    }
+    .theorem-name {
+      font-family: var(--font-headline);
+      font-size: var(--subhead-size);
+      font-weight: 500;
+      color: var(--on-surface);
+      margin: 0;
+    }
+    .formula-block {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      overflow-x: auto;
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-size: 0.95rem;
+    }
+
+    /* Interactive controls */
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+    button {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-sm);
+      transition: background-color var(--dur-short) var(--ease-out),
+                  border-color var(--dur-short) var(--ease-out),
+                  color var(--dur-short) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border: 1px solid var(--primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--on-primary-container);
+      border-color: var(--on-primary-container);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--on-surface);
+      border: var(--hairline-strong);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--surface-container-high);
+      border-color: var(--primary);
+    }
+    .btn-tab {
+      background: var(--background);
+      color: var(--on-surface-variant);
+      border: var(--hairline);
+    }
+    .btn-tab:hover:not(:disabled) {
+      color: var(--on-surface);
+      border-color: var(--outline);
+    }
+    .btn-tab.is-active {
+      background: var(--brass-tint);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    /* Inputs with always-visible labels above */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    input[type="number"], input[type="text"], select {
+      background: var(--background);
+      color: var(--on-surface);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-size: 0.9rem;
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-sm);
+      font-variant-numeric: tabular-nums;
+      width: 100%;
+    }
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+      min-height: 44px;
+    }
+
+    /* Tables: no vertical rules, hairline between rows, mono right-aligned numbers */
+    .table-wrap {
+      overflow-x: auto;
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      background: var(--background);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+    }
+    th, td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline);
+      text-align: left;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    th {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+      background: var(--surface-container-low);
+    }
+    td.num, th.num {
+      text-align: right;
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+    }
+    td.mono {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* 3D Viewport Canvas */
+    .canvas-stage {
+      position: relative;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      overflow: hidden;
+      min-height: 420px;
+      display: flex;
+      flex-direction: column;
+    }
+    canvas#tetra-canvas {
+      width: 100%;
+      height: 420px;
+      display: block;
+      cursor: grab;
+      touch-action: none;
+    }
+    canvas#tetra-canvas:active {
+      cursor: grabbing;
+    }
+    .canvas-hud {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-top: var(--hairline);
+      background: var(--surface-container-low);
+    }
+
+    /* Matrix display */
+    .matrix-grid {
+      display: grid;
+      gap: var(--space-xs);
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.85rem;
+    }
+    .matrix-row {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .matrix-cell {
+      background: var(--surface-container);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      text-align: right;
+      color: var(--on-surface);
+    }
+    .matrix-cell.diag {
+      border-color: var(--brass-border);
+      color: var(--primary);
+    }
+
+    /* Dimension ladder */
+    .ladder {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .ladder-step {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-xs);
+      align-content: start;
+    }
+    .ladder-step.is-focal {
+      border-color: var(--brass-border);
+      background: var(--surface-container-low);
+    }
+
+    /* Vertex coordinate editor grid */
+    .coord-editor-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+      gap: var(--space-md);
+    }
+    .vertex-card {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      display: grid;
+      gap: var(--space-sm);
+    }
+    .vertex-inputs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-xs);
+    }
+
+    /* Status / alert inline box */
+    .status-banner {
+      display: none;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      border: 1px solid var(--error-border);
+      background: var(--error-tint);
+      color: var(--error);
+    }
+    .status-banner.is-visible {
+      display: block;
+    }
+
+    /* Readout values */
+    .mono-val {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+    }
+    .mono-brass {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      color: var(--primary);
+    }
+    .mono-sky {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      color: var(--tertiary);
+    }
+    .mono-mint {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      color: var(--data-3);
+    }
+
+    /* Progressive disclosure details */
+    details.note-drawer {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    details.note-drawer summary {
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    details.note-drawer[open] summary {
+      margin-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity var(--dur-long) var(--ease-out),
+                  transform var(--dur-long) var(--ease-out);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Footer / Colophon */
+    .colophon {
+      border-top: var(--hairline);
+      padding-top: var(--space-xl);
+      display: grid;
+      gap: var(--space-sm);
+      color: var(--on-surface-variant);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 900px) {
+      .split-asymmetric, .split-balanced {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-lg) var(--space-md) var(--space-2xl);
+        gap: var(--space-xl);
+      }
+      .hero-header {
+        padding: var(--space-xl) var(--space-md) var(--space-lg);
+      }
+      .panel, .panel-low {
+        padding: var(--space-md);
+      }
+      canvas#tetra-canvas {
+        height: 340px;
+      }
+      .canvas-stage {
+        min-height: 340px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero-header">
+    <div class="hero-inner">
+      <div class="coord-label">Universal Hyperbolic Geometry &middot; Projective Space &#8473;&sup3; &middot; Field &#120125; (char &ne; 2)</div>
+      <h1 class="title">Projective Trigonometry of the <em>Tetrahedron</em></h1>
+      <p class="deck-brass">Normalized Gram Determinants, Recursive Altitude Factorization, Solid Spreads &amp; Dihedral Invariants</p>
+      <p class="hero-lede">
+        Classical tetrahedral trigonometry entangles edge lengths, spherical face angles, and transcendental solid angles. By lifting four points into a 4-dimensional vector space equipped with a symmetric bilinear form, every metrical invariant reduces to exact rational polynomials over &#8474;.
+      </p>
+
+      <div class="hero-anchors" id="hero-anchors">
+        <div class="anchor-card">
+          <span class="coord-label">Projective Quadrume</span>
+          <span class="anchor-val" id="hero-val-v">-1445 / 36</span>
+          <span class="anchor-note" id="hero-note-v">STH1 · det(G₄) / &prod; Q(vᵢ)</span>
+        </div>
+        <div class="anchor-card">
+          <span class="coord-label">Factorization Identity</span>
+          <span class="anchor-val" id="hero-val-fac">V = Aₖ &times; hₖ</span>
+          <span class="anchor-note" id="hero-note-fac">Face quadrea &times; altitude quadrance</span>
+        </div>
+        <div class="anchor-card">
+          <span class="coord-label">Solid Spread Law Constant</span>
+          <span class="anchor-val" id="hero-val-ssl">-15 / 282373</span>
+          <span class="anchor-note">Sᵢ / &prod; q_opp = V / &prod; q_ab</span>
+        </div>
+        <div class="anchor-card">
+          <span class="coord-label">Dihedral Pair Invariant</span>
+          <span class="anchor-val" id="hero-val-dih">21675 / 4241996</span>
+          <span class="anchor-note">E₁₂E₃₄ / q₁₂q₃₄ = V&sup2; / A₁A₂A₃A₄</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-grid">
+
+    <!-- CHAPTER 1: GRAM FRAMEWORK & SCALE INVARIANCE -->
+    <section class="chapter reveal" id="sec-gram">
+      <div class="chapter-head">
+        <span class="coord-label">01 &middot; Algebraic Foundation</span>
+        <h2 class="chapter-title">From Transcendental Angles to the Normalized <em>Gram</em> Invariant</h2>
+      </div>
+
+      <p class="prose">
+        In an ambient 4-dimensional vector space <em>V</em><sub>4</sub> over a field &#120125; with char(&#120125;) &ne; 2, a non-degenerate symmetric bilinear form <em>B(u, v)</em> replaces Euclidean distance and trigonometric sine/cosine functions with purely polynomial measurements. Each non-null vector <em>v</em> &isin; <em>V</em><sub>4</sub> (meaning <em>Q(v)</em> &equiv; <em>B(v, v)</em> &ne; 0) represents a projective point <em>a = [v]</em> &isin; &#8473;&sup3;.
+      </p>
+
+      <div class="split-balanced">
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Projective Quadrance &amp; Normalized Gram Volume</h3>
+            <span class="badge">Definition 2.1 – 2.2</span>
+          </div>
+          <p class="prose-muted">
+            Given <em>k</em> non-null vectors <em>v</em><sub>1</sub>, &hellip;, <em>v</em><sub>k</sub> with Gram matrix [<em>G</em><sub>k</sub>]<sub>ij</sub> = <em>B(v<sub>i</sub>, v<sub>j</sub>)</em>, the normalized projective Gram invariant <em>Q</em><sub>k</sub> cancels representative scaling factors identically:
+          </p>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="q(a_1, a_2) \equiv 1 - \frac{B(v_1, v_2)^2}{Q(v_1)Q(v_2)}, \qquad Q_k \equiv \frac{\det(G_k)}{\prod_{i=1}^k Q(v_i)}">q(a₁, a₂) = 1 − B(v₁, v₂)² / (Q(v₁)Q(v₂)),   Qₖ = det(Gₖ) / ∏ Q(vᵢ)</span>
+          </div>
+          <p class="prose-muted">
+            For <em>k = 2</em>, <em>Q</em><sub>2</sub> equals the projective quadrance <em>q(a<sub>1</sub>, a<sub>2</sub>)</em>; for <em>k = 3</em>, it equals the triangular face quadrea <em>A</em>; and for <em>k = 4</em>, it defines the <strong>projective quadrume</strong> <em>V</em> of the tetrahedron.
+          </p>
+        </div>
+
+        <div class="panel">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Projective Scale-Invariance Probe</h3>
+            <span class="badge badge-brass">Proposition 2.3</span>
+          </div>
+          <p class="prose-muted">
+            Rescale the representative vectors of the active tetrahedron by nonzero integers &lambda;<sub>i</sub>. Watch det(<em>G</em><sub>4</sub>) and &prod;<em>Q(v<sub>i</sub>)</em> transform by &prod;&lambda;<sub>i</sub>&sup2;, leaving the projective quadrume <em>V</em> untouched.
+          </p>
+
+          <div class="vertex-inputs">
+            <div class="field-group">
+              <label class="field-label" for="scale-l1">&lambda;₁</label>
+              <input type="number" id="scale-l1" value="1" min="-9" max="9" step="1" onchange="onScaleChange()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="scale-l2">&lambda;₂</label>
+              <input type="number" id="scale-l2" value="1" min="-9" max="9" step="1" onchange="onScaleChange()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="scale-l3">&lambda;₃</label>
+              <input type="number" id="scale-l3" value="1" min="-9" max="9" step="1" onchange="onScaleChange()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="scale-l4">&lambda;₄</label>
+              <input type="number" id="scale-l4" value="1" min="-9" max="9" step="1" onchange="onScaleChange()">
+            </div>
+          </div>
+          <div class="status-banner" id="scale-error"></div>
+
+          <div class="observation-well" id="scale-readout">
+            <div>det(G₄) scaled = <span class="mono-sky" id="scale-det">-4433280</span></div>
+            <div>&prod; Q(vᵢ) scaled = <span class="mono-sky" id="scale-prod">110430</span></div>
+            <div>Quotient V = <span class="mono-brass" id="scale-quotient">-1445 / 36</span> (invariant)</div>
+          </div>
+
+          <div>
+            <div class="field-label" style="margin-bottom: var(--space-xs);">Scaled 4&times;4 Gram Matrix G₄ (Entries B(&lambda;ᵢvᵢ, &lambda;ⱼvⱼ))</div>
+            <div class="matrix-grid" id="gram-matrix-view"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ladder">
+        <div class="ladder-step">
+          <span class="coord-label">k = 2 &middot; Edge</span>
+          <strong>Projective Quadrance q₁₂</strong>
+          <div class="mono-sky" id="ladder-q2">-26</div>
+          <span class="anchor-note">1-simplex separation in &#8473;&sup1;</span>
+        </div>
+        <div class="ladder-step">
+          <span class="coord-label">k = 3 &middot; Face</span>
+          <strong>Projective Quadrea A₄</strong>
+          <div class="mono-sky" id="ladder-q3">289 / 2</div>
+          <span class="anchor-note">2-simplex squared area in &#8473;&sup2;</span>
+        </div>
+        <div class="ladder-step is-focal">
+          <span class="coord-label">k = 4 &middot; Tetrahedron</span>
+          <strong>Projective Quadrume V</strong>
+          <div class="mono-brass" id="ladder-q4">-1445 / 36</div>
+          <span class="anchor-note">3-simplex squared volume in &#8473;&sup3;</span>
+        </div>
+        <div class="ladder-step">
+          <span class="coord-label">k = n &middot; General Simplex</span>
+          <strong>Recursive Chain Qₙ</strong>
+          <div class="mono-mint">Qₙ = Qₙ₋₁ &times; h(aₙ)</div>
+          <span class="anchor-note">Equals &prod; h(aⱼ) along non-degenerate flags</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 2: QUADRUME FACTORIZATION THEOREM -->
+    <section class="chapter reveal" id="sec-factorization">
+      <div class="chapter-head">
+        <span class="coord-label">02 &middot; Volume–Altitude Decomposition</span>
+        <h2 class="chapter-title">The Quadrume <em>Factorization</em> Theorem: V = Aₖ &times; hₖ</h2>
+      </div>
+
+      <p class="prose">
+        For any non-degenerate triangular face opposite vertex <em>a</em><sub>k</sub>, signed 3&times;3 cofactors of the rows <em>v<sub>j</sub><sup>T</sup> G</em> construct a unique dual normal vector <em>n<sub>k</sub></em> &isin; <em>U</em><sup>&perp;</sup> satisfying <em>B(v<sub>j</sub>, n<sub>k</sub>) = 0</em> for all <em>j &ne; k</em>. Orthogonal projection splits <em>v<sub>k</sub> = v<sub>k&parallel;</sub> + v<sub>k&perp;</sub></em>, reducing the 4&times;4 Gram determinant via block diagonalization (Lemma 2.6) to det(<em>G</em><sub>4</sub>) = det(<em>G</em><sub>3</sub>) &middot; <em>Q(v<sub>k&perp;</sub>)</em>.
+      </p>
+
+      <div class="theorem-box">
+        <div class="theorem-head">
+          <h3 class="theorem-name">Polynomial Gram Identity &amp; Quadrume Factorization</h3>
+          <span class="badge badge-brass">Theorem 3.3 – 3.4</span>
+        </div>
+        <div class="formula-block">
+          <span class="katex-tex" data-display="true" data-tex="\det(G_4)\,Q(n_k) = \det(G_3)\,B(v_k, n_k)^2 \quad\Longrightarrow\quad V = A_k \times h_k, \quad h_k \equiv 1 - q(a_k, n_k) = \frac{B(v_k, n_k)^2}{Q(v_k)Q(n_k)}">det(G₄) Q(nₖ) = det(G₃) B(vₖ, nₖ)²  ⇒  V = Aₖ × hₖ</span>
+        </div>
+        <p class="prose-muted">
+          Because the altitude base point <em>b<sub>k</sub> = [v<sub>k&parallel;</sub>]</em> lies in the opposite face and satisfies <em>q(b<sub>k</sub>, n<sub>k</sub>) = 1</em>, the projective separation between vertex <em>a<sub>k</sub></em> and its orthogonal foot <em>b<sub>k</sub></em> is identically <em>q(a<sub>k</sub>, b<sub>k</sub>) = h<sub>k</sub></em>.
+        </p>
+      </div>
+
+      <div class="split-asymmetric">
+        <div class="canvas-stage">
+          <canvas id="tetra-canvas" aria-label="Interactive 3D projective tetrahedron projection"></canvas>
+          <div class="canvas-hud">
+            <div class="btn-row">
+              <button type="button" class="btn-secondary" onclick="resetCamera()">
+                <i data-lucide="rotate-ccw" width="16" height="16"></i>
+                Reset View
+              </button>
+              <button type="button" class="btn-tab is-active" id="btn-toggle-sphere" onclick="toggleNullSphere()">
+                Null Sphere
+              </button>
+              <button type="button" class="btn-tab is-active" id="btn-toggle-alt" onclick="toggleAltitude()">
+                Altitude hₖ
+              </button>
+            </div>
+            <span class="coord-label" id="canvas-projection-note">Drag to orbit &middot; Beltrami–Klein w-slice</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Vertex Altitude Inspector</h3>
+            <span class="badge badge-mint" id="fac-badge">Vertex a₄</span>
+          </div>
+
+          <div class="btn-row" role="group" aria-label="Select vertex for factorization">
+            <button type="button" class="btn-tab" id="vbtn-0" onclick="selectVertex(0)">a₁</button>
+            <button type="button" class="btn-tab" id="vbtn-1" onclick="selectVertex(1)">a₂</button>
+            <button type="button" class="btn-tab" id="vbtn-2" onclick="selectVertex(2)">a₃</button>
+            <button type="button" class="btn-tab is-active" id="vbtn-3" onclick="selectVertex(3)">a₄</button>
+          </div>
+
+          <div class="observation-well" id="fac-breakdown">
+            <div>Opposite Face Quadrea <span class="mono-sky" id="fac-ak-label">A₄</span> = <span class="mono-sky" id="fac-ak-val">289 / 2</span></div>
+            <div>Altitude Quadrance <span class="mono-mint" id="fac-hk-label">h₄</span> = <span class="mono-mint" id="fac-hk-val">-5 / 18</span></div>
+            <div style="border-top: var(--hairline); margin-top: var(--space-xs); padding-top: var(--space-xs);">
+              Product Aₖ &times; hₖ = <span class="mono-brass" id="fac-prod-val">-1445 / 36</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Cofactor Dual Point nₖ (Orthogonal to Face)</span>
+            <div class="observation-well mono-sky" id="fac-dual-vec">n₄ = [-4 : 8 : -20 : -12]</div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Altitude Base Point bₖ on Opposite Face</span>
+            <div class="observation-well mono-mint" id="fac-base-vec">b₄ = [3/2 : 1 : 1/2 : 7/2]</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>k</th>
+                  <th class="num">Face Quadrea Aₖ</th>
+                  <th class="num">Altitude hₖ</th>
+                  <th class="num">Aₖ &times; hₖ</th>
+                </tr>
+              </thead>
+              <tbody id="fac-all-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <details class="note-drawer">
+        <summary>Exterior Algebra &amp; Signed Invariants in Indefinite Metrics</summary>
+        <p class="prose-muted">
+          In Grassmann algebra over <em>V</em><sub>4</sub>, det(<em>G</em><sub>k</sub>) = &langle;<em>v</em><sub>1</sub> &wedge; &hellip; &wedge; <em>v<sub>k</sub></em>, <em>v</em><sub>1</sub> &wedge; &hellip; &wedge; <em>v<sub>k</sub></em>&rangle;. Decomposing <em>v<sub>k</sub></em> = <em>v<sub>k&parallel;</sub> + v<sub>k&perp;</sub></em> eliminates the tangential piece inside the wedge product: <em>v</em><sub>1</sub> &wedge; &hellip; &wedge; <em>v<sub>k</sub></em> = <em>v</em><sub>1</sub> &wedge; &hellip; &wedge; <em>v<sub>k&perp;</sub></em>. Unlike Euclidean volume, <em>Q<sub>k</sub></em> behaves as a <em>squared</em> hypervolume and naturally takes negative values under Lorentzian signatures (+, +, +, &minus;) without requiring arbitrary absolute values.
+        </p>
+      </details>
+    </section>
+
+    <!-- CHAPTER 3: LOCAL VERTEX INVARIANTS -->
+    <section class="chapter reveal" id="sec-vertex">
+      <div class="chapter-head">
+        <span class="coord-label">03 &middot; Local Vertex Trigonometry</span>
+        <h2 class="chapter-title">Face Spreads, Vertex Pitches &amp; the Canonical <em>Solid Spread</em></h2>
+      </div>
+
+      <p class="prose">
+        Around any vertex <em>a<sub>j</sub></em> meet three triangular faces (opposite vertices <em>i, k, l</em>). Each face carries a <strong>projective face spread</strong> <em>S<sub>j,i</sub></em> at <em>a<sub>j</sub></em> inside face <em>i</em>, while the altitude from opposite vertex <em>a<sub>i</sub></em> defines a <strong>vertex pitch</strong> <em>P<sub>j,i</sub></em> along edge <em>a<sub>i</sub>a<sub>j</sub></em>. Remarkably, their product eliminates the choice of face <em>i</em> completely.
+      </p>
+
+      <div class="card-grid">
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Solid Spread Identity</h3>
+            <span class="badge badge-brass">Theorem 4.3</span>
+          </div>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="S_j = P_{j,i} \cdot S_{j,i} = \left(\frac{h_i}{q_{ij}}\right)\left(\frac{A_i}{q_{jk}q_{jl}}\right) = \frac{V}{\prod_{x \neq j} q(a_j, a_x)}">Sⱼ = P_{j,i} · S_{j,i} = V / ∏ q(aⱼ, aₓ)</span>
+          </div>
+          <p class="prose-muted">
+            Because <em>h<sub>i</sub> A<sub>i</sub> = V</em> by Quadrume Factorization, all three adjacent faces yield the identical vertex-transitive solid spread <em>S<sub>j</sub></em>.
+          </p>
+        </div>
+
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Projective Solid Spread Law</h3>
+            <span class="badge">Theorem 4.6</span>
+          </div>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="\frac{S_1}{q_{23}q_{24}q_{34}} = \frac{S_2}{q_{13}q_{14}q_{34}} = \frac{S_3}{q_{12}q_{14}q_{24}} = \frac{S_4}{q_{12}q_{13}q_{23}} = \frac{V}{\prod_{a<b} q_{ab}}">Sᵢ / ∏ q_opp = V / ∏ q_ab</span>
+          </div>
+          <p class="prose-muted">
+            Dividing each vertex solid spread by the product of its three <em>opposite</em> edge quadrances produces a single global tetrahedron constant.
+          </p>
+        </div>
+
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Alternate Spreads Theorem</h3>
+            <span class="badge badge-mint">Theorem 4.5</span>
+          </div>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="\frac{S_{2,4}}{S_{3,4}} \cdot \frac{S_{3,2}}{S_{4,2}} \cdot \frac{S_{4,3}}{S_{2,3}} = 1">S₂,₄/S₃,₄ · S₃,₂/S₄,₂ · S₄,₃/S₂,₃ = 1</span>
+          </div>
+          <p class="prose-muted">
+            Four cyclic products—each omitting one vertex—cancel all face quadreas and edge quadrances identically to 1.
+          </p>
+        </div>
+      </div>
+
+      <div class="split-balanced">
+        <div class="panel">
+          <div class="theorem-head">
+            <h3 class="theorem-name">3-Face Pitch &times; Spread Convergence</h3>
+            <span class="badge badge-brass" id="solid-vertex-badge">At Vertex a₁</span>
+          </div>
+          <p class="prose-muted">
+            Inspect how three distinct pitch–spread pairs at vertex <span class="mono-brass" id="solid-vertex-name">a₁</span> collapse to the identical solid spread <span class="mono-brass" id="solid-vertex-val">S₁ = 289 / 80678</span>.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Opp. Face i</th>
+                  <th class="num">Pitch P<sub>j,i</sub></th>
+                  <th class="num">Face Spread S<sub>j,i</sub></th>
+                  <th class="num">P<sub>j,i</sub> &times; S<sub>j,i</sub></th>
+                </tr>
+              </thead>
+              <tbody id="solid-pair-rows"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Vertex</th>
+                  <th class="num">Solid Spread Sᵢ</th>
+                  <th class="num">Opp. Edge Prod</th>
+                  <th class="num">Sᵢ / Prod</th>
+                </tr>
+              </thead>
+              <tbody id="solid-law-rows"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="theorem-head">
+            <h3 class="theorem-name">12 Face Spreads &amp; 4 Alternate Cycles</h3>
+            <span class="badge">Exact Over &#8474;</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Omitted</th>
+                  <th>Cyclic Product Expression</th>
+                  <th class="num">Exact Value</th>
+                </tr>
+              </thead>
+              <tbody id="alt-spreads-rows"></tbody>
+            </table>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Face Opp.</th>
+                  <th class="num">1st Vertex S<sub>i,j</sub></th>
+                  <th class="num">2nd Vertex S<sub>k,j</sub></th>
+                  <th class="num">3rd Vertex S<sub>l,j</sub></th>
+                </tr>
+              </thead>
+              <tbody id="face-spreads-matrix"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 4: PROJECTIVE DIHEDRAL LAWS -->
+    <section class="chapter reveal" id="sec-dihedral">
+      <div class="chapter-head">
+        <span class="coord-label">04 &middot; Edge &amp; Dual-Point Geometry</span>
+        <h2 class="chapter-title">Projective <em>Dihedral</em> Spreads &amp; Cofactor Invariants</h2>
+      </div>
+
+      <p class="prose">
+        Along any edge <em>a<sub>k</sub>a<sub>l</sub></em>, two triangular faces (opposite vertices <em>a<sub>i</sub></em> and <em>a<sub>j</sub></em>) meet. Comparing the tetrahedral altitude <em>h<sub>i</sub></em> against the in-face altitude <em>h<sub>i,j</sub> = A<sub>j</sub> / q<sub>kl</sub></em> yields the <strong>projective dihedral spread</strong> <em>E<sub>kl</sub></em>. Geometrically, <em>E<sub>kl</sub></em> equals the projective quadrance <em>q(n<sub>i</sub>, n<sub>j</sub>)</em> between the dual points of the two meeting faces.
+      </p>
+
+      <div class="split-balanced">
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Projective Dihedral Spreads Theorem</h3>
+            <span class="badge badge-brass">Theorem 5.2</span>
+          </div>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="E_{kl} \equiv \frac{h_i \cdot q_{kl}}{A_j} = \frac{q_{kl}\,V}{A_i A_j}, \qquad \frac{E_{12}E_{34}}{q_{12}q_{34}} = \frac{E_{13}E_{24}}{q_{13}q_{24}} = \frac{E_{14}E_{23}}{q_{14}q_{23}} = \frac{V^2}{A_1 A_2 A_3 A_4}">E_kl = q_kl V / (Aᵢ Aⱼ),   E₁₂E₃₄ / (q₁₂q₃₄) = V² / (A₁A₂A₃A₄)</span>
+          </div>
+          <p class="prose-muted">
+            Every opposite-edge pair produces the exact same rational invariant <em>V&sup2; / (A<sub>1</sub> A<sub>2</sub> A<sub>3</sub> A<sub>4</sub>)</em> across arbitrary fields and indefinite signatures.
+          </p>
+        </div>
+
+        <div class="theorem-box">
+          <div class="theorem-head">
+            <h3 class="theorem-name">Dihedral Cross via Gram Cofactors</h3>
+            <span class="badge">Remark 5.3</span>
+          </div>
+          <div class="formula-block">
+            <span class="katex-tex" data-display="true" data-tex="C(E_{kl}) \equiv 1 - E_{kl} = \frac{C_{ij}^2}{C_{ii} C_{jj}}">1 − E_kl = Cᵢⱼ² / (Cᵢᵢ Cⱼⱼ)</span>
+          </div>
+          <p class="prose-muted">
+            By Jacobi's complementary-minor identity on <em>G</em><sub>4</sub>, the dihedral cross along edge <em>a<sub>k</sub>a<sub>l</sub></em> is a pure square-free rational quotient of cofactors <em>C<sub>ij</sub></em>—cubic in the bilinear products <em>B<sub>rs</sub></em>, requiring zero square roots or field extensions.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="theorem-head">
+          <h3 class="theorem-name">Opposite-Edge Dihedral Pair Verification</h3>
+          <span class="badge badge-mint" id="dih-const-badge">V&sup2; / A₁A₂A₃A₄ = 21675 / 4241996</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Opposite Pair</th>
+                <th class="num">Edge Quadrances (q<sub>kl</sub>, q<sub>ij</sub>)</th>
+                <th class="num">Dihedral Spreads (E<sub>kl</sub>, E<sub>ij</sub>)</th>
+                <th class="num">Dihedral Cross 1&minus;E<sub>kl</sub></th>
+                <th class="num">E<sub>kl</sub>E<sub>ij</sub> / q<sub>kl</sub>q<sub>ij</sub></th>
+              </tr>
+            </thead>
+            <tbody id="dihedral-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- CHAPTER 5: INTERACTIVE RATIONAL LABORATORY -->
+    <section class="chapter reveal" id="sec-lab">
+      <div class="chapter-head">
+        <span class="coord-label">05 &middot; Computational Verification over &#8474;</span>
+        <h2 class="chapter-title">Interactive Projective <em>Tetrahedron</em> Laboratory</h2>
+      </div>
+
+      <p class="prose">
+        Edit any projective coordinate in &#8473;&sup3; or switch the ambient bilinear form signature below. The entire page—the 3D projection, Gram matrices, Quadrume Factorization, Solid Spread Law, Alternate Spreads cycles, and Dihedral Pair invariants—recomputes live using exact arbitrary-precision BigInt rational arithmetic.
+      </p>
+
+      <div class="panel">
+        <div class="split-balanced">
+          <div class="field-group">
+            <span class="field-label">Benchmark Presets</span>
+            <div class="btn-row">
+              <button type="button" class="btn-tab is-active" id="preset-sth1" onclick="loadPreset('sth1')">Coady STH1 (Lorentzian)</button>
+              <button type="button" class="btn-tab" id="preset-elliptic" onclick="loadPreset('elliptic')">Elliptic Orthogonal</button>
+              <button type="button" class="btn-tab" id="preset-mixed" onclick="loadPreset('mixed')">Mixed Null-Cone Straddle</button>
+              <button type="button" class="btn-tab" id="preset-symmetric" onclick="loadPreset('symmetric')">Symmetric &#8473;&sup3; Simplex</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Bilinear Form Signature B(u, v)</span>
+            <div class="btn-row">
+              <button type="button" class="btn-tab is-active" id="sig-lorentz" onclick="setSignature('lorentz')">(+ , + , + , &minus;)</button>
+              <button type="button" class="btn-tab" id="sig-elliptic" onclick="setSignature('elliptic')">(+ , + , + , +)</button>
+              <button type="button" class="btn-tab" id="sig-klein22" onclick="setSignature('klein22')">(+ , + , &minus; , &minus;)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="status-banner" id="lab-degeneracy-warning"></div>
+
+        <div class="coord-editor-grid">
+          <div class="vertex-card">
+            <div class="theorem-head">
+              <strong class="mono-brass">Point a₁</strong>
+              <span class="coord-label" id="q-v1">Q(v₁) = -6</span>
+            </div>
+            <div class="vertex-inputs">
+              <div class="field-group"><label class="field-label" for="v0-0">x₁</label><input type="number" id="v0-0" value="-3" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v0-1">y₁</label><input type="number" id="v0-1" value="3" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v0-2">z₁</label><input type="number" id="v0-2" value="1" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v0-3">w₁</label><input type="number" id="v0-3" value="5" step="1" oninput="onCoordInput()"></div>
+            </div>
+          </div>
+
+          <div class="vertex-card">
+            <div class="theorem-head">
+              <strong class="mono-sky">Point a₂</strong>
+              <span class="coord-label" id="q-v2">Q(v₂) = -8</span>
+            </div>
+            <div class="vertex-inputs">
+              <div class="field-group"><label class="field-label" for="v1-0">x₂</label><input type="number" id="v1-0" value="4" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v1-1">y₂</label><input type="number" id="v1-1" value="0" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v1-2">z₂</label><input type="number" id="v1-2" value="1" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v1-3">w₂</label><input type="number" id="v1-3" value="5" step="1" oninput="onCoordInput()"></div>
+            </div>
+          </div>
+
+          <div class="vertex-card">
+            <div class="theorem-head">
+              <strong class="mono-mint">Point a₃</strong>
+              <span class="coord-label" id="q-v3">Q(v₃) = -4</span>
+            </div>
+            <div class="vertex-inputs">
+              <div class="field-group"><label class="field-label" for="v2-0">x₃</label><input type="number" id="v2-0" value="2" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v2-1">y₃</label><input type="number" id="v2-1" value="-4" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v2-2">z₃</label><input type="number" id="v2-2" value="1" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v2-3">w₃</label><input type="number" id="v2-3" value="5" step="1" oninput="onCoordInput()"></div>
+            </div>
+          </div>
+
+          <div class="vertex-card">
+            <div class="theorem-head">
+              <strong class="mono-val">Point a₄</strong>
+              <span class="coord-label" id="q-v4">Q(v₄) = -15</span>
+            </div>
+            <div class="vertex-inputs">
+              <div class="field-group"><label class="field-label" for="v3-0">x₄</label><input type="number" id="v3-0" value="1" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v3-1">y₄</label><input type="number" id="v3-1" value="0" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v3-2">z₄</label><input type="number" id="v3-2" value="3" step="1" oninput="onCoordInput()"></div>
+              <div class="field-group"><label class="field-label" for="v3-3">w₄</label><input type="number" id="v3-3" value="5" step="1" oninput="onCoordInput()"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row" style="justify-content: space-between; border-top: var(--hairline); padding-top: var(--space-md);">
+          <div class="btn-row">
+            <button type="button" class="btn-primary" onclick="exportRationalReport()">
+              <i data-lucide="download" width="16" height="16"></i>
+              Export Exact Report (.txt)
+            </button>
+            <button type="button" class="btn-secondary" id="btn-reset-lab" onclick="resetToBenchmark(this)">
+              Restore STH1 Benchmark
+            </button>
+          </div>
+          <span class="coord-label" id="save-status">Saved to workspace</span>
+        </div>
+      </div>
+
+      <div class="panel-low">
+        <div class="theorem-head">
+          <h3 class="theorem-name">Complete Edge Quadrance Summary</h3>
+          <span class="coord-label">All 6 Edges q(aᵢ, aⱼ)</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Edge</th>
+                <th class="num">B(vᵢ, vⱼ)</th>
+                <th class="num">Quadrance q<sub>ij</sub></th>
+                <th class="num">Decimal Approx.</th>
+              </tr>
+            </thead>
+            <tbody id="edge-summary-rows"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <footer class="colophon">
+      <div class="coord-label">Sources &amp; Mathematical Grounding</div>
+      <p style="margin: 0;">
+        Primary mathematical framework, definitions, theorems, and the exact rational STH1 verification benchmark are drawn from John D. Coady, <em>On the Projective Trigonometry of the Tetrahedron: Solid Spreads, Dihedral Laws, and Factorization</em> (2026) and <em>On the Projective Quadrume and the Recursive Factorization of Projective Simplices</em> (2026), building upon N. J. Wildberger&rsquo;s <em>Affine and Projective Universal Geometry</em> (2024) and <em>Universal Hyperbolic Geometry I: Trigonometry</em> (2013).
+      </p>
+    </footer>
+
+  </main>
+
+  <api-shim></api-shim>
+
+  <script>
+    /* ===== 1. EXACT BIGINT RATIONAL ARITHMETIC ===== */
+    function gcdBig(a, b) {
+      a = a < 0n ? -a : a;
+      b = b < 0n ? -b : b;
+      while (b !== 0n) {
+        const t = a % b;
+        a = b;
+        b = t;
+      }
+      return a;
+    }
+
+    function rat(n, d) {
+      const num = BigInt(n);
+      const den = d === undefined ? 1n : BigInt(d);
+      if (den === 0n) return null;
+      if (num === 0n) return { n: 0n, d: 1n };
+      const s = den < 0n ? -1n : 1n;
+      const nn = num * s;
+      const dd = den * s;
+      const g = gcdBig(nn, dd);
+      return { n: nn / g, d: dd / g };
+    }
+
+    function rAdd(a, b) {
+      if (!a || !b) return null;
+      return rat(a.n * b.d + b.n * a.d, a.d * b.d);
+    }
+    function rSub(a, b) {
+      if (!a || !b) return null;
+      return rat(a.n * b.d - b.n * a.d, a.d * b.d);
+    }
+    function rMul(a, b) {
+      if (!a || !b) return null;
+      return rat(a.n * b.n, a.d * b.d);
+    }
+    function rDiv(a, b) {
+      if (!a || !b || b.n === 0n) return null;
+      return rat(a.n * b.d, a.d * b.n);
+    }
+    function rEq(a, b) {
+      if (!a || !b) return false;
+      return a.n === b.n && a.d === b.d;
+    }
+    function rFmt(r) {
+      if (!r) return `undef`;
+      if (r.d === 1n) return `${r.n.toString()}`;
+      return `${r.n.toString()} / ${r.d.toString()}`;
+    }
+    function rApprox(r) {
+      if (!r) return `undef`;
+      const val = Number(r.n) / Number(r.d);
+      if (!Number.isFinite(val)) return `~`;
+      return val.toFixed(5);
+    }
+
+    /* Exact determinants for 3x3 and 4x4 BigInt matrices */
+    function det3Big(m) {
+      const a = m[0][0], b = m[0][1], c = m[0][2];
+      const d = m[1][0], e = m[1][1], f = m[1][2];
+      const g = m[2][0], h = m[2][1], i = m[2][2];
+      return a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+    }
+
+    function det2Big(m) {
+      return m[0][0] * m[1][1] - m[0][1] * m[1][0];
+    }
+
+    function det4Big(m) {
+      let sum = 0n;
+      for (let col = 0; col < 4; col++) {
+        const sub = [];
+        for (let r = 1; r < 4; r++) {
+          const row = [];
+          for (let c = 0; c < 4; c++) {
+            if (c !== col) row.push(m[r][c]);
+          }
+          sub.push(row);
+        }
+        const sign = col % 2 === 0 ? 1n : -1n;
+        sum += sign * m[0][col] * det3Big(sub);
+      }
+      return sum;
+    }
+
+    function cofactor4Big(m, rowIdx, colIdx) {
+      const sub = [];
+      for (let r = 0; r < 4; r++) {
+        if (r === rowIdx) continue;
+        const row = [];
+        for (let c = 0; c < 4; c++) {
+          if (c !== colIdx) row.push(m[r][c]);
+        }
+        sub.push(row);
+      }
+      const sign = (rowIdx + colIdx) % 2 === 0 ? 1n : -1n;
+      return sign * det3Big(sub);
+    }
+
+    /* ===== 2. STATE & PRESETS ===== */
+    const PRESETS = {
+      sth1: {
+        sig: `lorentz`,
+        verts: [
+          [-3, 3, 1, 5],
+          [4, 0, 1, 5],
+          [2, -4, 1, 5],
+          [1, 0, 3, 5]
+        ]
+      },
+      elliptic: {
+        sig: `elliptic`,
+        verts: [
+          [1, 0, 0, 1],
+          [0, 1, 0, 1],
+          [0, 0, 1, 1],
+          [1, 1, 1, 2]
+        ]
+      },
+      mixed: {
+        sig: `lorentz`,
+        verts: [
+          [0, 0, 0, 1],
+          [2, 0, 0, 3],
+          [0, 3, 1, 2],
+          [1, 2, 3, 2]
+        ]
+      },
+      symmetric: {
+        sig: `elliptic`,
+        verts: [
+          [1, 1, 1, 2],
+          [1, -1, -1, 2],
+          [-1, 1, -1, 2],
+          [-1, -1, 1, 2]
+        ]
+      }
+    };
+
+    const SIGNATURES = {
+      lorentz: [1n, 1n, 1n, -1n],
+      elliptic: [1n, 1n, 1n, 1n],
+      klein22: [1n, 1n, -1n, -1n]
+    };
+
+    let appState = {
+      preset: `sth1`,
+      sig: `lorentz`,
+      verts: PRESETS.sth1.verts.map(v => v.slice()),
+      scales: [1, 1, 1, 1],
+      selectedVertex: 3,
+      showSphere: true,
+      showAltitude: true
+    };
+
+    let computedData = null;
+
+    /* Camera state for 3D projection */
+    const camera = {
+      yaw: 0.62,
+      pitch: 0.38,
+      dragging: false,
+      lastX: 0,
+      lastY: 0
+    };
+
+    /* ===== 3. PROJECTIVE TETRAHEDRON ENGINE ===== */
+    function bForm(u, v, sigVec) {
+      let s = 0n;
+      for (let i = 0; i < 4; i++) {
+        s += sigVec[i] * BigInt(u[i]) * BigInt(v[i]);
+      }
+      return s;
+    }
+
+    function computeTetrahedron(verts, sigKey, scales) {
+      const sigVec = SIGNATURES[sigKey] || SIGNATURES.lorentz;
+      const V = verts.map(row => row.map(x => BigInt(x)));
+
+      // B(vi, vj) matrix
+      const G4 = Array.from({ length: 4 }, (_, i) =>
+        Array.from({ length: 4 }, (__, j) => bForm(V[i], V[j], sigVec))
+      );
+
+      // Vector quadrances Q(vi)
+      const Qv = [G4[0][0], G4[1][1], G4[2][2], G4[3][3]];
+      const nullVerts = [];
+      for (let i = 0; i < 4; i++) {
+        if (Qv[i] === 0n) nullVerts.push(i + 1);
+      }
+
+      // Scaled Gram matrix for Proposition 2.3 probe
+      const S = scales.map(s => BigInt(s));
+      const G4Scaled = Array.from({ length: 4 }, (_, i) =>
+        Array.from({ length: 4 }, (__, j) => S[i] * S[j] * G4[i][j])
+      );
+      const detG4Scaled = det4Big(G4Scaled);
+      const prodQvScaled = (S[0] * S[0] * Qv[0]) * (S[1] * S[1] * Qv[1]) * (S[2] * S[2] * Qv[2]) * (S[3] * S[3] * Qv[3]);
+
+      const detG4 = det4Big(G4);
+      const prodQv = Qv[0] * Qv[1] * Qv[2] * Qv[3];
+      const quadrume = prodQv !== 0n ? rat(detG4, prodQv) : null;
+
+      // Edge quadrances q_ij
+      const q = Array.from({ length: 4 }, () => Array(4).fill(null));
+      for (let i = 0; i < 4; i++) {
+        q[i][i] = rat(0n, 1n);
+        for (let j = i + 1; j < 4; j++) {
+          const denom = Qv[i] * Qv[j];
+          const val = denom !== 0n ? rSub(rat(1n, 1n), rat(G4[i][j] * G4[i][j], denom)) : null;
+          q[i][j] = val;
+          q[j][i] = val;
+        }
+      }
+
+      // Face quadreas A_k, dual points n_k, altitude quadrances h_k, base points b_k
+      const A = [];
+      const h = [];
+      const dualN = [];
+      const baseB = [];
+      const degFaces = [];
+
+      for (let k = 0; k < 4; k++) {
+        const opp = [0, 1, 2, 3].filter(idx => idx !== k);
+        const G3 = opp.map(r => opp.map(c => G4[r][c]));
+        const detG3 = det3Big(G3);
+        const denomA = Qv[opp[0]] * Qv[opp[1]] * Qv[opp[2]];
+        const Ak = denomA !== 0n ? rat(detG3, denomA) : null;
+        A.push(Ak);
+
+        if (detG3 === 0n) degFaces.push(k + 1);
+
+        // Cofactor dual point n_k from 3x4 matrix M whose rows are v_j^T G
+        const M = opp.map(idx => [0, 1, 2, 3].map(c => sigVec[c] * V[idx][c]));
+        const nk = [];
+        for (let col = 0; col < 4; col++) {
+          const sub3 = M.map(row => row.filter((_, c) => c !== col));
+          const sign = col % 2 === 0 ? 1n : -1n;
+          nk.push(sign * det3Big(sub3));
+        }
+        dualN.push(nk);
+
+        const Qn = bForm(nk, nk, sigVec);
+        const Bkn = bForm(V[k], nk, sigVec);
+        const denomH = Qv[k] * Qn;
+        const hk = denomH !== 0n ? rat(Bkn * Bkn, denomH) : null;
+        h.push(hk);
+
+        // Exact rational altitude base point b_k = v_k - (B(v_k, n_k)/Q(n_k)) * n_k
+        if (Qn !== 0n) {
+          const coeff = rat(Bkn, Qn);
+          const bkVec = [0, 1, 2, 3].map(c => rSub(rat(V[k][c], 1n), rMul(coeff, rat(nk[c], 1n))));
+          baseB.push(bkVec);
+        } else {
+          baseB.push(null);
+        }
+      }
+
+      // Face spreads S_{i,j} and vertex pitches P_{j,i}
+      // Face j is opposite vertex j. Vertices in face j are {0,1,2,3}\{j}.
+      const faceSpreads = Array.from({ length: 4 }, () => Array(4).fill(null));
+      const pitches = Array.from({ length: 4 }, () => Array(4).fill(null));
+      for (let j = 0; j < 4; j++) {
+        for (let i = 0; i < 4; i++) {
+          if (i === j) continue;
+          const others = [0, 1, 2, 3].filter(x => x !== i && x !== j);
+          const k = others[0], l = others[1];
+          faceSpreads[i][j] = rDiv(A[j], rMul(q[i][k], q[i][l]));
+          pitches[j][i] = rDiv(h[i], q[i][j]);
+        }
+      }
+
+      // Solid spreads S_j
+      const solidSpreads = [];
+      const oppEdgeProds = [];
+      const solidRatios = [];
+      for (let j = 0; j < 4; j++) {
+        const adj = [0, 1, 2, 3].filter(x => x !== j);
+        const adjProd = rMul(rMul(q[j][adj[0]], q[j][adj[1]]), q[j][adj[2]]);
+        const Sj = rDiv(quadrume, adjProd);
+        solidSpreads.push(Sj);
+        const oppProd = rMul(rMul(q[adj[0]][adj[1]], q[adj[0]][adj[2]]), q[adj[1]][adj[2]]);
+        oppEdgeProds.push(oppProd);
+        solidRatios.push(rDiv(Sj, oppProd));
+      }
+
+      // Product of all 6 edges
+      let allEdgesProd = rat(1n, 1n);
+      for (let i = 0; i < 4; i++) {
+        for (let j = i + 1; j < 4; j++) {
+          allEdgesProd = rMul(allEdgesProd, q[i][j]);
+        }
+      }
+      const solidGlobalConst = rDiv(quadrume, allEdgesProd);
+
+      // Alternate spreads cyclic ratios (omitting vertex x = 0,1,2,3)
+      const altCycles = [];
+      for (let omit = 0; omit < 4; omit++) {
+        const cyc = [0, 1, 2, 3].filter(x => x !== omit);
+        const a = cyc[0], b = cyc[1], c = cyc[2];
+        // (S_{a,c}/S_{b,c}) * (S_{b,a}/S_{c,a}) * (S_{c,b}/S_{a,b})
+        const r1 = rDiv(faceSpreads[a][c], faceSpreads[b][c]);
+        const r2 = rDiv(faceSpreads[b][a], faceSpreads[c][a]);
+        const r3 = rDiv(faceSpreads[c][b], faceSpreads[a][b]);
+        const prod = rMul(rMul(r1, r2), r3);
+        altCycles.push({ omit: omit + 1, a: a + 1, b: b + 1, c: c + 1, prod });
+      }
+
+      // Dihedral spreads E_{kl} and crosses via cofactors C_{ij}^2 / (C_{ii} C_{jj})
+      const cofactors = Array.from({ length: 4 }, (_, i) =>
+        Array.from({ length: 4 }, (__, j) => cofactor4Big(G4, i, j))
+      );
+
+      const pairs = [
+        [0, 1, 2, 3],
+        [0, 2, 1, 3],
+        [0, 3, 1, 2]
+      ];
+      const dihedralPairs = pairs.map(([k, l, i, j]) => {
+        const Ekl = rDiv(rMul(q[k][l], quadrume), rMul(A[i], A[j]));
+        const Eij = rDiv(rMul(q[i][j], quadrume), rMul(A[k], A[l]));
+        const crossKlDef = Ekl ? rSub(rat(1n, 1n), Ekl) : null;
+        const denomCof = cofactors[i][i] * cofactors[j][j];
+        const crossKlCof = denomCof !== 0n ? rat(cofactors[i][j] * cofactors[i][j], denomCof) : null;
+        const pairInv = rDiv(rMul(Ekl, Eij), rMul(q[k][l], q[i][j]));
+        return {
+          k: k + 1, l: l + 1, i: i + 1, j: j + 1,
+          qkl: q[k][l], qij: q[i][j],
+          Ekl, Eij, crossKlDef, crossKlCof, pairInv
+        };
+      });
+
+      const prodAllA = rMul(rMul(A[0], A[1]), rMul(A[2], A[3]));
+      const dihedralGlobalConst = rDiv(rMul(quadrume, quadrume), prodAllA);
+
+      return {
+        V, G4, G4Scaled, detG4, prodQv, detG4Scaled, prodQvScaled,
+        Qv, quadrume, q, A, h, dualN, baseB,
+        faceSpreads, pitches, solidSpreads, oppEdgeProds, solidRatios,
+        solidGlobalConst, altCycles, dihedralPairs, dihedralGlobalConst,
+        nullVerts, degFaces
+      };
+    }
+
+    /* ===== 4. 3D CANVAS RENDERER ===== */
+    function getThemeColor(token) {
+      return getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+    }
+
+    function project3DPoints(verts, basePt) {
+      // Map [x, y, z, w] -> (x/w, y/w, z/w) when w != 0, else normalize to radius 1.2
+      function toR3(v) {
+        const x = Number(v[0]), y = Number(v[1]), z = Number(v[2]), w = Number(v[3]);
+        if (Math.abs(w) > 1e-6) {
+          return [x / w, y / w, z / w];
+        }
+        const norm = Math.hypot(x, y, z) || 1;
+        return [1.2 * x / norm, 1.2 * y / norm, 1.2 * z / norm];
+      }
+
+      const pts = verts.map(toR3);
+      let baseR3 = null;
+      if (basePt) {
+        const bw = Number(basePt[3].n) / Number(basePt[3].d);
+        const bx = Number(basePt[0].n) / Number(basePt[0].d);
+        const by = Number(basePt[1].n) / Number(basePt[1].d);
+        const bz = Number(basePt[2].n) / Number(basePt[2].d);
+        if (Math.abs(bw) > 1e-6) {
+          baseR3 = [bx / bw, by / bw, bz / bw];
+        }
+      }
+
+      // Determine center & scale (keep centered around 0 if Lorentzian sphere shown)
+      let maxR = 1.05;
+      for (const p of pts) {
+        const r = Math.hypot(p[0], p[1], p[2]);
+        if (r > maxR) maxR = r;
+      }
+      if (baseR3) {
+        const rb = Math.hypot(baseR3[0], baseR3[1], baseR3[2]);
+        if (rb > maxR && rb < 6) maxR = rb;
+      }
+      return { pts, baseR3, maxR };
+    }
+
+    function rotPoint(p, yaw, pitch) {
+      const cy = Math.cos(yaw), sy = Math.sin(yaw);
+      const cp = Math.cos(pitch), sp = Math.sin(pitch);
+      const x1 = p[0] * cy - p[2] * sy;
+      const z1 = p[0] * sy + p[2] * cy;
+      const y2 = p[1] * cp - z1 * sp;
+      const z2 = p[1] * sp + z1 * cp;
+      return [x1, y2, z2];
+    }
+
+    function drawTetrahedronCanvas() {
+      const canvas = document.getElementById(`tetra-canvas`);
+      if (!canvas || !computedData) return;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      if (w === 0 || h === 0) return;
+
+      if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+      }
+
+      const ctx = canvas.getContext(`2d`);
+      ctx.save();
+      ctx.scale(dpr, dpr);
+
+      const bgCol = getThemeColor(`--background`);
+      const brassCol = getThemeColor(`--primary`);
+      const skyCol = getThemeColor(`--tertiary`);
+      const mintCol = getThemeColor(`--data-3`);
+      const coralCol = getThemeColor(`--data-4`);
+      const ivoryCol = getThemeColor(`--on-surface`);
+      const slateCol = getThemeColor(`--on-surface-variant`);
+      const gridCol = getThemeColor(`--outline-variant`);
+      const outlineCol = getThemeColor(`--outline`);
+
+      ctx.fillStyle = bgCol;
+      ctx.fillRect(0, 0, w, h);
+
+      const k = appState.selectedVertex;
+      const baseRaw = computedData.baseB[k];
+      const { pts, baseR3, maxR } = project3DPoints(appState.verts, baseRaw);
+
+      const radiusPx = Math.min(w, h) * 0.36;
+      const scale = radiusPx / maxR;
+      const cx = w * 0.5;
+      const cy = h * 0.52;
+
+      function toScreen(p3) {
+        const rp = rotPoint(p3, camera.yaw, camera.pitch);
+        const persp = 4.2 / (4.2 - rp[2] / maxR);
+        return {
+          x: cx + rp[0] * scale * persp,
+          y: cy - rp[1] * scale * persp,
+          z: rp[2]
+        };
+      }
+
+      // Draw Beltrami-Klein unit null sphere wireframe (subtle)
+      if (appState.showSphere) {
+        ctx.strokeStyle = gridCol;
+        ctx.lineWidth = 1;
+        const steps = 48;
+
+        // Three great circles on unit sphere
+        const planes = [
+          t => [Math.cos(t), Math.sin(t), 0],
+          t => [Math.cos(t), 0, Math.sin(t)],
+          t => [0, Math.cos(t), Math.sin(t)]
+        ];
+        for (const fn of planes) {
+          ctx.beginPath();
+          for (let s = 0; s <= steps; s++) {
+            const t = (s / steps) * Math.PI * 2;
+            const sc = toScreen(fn(t));
+            if (s === 0) ctx.moveTo(sc.x, sc.y);
+            else ctx.lineTo(sc.x, sc.y);
+          }
+          ctx.stroke();
+        }
+      }
+
+      const screenPts = pts.map(toScreen);
+      const oppVerts = [0, 1, 2, 3].filter(idx => idx !== k);
+
+      // Opposite face A_k translucent fill
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(screenPts[oppVerts[0]].x, screenPts[oppVerts[0]].y);
+      ctx.lineTo(screenPts[oppVerts[1]].x, screenPts[oppVerts[1]].y);
+      ctx.lineTo(screenPts[oppVerts[2]].x, screenPts[oppVerts[2]].y);
+      ctx.closePath();
+      ctx.globalAlpha = 0.14;
+      ctx.fillStyle = skyCol;
+      ctx.fill();
+      ctx.restore();
+
+      // Depth-sorted edges
+      const edges = [
+        [0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]
+      ].map(([a, b]) => {
+        const isOppFaceEdge = a !== k && b !== k;
+        const zAvg = (screenPts[a].z + screenPts[b].z) * 0.5;
+        return { a, b, isOppFaceEdge, zAvg };
+      }).sort((u, v) => u.zAvg - v.zAvg);
+
+      for (const e of edges) {
+        ctx.beginPath();
+        ctx.moveTo(screenPts[e.a].x, screenPts[e.a].y);
+        ctx.lineTo(screenPts[e.b].x, screenPts[e.b].y);
+        ctx.strokeStyle = e.isOppFaceEdge ? skyCol : outlineCol;
+        ctx.lineWidth = e.isOppFaceEdge ? 2.2 : 1.4;
+        ctx.stroke();
+      }
+
+      // Draw altitude segment a_k -> b_k
+      if (appState.showAltitude && baseR3) {
+        const bDist = Math.hypot(baseR3[0], baseR3[1], baseR3[2]);
+        if (Number.isFinite(bDist) && bDist < 8) {
+          const bScreen = toScreen(baseR3);
+          ctx.save();
+          ctx.setLineDash([5, 4]);
+          ctx.beginPath();
+          ctx.moveTo(screenPts[k].x, screenPts[k].y);
+          ctx.lineTo(bScreen.x, bScreen.y);
+          ctx.strokeStyle = mintCol;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+          ctx.restore();
+
+          // Base point marker
+          ctx.beginPath();
+          ctx.arc(bScreen.x, bScreen.y, 4.5, 0, Math.PI * 2);
+          ctx.fillStyle = mintCol;
+          ctx.fill();
+
+          ctx.font = `500 12px "JetBrains Mono", monospace`;
+          ctx.fillStyle = mintCol;
+          ctx.fillText(`b${k + 1} (foot)`, bScreen.x + 8, bScreen.y + 4);
+        }
+      }
+
+      // Draw vertices sorted by depth
+      const vertColors = [brassCol, skyCol, mintCol, ivoryCol];
+      const vOrder = [0, 1, 2, 3].sort((a, b) => screenPts[a].z - screenPts[b].z);
+      for (const idx of vOrder) {
+        const sp = screenPts[idx];
+        const isSel = idx === k;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, isSel ? 7 : 5, 0, Math.PI * 2);
+        ctx.fillStyle = isSel ? brassCol : vertColors[idx];
+        ctx.fill();
+        if (isSel) {
+          ctx.beginPath();
+          ctx.arc(sp.x, sp.y, 11, 0, Math.PI * 2);
+          ctx.strokeStyle = brassCol;
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+        }
+        ctx.font = `600 13px "JetBrains Mono", monospace`;
+        ctx.fillStyle = isSel ? brassCol : ivoryCol;
+        ctx.fillText(`a${idx + 1}`, sp.x + 10, sp.y - 6);
+      }
+
+      // Top-left annotation inside canvas
+      ctx.font = `500 11px "JetBrains Mono", monospace`;
+      ctx.fillStyle = slateCol;
+      const sigLabel = appState.sig === `lorentz` ? `Signature (+, +, +, -)` :
+        (appState.sig === `elliptic` ? `Signature (+, +, +, +)` : `Signature (+, +, -, -)`);
+      ctx.fillText(sigLabel, 14, 22);
+      ctx.fillStyle = brassCol;
+      ctx.fillText(`Selected: a${k + 1} -> Opp. Face A${k + 1}`, 14, 40);
+
+      ctx.restore();
+    }
+
+    /* ===== 5. DOM UPDATES ===== */
+    function renderAll() {
+      computedData = computeTetrahedron(appState.verts, appState.sig, appState.scales);
+      const d = computedData;
+
+      // Hero figures
+      setText(`hero-val-v`, rFmt(d.quadrume));
+      setText(`hero-note-v`, `${appState.preset.toUpperCase()} · det(G₄) / ∏ Q(vᵢ)`);
+      const k = appState.selectedVertex;
+      setText(`hero-val-fac`, d.A[k] && d.h[k] ? `${rFmt(d.A[k])} × ${rFmt(d.h[k])}` : `undef`);
+      setText(`hero-note-fac`, `Face A${k + 1} × Altitude h${k + 1} = ${rFmt(d.quadrume)}`);
+      setText(`hero-val-ssl`, rFmt(d.solidGlobalConst));
+      setText(`hero-val-dih`, rFmt(d.dihedralGlobalConst));
+
+      // Section 1: Scale probe & ladder
+      setText(`scale-det`, d.detG4Scaled.toString());
+      setText(`scale-prod`, d.prodQvScaled.toString());
+      const qScaled = d.prodQvScaled !== 0n ? rat(d.detG4Scaled, d.prodQvScaled) : null;
+      setText(`scale-quotient`, rFmt(qScaled));
+
+      const gGrid = document.getElementById(`gram-matrix-view`);
+      if (gGrid) {
+        let html = ``;
+        for (let i = 0; i < 4; i++) {
+          html += `<div class="matrix-row" style="grid-template-columns: repeat(4, minmax(0, 1fr));">`;
+          for (let j = 0; j < 4; j++) {
+            const cls = i === j ? `matrix-cell diag` : `matrix-cell`;
+            html += `<div class="${cls}">${d.G4Scaled[i][j].toString()}</div>`;
+          }
+          html += `</div>`;
+        }
+        gGrid.innerHTML = html;
+      }
+
+      setText(`ladder-q2`, rFmt(d.q[0][1]));
+      setText(`ladder-q3`, rFmt(d.A[3]));
+      setText(`ladder-q4`, rFmt(d.quadrume));
+
+      // Section 2: Factorization inspector
+      setText(`fac-badge`, `Vertex a${k + 1}`);
+      setText(`fac-ak-label`, `A${k + 1}`);
+      setText(`fac-ak-val`, rFmt(d.A[k]));
+      setText(`fac-hk-label`, `h${k + 1}`);
+      setText(`fac-hk-val`, rFmt(d.h[k]));
+      const prodKh = rMul(d.A[k], d.h[k]);
+      setText(`fac-prod-val`, rFmt(prodKh));
+
+      const nk = d.dualN[k];
+      setText(`fac-dual-vec`, `n${k + 1} = [${nk[0]} : ${nk[1]} : ${nk[2]} : ${nk[3]}]`);
+      const bk = d.baseB[k];
+      if (bk) {
+        setText(`fac-base-vec`, `b${k + 1} = [${rFmt(bk[0])} : ${rFmt(bk[1])} : ${rFmt(bk[2])} : ${rFmt(bk[3])}]`);
+      } else {
+        setText(`fac-base-vec`, `b${k + 1} undefined (degenerate face normal Q(n${k + 1}) = 0)`);
+      }
+
+      const facRows = document.getElementById(`fac-all-rows`);
+      if (facRows) {
+        let rowsHtml = ``;
+        for (let idx = 0; idx < 4; idx++) {
+          const prod = rMul(d.A[idx], d.h[idx]);
+          rowsHtml += `<tr>
+            <td class="mono">a${idx + 1}</td>
+            <td class="num">${rFmt(d.A[idx])}</td>
+            <td class="num">${rFmt(d.h[idx])}</td>
+            <td class="num" style="color: var(--primary);">${rFmt(prod)}</td>
+          </tr>`;
+        }
+        facRows.innerHTML = rowsHtml;
+      }
+
+      // Section 3: Vertex invariants
+      setText(`solid-vertex-badge`, `At Vertex a${k + 1}`);
+      setText(`solid-vertex-name`, `a${k + 1}`);
+      setText(`solid-vertex-val`, `S${k + 1} = ${rFmt(d.solidSpreads[k])}`);
+
+      const pairRows = document.getElementById(`solid-pair-rows`);
+      if (pairRows) {
+        const oppList = [0, 1, 2, 3].filter(x => x !== k);
+        let pHtml = ``;
+        for (const faceI of oppList) {
+          const pVal = d.pitches[k][faceI];
+          const sVal = d.faceSpreads[k][faceI];
+          const prod = rMul(pVal, sVal);
+          pHtml += `<tr>
+            <td class="mono">Face ${faceI + 1}</td>
+            <td class="num">${rFmt(pVal)}</td>
+            <td class="num">${rFmt(sVal)}</td>
+            <td class="num" style="color: var(--primary);">${rFmt(prod)}</td>
+          </tr>`;
+        }
+        pairRows.innerHTML = pHtml;
+      }
+
+      const sslRows = document.getElementById(`solid-law-rows`);
+      if (sslRows) {
+        let sHtml = ``;
+        for (let i = 0; i < 4; i++) {
+          sHtml += `<tr>
+            <td class="mono">a${i + 1}</td>
+            <td class="num">${rFmt(d.solidSpreads[i])}</td>
+            <td class="num">${rFmt(d.oppEdgeProds[i])}</td>
+            <td class="num" style="color: var(--tertiary);">${rFmt(d.solidRatios[i])}</td>
+          </tr>`;
+        }
+        sslRows.innerHTML = sHtml;
+      }
+
+      const altRows = document.getElementById(`alt-spreads-rows`);
+      if (altRows) {
+        let aHtml = ``;
+        for (const cyc of d.altCycles) {
+          const expr = `(S${cyc.a},${cyc.c}/S${cyc.b},${cyc.c}) · (S${cyc.b},${cyc.a}/S${cyc.c},${cyc.a}) · (S${cyc.c},${cyc.b}/S${cyc.a},${cyc.b})`;
+          aHtml += `<tr>
+            <td class="mono">a${cyc.omit}</td>
+            <td class="mono" style="font-size: 0.8rem;">${expr}</td>
+            <td class="num" style="color: var(--data-3);">${rFmt(cyc.prod)}</td>
+          </tr>`;
+        }
+        altRows.innerHTML = aHtml;
+      }
+
+      const fMatRows = document.getElementById(`face-spreads-matrix`);
+      if (fMatRows) {
+        let fmHtml = ``;
+        for (let j = 0; j < 4; j++) {
+          const vs = [0, 1, 2, 3].filter(x => x !== j);
+          fmHtml += `<tr>
+            <td class="mono">Opp. a${j + 1}</td>
+            <td class="num">S<sub>${vs[0] + 1},${j + 1}</sub> = ${rFmt(d.faceSpreads[vs[0]][j])}</td>
+            <td class="num">S<sub>${vs[1] + 1},${j + 1}</sub> = ${rFmt(d.faceSpreads[vs[1]][j])}</td>
+            <td class="num">S<sub>${vs[2] + 1},${j + 1}</sub> = ${rFmt(d.faceSpreads[vs[2]][j])}</td>
+          </tr>`;
+        }
+        fMatRows.innerHTML = fmHtml;
+      }
+
+      // Section 4: Dihedral laws
+      setText(`dih-const-badge`, `V² / A₁A₂A₃A₄ = ${rFmt(d.dihedralGlobalConst)}`);
+      const dihRows = document.getElementById(`dihedral-rows`);
+      if (dihRows) {
+        let dHtml = ``;
+        for (const p of d.dihedralPairs) {
+          dHtml += `<tr>
+            <td class="mono">(${p.k}${p.l}, ${p.i}${p.j})</td>
+            <td class="num">${rFmt(p.qkl)}, ${rFmt(p.qij)}</td>
+            <td class="num">${rFmt(p.Ekl)}, ${rFmt(p.Eij)}</td>
+            <td class="num">${rFmt(p.crossKlCof)}</td>
+            <td class="num" style="color: var(--primary);">${rFmt(p.pairInv)}</td>
+          </tr>`;
+        }
+        dihRows.innerHTML = dHtml;
+      }
+
+      // Section 5: Lab readouts & edge table
+      for (let i = 0; i < 4; i++) {
+        setText(`q-v${i + 1}`, `Q(v${i + 1}) = ${d.Qv[i].toString()}`);
+      }
+
+      const edgeRows = document.getElementById(`edge-summary-rows`);
+      if (edgeRows) {
+        let eHtml = ``;
+        for (let i = 0; i < 4; i++) {
+          for (let j = i + 1; j < 4; j++) {
+            eHtml += `<tr>
+              <td class="mono">a${i + 1}a${j + 1}</td>
+              <td class="num">${d.G4[i][j].toString()}</td>
+              <td class="num" style="color: var(--tertiary);">${rFmt(d.q[i][j])}</td>
+              <td class="num">${rApprox(d.q[i][j])}</td>
+            </tr>`;
+          }
+        }
+        edgeRows.innerHTML = eHtml;
+      }
+
+      // Degeneracy warning (Proposition 4.4)
+      const warnEl = document.getElementById(`lab-degeneracy-warning`);
+      if (warnEl) {
+        const msgs = [];
+        if (d.nullVerts.length > 0) {
+          msgs.push(`Null representative vector(s): v${d.nullVerts.join(`, v`)} has Q(v) = 0, so normalized projective coordinates are undefined.`);
+        }
+        if (d.degFaces.length > 0) {
+          msgs.push(`Degenerate face span det(G₃) = 0 opposite vertex a${d.degFaces.join(`, a`)} (coplanar or isotropic face restriction B|_U).`);
+        }
+        if (d.detG4 === 0n && d.degFaces.length === 0) {
+          msgs.push(`All four points are coplanar (det(G₄) = 0), yielding projective quadrume V = 0.`);
+        }
+        if (msgs.length > 0) {
+          warnEl.textContent = msgs.join(` `);
+          warnEl.classList.add(`is-visible`);
+        } else {
+          warnEl.textContent = ``;
+          warnEl.classList.remove(`is-visible`);
+        }
+      }
+
+      syncControlsToState();
+      drawTetrahedronCanvas();
+    }
+
+    function setText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = text;
+    }
+
+    function syncControlsToState() {
+      for (let i = 0; i < 4; i++) {
+        const vbtn = document.getElementById(`vbtn-${i}`);
+        if (vbtn) vbtn.classList.toggle(`is-active`, appState.selectedVertex === i);
+        for (let c = 0; c < 4; c++) {
+          const inp = document.getElementById(`v${i}-${c}`);
+          if (inp && Number(inp.value) !== appState.verts[i][c]) {
+            inp.value = appState.verts[i][c];
+          }
+        }
+        const sc = document.getElementById(`scale-l${i + 1}`);
+        if (sc && Number(sc.value) !== appState.scales[i]) {
+          sc.value = appState.scales[i];
+        }
+      }
+
+      for (const pKey of [`sth1`, `elliptic`, `mixed`, `symmetric`]) {
+        const pb = document.getElementById(`preset-${pKey}`);
+        if (pb) pb.classList.toggle(`is-active`, appState.preset === pKey);
+      }
+      for (const sKey of [`lorentz`, `elliptic`, `klein22`]) {
+        const sb = document.getElementById(`sig-${sKey}`);
+        if (sb) sb.classList.toggle(`is-active`, appState.sig === sKey);
+      }
+
+      const sphBtn = document.getElementById(`btn-toggle-sphere`);
+      if (sphBtn) sphBtn.classList.toggle(`is-active`, appState.showSphere);
+      const altBtn = document.getElementById(`btn-toggle-alt`);
+      if (altBtn) altBtn.classList.toggle(`is-active`, appState.showAltitude);
+    }
+
+    /* ===== 6. INTERACTIVE HANDLERS (HOISTED FUNCTIONS) ===== */
+    function selectVertex(idx) {
+      appState.selectedVertex = idx;
+      renderAll();
+      persistState();
+    }
+
+    function resetCamera() {
+      camera.yaw = 0.62;
+      camera.pitch = 0.38;
+      drawTetrahedronCanvas();
+    }
+
+    function toggleNullSphere() {
+      appState.showSphere = !appState.showSphere;
+      renderAll();
+      persistState();
+    }
+
+    function toggleAltitude() {
+      appState.showAltitude = !appState.showAltitude;
+      renderAll();
+      persistState();
+    }
+
+    function onScaleChange() {
+      const warn = document.getElementById(`scale-error`);
+      const next = [];
+      let hasZero = false;
+      for (let i = 1; i <= 4; i++) {
+        const inp = document.getElementById(`scale-l${i}`);
+        let val = inp ? parseInt(inp.value, 10) : 1;
+        if (Number.isNaN(val) || val === 0) {
+          hasZero = true;
+          val = 1;
+        }
+        next.push(val);
+      }
+      if (warn) {
+        if (hasZero) {
+          warn.textContent = `Scaling factors must be non-zero integers; reverted 0 to 1.`;
+          warn.classList.add(`is-visible`);
+        } else {
+          warn.textContent = ``;
+          warn.classList.remove(`is-visible`);
+        }
+      }
+      appState.scales = next;
+      renderAll();
+      persistState();
+    }
+
+    function onCoordInput() {
+      const nextVerts = [];
+      for (let i = 0; i < 4; i++) {
+        const row = [];
+        for (let c = 0; c < 4; c++) {
+          const inp = document.getElementById(`v${i}-${c}`);
+          const v = inp ? parseInt(inp.value, 10) : 0;
+          row.push(Number.isNaN(v) ? 0 : v);
+        }
+        nextVerts.push(row);
+      }
+      appState.verts = nextVerts;
+      appState.preset = `custom`;
+      renderAll();
+      persistState();
+    }
+
+    function loadPreset(key) {
+      const p = PRESETS[key];
+      if (!p) return;
+      appState.preset = key;
+      appState.sig = p.sig;
+      appState.verts = p.verts.map(v => v.slice());
+      appState.scales = [1, 1, 1, 1];
+      renderAll();
+      persistState();
+    }
+
+    function setSignature(sigKey) {
+      if (!SIGNATURES[sigKey]) return;
+      appState.sig = sigKey;
+      renderAll();
+      persistState();
+    }
+
+    function resetToBenchmark(btn) {
+      if (!btn) return;
+      if (btn.dataset.armed !== `true`) {
+        btn.dataset.armed = `true`;
+        btn.textContent = `Click again to confirm reset`;
+        return;
+      }
+      btn.dataset.armed = `false`;
+      btn.textContent = `Restore STH1 Benchmark`;
+      loadPreset(`sth1`);
+    }
+
+    function exportRationalReport() {
+      if (!computedData) return;
+      const d = computedData;
+      const lines = [
+        `PROJECTIVE TRIGONOMETRY OF THE TETRAHEDRON - EXACT RATIONAL REPORT`,
+        `====================================================================`,
+        `Signature: ${appState.sig} | Preset: ${appState.preset}`,
+        `Vertices:`,
+        `  a1 = [${appState.verts[0].join(` : `)}]  Q(v1) = ${d.Qv[0]}`,
+        `  a2 = [${appState.verts[1].join(` : `)}]  Q(v2) = ${d.Qv[1]}`,
+        `  a3 = [${appState.verts[2].join(` : `)}]  Q(v3) = ${d.Qv[2]}`,
+        `  a4 = [${appState.verts[3].join(` : `)}]  Q(v4) = ${d.Qv[3]}`,
+        ``,
+        `Projective Quadrume V = ${rFmt(d.quadrume)}`,
+        `Solid Spread Law Constant = ${rFmt(d.solidGlobalConst)}`,
+        `Dihedral Pair Invariant V^2/(A1 A2 A3 A4) = ${rFmt(d.dihedralGlobalConst)}`,
+        ``,
+        `Quadrume Factorization V = A_k * h_k:`,
+        ...([0, 1, 2, 3].map(i => `  k=${i + 1}: A${i + 1} = ${rFmt(d.A[i])}, h${i + 1} = ${rFmt(d.h[i])}, A${i + 1}*h${i + 1} = ${rFmt(rMul(d.A[i], d.h[i]))}`)),
+        ``,
+        `Solid Spreads:`,
+        ...([0, 1, 2, 3].map(i => `  S${i + 1} = ${rFmt(d.solidSpreads[i])}`)),
+        ``,
+        `Opposite-Edge Dihedral Pairs:`,
+        ...(d.dihedralPairs.map(p => `  (${p.k}${p.l}, ${p.i}${p.j}): E_${p.k}${p.l} = ${rFmt(p.Ekl)}, E_${p.i}${p.j} = ${rFmt(p.Eij)}, Ratio = ${rFmt(p.pairInv)}`))
+      ];
+      const content = lines.join(`\n`);
+      if (window.notebookAppApi && typeof window.notebookAppApi.triggerFileDownload === `function`) {
+        window.notebookAppApi.triggerFileDownload({
+          content,
+          contentType: `text/plain`,
+          encoding: `UTF-8`,
+          filename: `projective_tetrahedron_report.txt`
+        });
+      } else {
+        const blob = new Blob([content], { type: `text/plain` });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement(`a`);
+        a.href = url;
+        a.download = `projective_tetrahedron_report.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    }
+
+    /* ===== 7. PERSISTENCE, KATEX & INITIALIZATION ===== */
+    async function persistState() {
+      const statusEl = document.getElementById(`save-status`);
+      if (window.notebookAppApi && typeof window.notebookAppApi.setAppState === `function`) {
+        try {
+          await window.notebookAppApi.setAppState({
+            preset: appState.preset,
+            sig: appState.sig,
+            verts: appState.verts,
+            scales: appState.scales,
+            selectedVertex: appState.selectedVertex,
+            showSphere: appState.showSphere,
+            showAltitude: appState.showAltitude
+          });
+          if (statusEl) statusEl.textContent = `Workspace synced`;
+        } catch (err) {
+          if (statusEl) statusEl.textContent = `Sync pending`;
+        }
+      }
+    }
+
+    function hydrateKatex() {
+      if (!window.katex) return false;
+      const nodes = document.querySelectorAll(`.katex-tex`);
+      nodes.forEach(node => {
+        const tex = node.getAttribute(`data-tex`);
+        const disp = node.getAttribute(`data-display`) === `true`;
+        if (tex) {
+          window.katex.render(tex, node, { displayMode: disp, throwOnError: false });
+        }
+      });
+      return true;
+    }
+
+    function setupCanvasInteractions() {
+      const canvas = document.getElementById(`tetra-canvas`);
+      if (!canvas) return;
+
+      canvas.addEventListener(`pointerdown`, e => {
+        camera.dragging = true;
+        camera.lastX = e.clientX;
+        camera.lastY = e.clientY;
+        canvas.setPointerCapture(e.pointerId);
+      });
+      canvas.addEventListener(`pointermove`, e => {
+        if (!camera.dragging) return;
+        const dx = e.clientX - camera.lastX;
+        const dy = e.clientY - camera.lastY;
+        camera.lastX = e.clientX;
+        camera.lastY = e.clientY;
+        camera.yaw += dx * 0.008;
+        camera.pitch = Math.max(-1.4, Math.min(1.4, camera.pitch + dy * 0.008));
+        drawTetrahedronCanvas();
+      });
+      const stopDrag = () => { camera.dragging = false; };
+      canvas.addEventListener(`pointerup`, stopDrag);
+      canvas.addEventListener(`pointercancel`, stopDrag);
+
+      window.addEventListener(`resize`, () => drawTetrahedronCanvas());
+    }
+
+    function setupRevealObserver() {
+      const targets = document.querySelectorAll(`.reveal`);
+      if (!(`IntersectionObserver` in window)) {
+        targets.forEach(el => el.classList.add(`is-visible`));
+        return;
+      }
+      const obs = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add(`is-visible`);
+            obs.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08 });
+      targets.forEach(el => obs.observe(el));
+    }
+
+    async function initApp() {
+      if (window.notebookAppApi && typeof window.notebookAppApi.getAppState === `function`) {
+        try {
+          const saved = await window.notebookAppApi.getAppState();
+          if (saved && Array.isArray(saved.verts) && saved.verts.length === 4) {
+            appState.preset = saved.preset || `custom`;
+            appState.sig = saved.sig || `lorentz`;
+            appState.verts = saved.verts;
+            appState.scales = Array.isArray(saved.scales) ? saved.scales : [1, 1, 1, 1];
+            appState.selectedVertex = typeof saved.selectedVertex === `number` ? saved.selectedVertex : 3;
+            appState.showSphere = saved.showSphere !== false;
+            appState.showAltitude = saved.showAltitude !== false;
+          }
+        } catch (err) {
+          // Proceed with default benchmark state
+        }
+      }
+
+      setupCanvasInteractions();
+      setupRevealObserver();
+      renderAll();
+
+      if (window.lucide && typeof window.lucide.createIcons === `function`) {
+        window.lucide.createIcons();
+      }
+      if (!hydrateKatex()) {
+        setTimeout(hydrateKatex, 350);
+      }
+
+      if (window.notebookAppApi && typeof window.notebookAppApi.notifyAppReady === `function`) {
+        window.notebookAppApi.notifyAppReady();
+      }
+    }
+
+    document.addEventListener(`DOMContentLoaded`, initApp);
+  </script>
+</body>
+</html>
