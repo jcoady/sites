@@ -1,0 +1,2190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="nocturne">
+  <title>The Quadrea of a Projective Quadrangle in Universal Hyperbolic Geometry</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* Page and surfaces: Prussian midnight steps (Nocturne) */
+      --background: #0a101d;
+      --surface-container-low: #0e1626;
+      --surface-container: #111b2e;
+      --surface-container-high: #17243c;
+
+      /* Text */
+      --on-surface: #f2ece1;
+      --on-surface-variant: #9ba8bf;
+
+      /* Borders */
+      --outline: #384d73;
+      --outline-variant: #21304d;
+
+      /* Accents */
+      --primary: #dfaa5b;
+      --on-primary: #0a101d;
+      --primary-container: #2b261c;
+      --on-primary-container: #f5dcb0;
+      --secondary: #687a99;
+      --tertiary: #7cc4e8;
+      --error: #f27474;
+      --on-error: #1a0606;
+
+      /* Data series */
+      --data-1: #dfaa5b;
+      --data-2: #7cc4e8;
+      --data-3: #52d19c;
+      --data-4: #e07a5f;
+      --data-context: #4a5d80;
+
+      /* Fonts */
+      --font-headline: 'EB Garamond', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'JetBrains Mono', monospace;
+
+      /* Shape */
+      --rounded: 0.25rem;
+      --rounded-lg: 0.375rem;
+      --rounded-full: 9999px;
+
+      /* Style effects */
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-highlight: inset 0 1px 0 rgba(242, 236, 225, 0.05);
+      --brass-glow: radial-gradient(circle at 88% 12%, rgba(223, 170, 91, 0.08), transparent 45%);
+      --heading-tracking: -0.015em;
+      --label-tracking: 0.06em;
+      --sky-tint: color-mix(in srgb, var(--tertiary) 12%, transparent);
+      --brass-tint: color-mix(in srgb, var(--primary) 14%, transparent);
+      --mint-tint: color-mix(in srgb, var(--data-3) 14%, transparent);
+      --coral-tint: color-mix(in srgb, var(--data-4) 14%, transparent);
+
+      /* Shared tokens */
+      --positive: #52d19c;
+      --warning: #e07a5f;
+      --focus: #dfaa5b;
+
+      /* Narrative type scale */
+      --display-size: clamp(2.5rem, 1.4rem + 3.8vw, 4.35rem);
+      --headline-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+      --subhead-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem);
+      --body-size: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* Spacing scale */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 6rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+
+    .page-grid {
+      display: grid;
+      gap: var(--space-xl);
+      padding: var(--space-lg);
+      max-width: 1200px;
+      margin: 0 auto;
+      overflow: hidden;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Typography */
+    .title {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      letter-spacing: var(--heading-tracking);
+      line-height: 1.07;
+      color: var(--on-surface);
+      margin: 0;
+    }
+    .title-display {
+      font-size: var(--display-size);
+      max-width: 22ch;
+    }
+    .title-display em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--primary);
+    }
+    .section-title {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: var(--headline-size);
+      letter-spacing: var(--heading-tracking);
+      line-height: 1.12;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-sm) 0;
+    }
+    .subhead {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: var(--subhead-size);
+      line-height: 1.25;
+      color: var(--on-surface);
+      margin: 0 0 var(--space-sm) 0;
+    }
+    .deck-brass {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--primary);
+      margin: 0 0 var(--space-sm) 0;
+    }
+    .coord-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+    }
+    .muted-caption {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+    .prose {
+      max-width: 65ch;
+      color: var(--on-surface);
+    }
+    .prose p {
+      margin: 0 0 var(--space-md) 0;
+    }
+    .prose strong {
+      font-weight: 600;
+      color: var(--on-surface);
+    }
+    .prose-wide {
+      max-width: 78ch;
+    }
+
+    /* Hero Header */
+    .hero-header {
+      background-color: var(--background);
+      background-image: var(--brass-glow);
+      border-bottom: var(--hairline);
+      padding: var(--space-2xl) var(--space-lg) var(--space-xl);
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.95fr);
+      gap: var(--space-xl);
+      align-items: end;
+    }
+    .hero-lede {
+      font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+      color: var(--on-surface-variant);
+      max-width: 58ch;
+      margin: var(--space-md) 0 0 0;
+      line-height: 1.58;
+    }
+    .hero-meta-panel {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+      display: grid;
+      gap: var(--space-md);
+    }
+    .hero-stat-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-md);
+      border-top: var(--hairline);
+      padding-top: var(--space-md);
+    }
+    .stat-num {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+      line-height: 1.1;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+    }
+    .stat-num-accent { color: var(--primary); }
+    .stat-num-sky { color: var(--tertiary); }
+
+    /* Jump index strip */
+    .chapter-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      padding: var(--space-md) 0;
+      border-bottom: var(--hairline);
+    }
+    .chapter-link {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: 0.03em;
+      color: var(--on-surface-variant);
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      transition: background-color var(--dur-short) var(--ease-out), color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out);
+      text-decoration: none;
+    }
+    .chapter-link:hover {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+
+    /* Panels and observation wells */
+    .panel {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .panel-low {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .observation-well {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      font-family: var(--font-label);
+      color: var(--on-surface);
+    }
+    .formula-well {
+      background: var(--background);
+      border: var(--hairline);
+      border-left: 3px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      margin: var(--space-md) 0;
+      overflow-x: auto;
+    }
+    .formula-well-sky {
+      border-left-color: var(--tertiary);
+    }
+    .formula-caption {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: var(--space-xs);
+    }
+    .formula-caption-sky { color: var(--tertiary); }
+
+    /* Badges */
+    .badge {
+      background: var(--sky-tint);
+      color: var(--tertiary);
+      border: 1px solid color-mix(in srgb, var(--tertiary) 35%, transparent);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+    .badge-brass {
+      background: var(--brass-tint);
+      color: var(--primary);
+      border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+    }
+    .badge-mint {
+      background: var(--mint-tint);
+      color: var(--positive);
+      border-color: color-mix(in srgb, var(--positive) 35%, transparent);
+    }
+    .badge-coral {
+      background: var(--coral-tint);
+      color: var(--data-4);
+      border-color: color-mix(in srgb, var(--data-4) 35%, transparent);
+    }
+
+    /* Buttons & Controls */
+    .btn {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      min-height: 44px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      border: var(--hairline-strong);
+      background: transparent;
+      color: var(--on-surface);
+      transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .btn:hover {
+      background: var(--surface-container-high);
+    }
+    .btn:active {
+      transform: translateY(1px);
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover {
+      background: var(--on-primary-container);
+    }
+    .btn-active {
+      background: var(--brass-tint);
+      color: var(--primary);
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    .btn-sky-active {
+      background: var(--sky-tint);
+      color: var(--tertiary);
+      box-shadow: inset 0 0 0 1px var(--tertiary);
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    /* Inputs */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .num-input {
+      background: var(--background);
+      color: var(--on-surface);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      font-variant-numeric: tabular-nums;
+      min-height: 44px;
+      width: 100%;
+    }
+    .range-input {
+      width: 100%;
+      accent-color: var(--primary);
+      min-height: 44px;
+      cursor: pointer;
+    }
+
+    /* Section layout */
+    .narrative-section {
+      padding: var(--space-xl) 0;
+      border-bottom: var(--hairline);
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .split-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-grid-even {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+    }
+    table.uhg-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+    table.uhg-table th {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline-strong);
+      font-weight: 500;
+    }
+    table.uhg-table td {
+      padding: var(--space-sm) var(--space-md);
+      border-bottom: var(--hairline);
+      vertical-align: top;
+      color: var(--on-surface);
+    }
+    table.uhg-table tr:hover td {
+      background: var(--surface-container-high);
+    }
+    .mono-val {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+      font-size: 0.875rem;
+    }
+    .text-right { text-align: right; }
+
+    /* Interactive SVGs */
+    .svg-stage {
+      width: 100%;
+      min-height: 360px;
+      display: block;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      touch-action: none;
+      user-select: none;
+    }
+    .svg-stage-tall {
+      min-height: 410px;
+    }
+    .drag-handle {
+      cursor: grab;
+    }
+    .drag-handle:active {
+      cursor: grabbing;
+    }
+
+    /* Workbench grid */
+    .workbench-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1.15fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .coord-editor-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .point-box {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .point-xyz {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: var(--space-xs);
+      margin-top: var(--space-xs);
+    }
+    .readout-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .readout-tile {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    .readout-tile-wide {
+      grid-column: 1 / -1;
+    }
+    .readout-val {
+      font-family: var(--font-label);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--on-surface);
+      font-variant-numeric: tabular-nums;
+      word-break: break-all;
+      margin-top: var(--space-xs);
+    }
+    .readout-val-brass { color: var(--primary); font-size: 1.05rem; }
+    .readout-val-sky { color: var(--tertiary); font-size: 1.05rem; }
+
+    /* Collapsible details */
+    details.proof-drawer {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+    }
+    details.proof-drawer summary {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+    }
+    details.proof-drawer[open] summary {
+      margin-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity var(--dur-long) var(--ease-out), transform var(--dur-long) var(--ease-out);
+    }
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Container queries for adaptive cards */
+    .card-wrapper { container-type: inline-size; }
+    @container (min-width: 440px) {
+      .card-inner-split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-md);
+      }
+    }
+    @container (max-width: 439px) {
+      .card-inner-split {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: var(--space-md);
+      }
+    }
+
+    /* Footer */
+    .site-footer {
+      padding: var(--space-xl) 0 var(--space-2xl);
+      color: var(--on-surface-variant);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-inner,
+      .split-grid,
+      .split-grid-even,
+      .workbench-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        grid-template-columns: 1fr;
+        padding: var(--space-md);
+      }
+      .coord-editor-grid,
+      .readout-grid,
+      .hero-stat-row {
+        grid-template-columns: 1fr;
+      }
+      .hero-header {
+        padding: var(--space-xl) var(--space-md);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero-header">
+    <div class="hero-inner">
+      <div>
+        <p class="deck-brass">Universal Hyperbolic Geometry · Rational Projective Metrics</p>
+        <h1 class="title title-display">The <em>Quadrea</em> of a Projective Quadrangle</h1>
+        <p class="hero-lede">
+          Classical hyperbolic and spherical trigonometry rely on transcendental functions ($\sinh$, $\cosh$, $\arcsin$) and real-number approximations. Building on N. J. Wildberger’s Universal Hyperbolic Geometry (UHG), John David Coady’s 2025 theorem extends exact rational metrical invariants from 3-point triangles to 4-point quadrangles ($B$) and 4-line quadrilaterals ($M$) over $\mathbb{Q}$—unifying hyperbolic and elliptic geometries through Archimedes’ function.
+        </p>
+      </div>
+
+      <aside class="hero-meta-panel" aria-label="Key mathematical invariants">
+        <div>
+          <span class="coord-label">Field &amp; Form</span>
+          <p style="margin: var(--space-xs) 0 0 0; font-size: 0.95rem; color: var(--on-surface-variant);">
+            Defined purely algebraically over $\mathbb{Q}$ (or any field $\operatorname{char}\neq 2$) via the quadratic form $x^2 + y^2 \mp z^2$.
+          </p>
+        </div>
+        <div class="hero-stat-row">
+          <div>
+            <span class="coord-label">Coady Ex. 1 Quadrea $B$</span>
+            <div class="stat-num stat-num-accent">17512 / 315</div>
+            <span class="muted-caption">Exact rational invariant</span>
+          </div>
+          <div>
+            <span class="coord-label">Dual Quadreal $M$</span>
+            <div class="stat-num stat-num-sky">−9019516250 / 896919661</div>
+            <span class="muted-caption">Exact 4-line dual</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </header>
+
+  <main class="page-grid">
+
+    <nav class="chapter-nav" aria-label="Article sections">
+      <a class="chapter-link" href="#sec-gap">1. The 4-Point Gap</a>
+      <a class="chapter-link" href="#sec-foundations">2. Quadrance, Spread &amp; Triangulations</a>
+      <a class="chapter-link" href="#sec-archimedes">3. Archimedes’ Function &amp; Compatibility</a>
+      <a class="chapter-link" href="#sec-theorems">4. Theorems 4.1 &amp; 4.2</a>
+      <a class="chapter-link" href="#sec-workbench">5. Exact $\mathbb{Q}$ Workbench</a>
+      <a class="chapter-link" href="#sec-corollaries">6. Degenerate Cases &amp; Dual Pythagoras</a>
+      <a class="chapter-link" href="#sec-unification">7. Hyperbolic &amp; Elliptic Unification</a>
+    </nav>
+
+    <!-- SECTION 1: THE 4-POINT GAP -->
+    <section id="sec-gap" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">01 · Extending UHG Beyond Three Elements</p>
+        <h2 class="section-title">Closing the Four-Point and Four-Line Gap in UHG</h2>
+        <div class="prose prose-wide">
+          <p>
+            In affine Rational Trigonometry (RT), area-squared invariants are captured by the <strong>quadrea</strong> of a triangle ($\mathcal{A}$) and extended to quadrilaterals via Bretschneider-type rational identities. In <strong>Universal Hyperbolic Geometry (UHG)</strong>, points and lines are projective 3-proportions $a \equiv [x:y:z]$ and $L \equiv (l:m:n)$ rather than affine vectors. Wildberger established exact laws for triangles and trilaterals—Pythagoras, the Triple Quad Formula (TQF), the Spread Law, the Cross Law, triangle quadrea $\mathcal{A}$, and trilateral quadreal $\mathcal{L}$—yet left the 4-point quadrangle and 4-line quadrilateral unsolved.
+          </p>
+          <p>
+            Coady’s Theorems 4.1 and 4.2 supply those missing invariants: the <strong>quadrea $B(\overline{a_1a_2a_3a_4})$</strong> of a projective quadrangle and its point–line dual, the <strong>quadreal $M(\overline{L_1L_2L_3L_4})$</strong> of a projective quadrilateral. Both emerge as the unique common root of two compatible quadratic equations linked to the two triangulations of the four-point figure.
+          </p>
+        </div>
+      </div>
+
+      <div class="split-grid-even">
+        <div class="panel">
+          <span class="coord-label">Formula Coverage · Affine RT vs. Projective UHG</span>
+          <h3 class="subhead" style="margin-top: var(--space-xs);">Where Theorems 4.1 &amp; 4.2 Complete Table 1</h3>
+          <div class="table-wrap">
+            <table class="uhg-table">
+              <thead>
+                <tr>
+                  <th>Metrical Concept</th>
+                  <th>Affine RT</th>
+                  <th>Projective UHG</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Pythagoras, TQF, Spread &amp; Cross Laws</td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                </tr>
+                <tr>
+                  <td>Quadrance $q$ &amp; Spread $S$</td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                </tr>
+                <tr>
+                  <td>Triangle Quadrea $\mathcal{A}$ &amp; Trilateral $\mathcal{L}$</td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                  <td><span class="badge badge-mint">Established</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Quadrea of Quadrangle $B(\overline{a_1a_2a_3a_4})$</strong></td>
+                  <td><span class="badge badge-mint">Affine Quad.</span></td>
+                  <td><span class="badge badge-brass">Filled by Thm. 4.1</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Quadreal of Quadrilateral $M(\overline{L_1L_2L_3L_4})$</strong></td>
+                  <td><span class="muted-caption">No full duality</span></td>
+                  <td><span class="badge badge-brass">Filled by Thm. 4.2</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div style="display:flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-sm);">
+            <div>
+              <span class="coord-label">Main Laws Comparison</span>
+              <h3 class="subhead" style="margin-top: var(--space-xs);">From Affine Deformations to Projective Laws</h3>
+            </div>
+            <div class="btn-row">
+              <button type="button" class="btn btn-active" id="btn-laws-uhg" onclick="setLawHighlight('uhg')">Focus UHG</button>
+              <button type="button" class="btn" id="btn-laws-rt" onclick="setLawHighlight('rt')">Compare RT</button>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-top: var(--space-sm);">
+            <table class="uhg-table">
+              <thead>
+                <tr>
+                  <th>Law</th>
+                  <th>Affine RT</th>
+                  <th>Projective UHG (Hyp. &amp; Ellip.)</th>
+                </tr>
+              </thead>
+              <tbody id="laws-tbody">
+                <tr>
+                  <td><strong>Pythagoras</strong></td>
+                  <td class="mono-val">$Q_1 + Q_2 = Q_3$</td>
+                  <td class="mono-val" data-uhg-cell>$q_3 = q_1 + q_2 - q_1q_2$</td>
+                </tr>
+                <tr>
+                  <td><strong>Triple Quad</strong></td>
+                  <td class="mono-val">$(Q_1+Q_2+Q_3)^2 = 2(Q_1^2+Q_2^2+Q_3^2)$</td>
+                  <td class="mono-val" data-uhg-cell>$(q_1+q_2+q_3)^2 = 2(q_1^2+q_2^2+q_3^2)+4q_1q_2q_3$</td>
+                </tr>
+                <tr>
+                  <td><strong>Spread Law</strong></td>
+                  <td class="mono-val">$s_1/Q_1 = s_2/Q_2 = s_3/Q_3$</td>
+                  <td class="mono-val" data-uhg-cell>$S_1/q_1 = S_2/q_2 = S_3/q_3$</td>
+                </tr>
+                <tr>
+                  <td><strong>Cross Law</strong></td>
+                  <td class="mono-val">$(Q_1+Q_2-Q_3)^2 = 4Q_1Q_2(1-s_3)$</td>
+                  <td class="mono-val" data-uhg-cell>$(q_1q_2S_3 - q_1 - q_2 - q_3 + 2)^2 = 4(1-q_1)(1-q_2)(1-q_3)$</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="muted-caption" style="margin: var(--space-sm) 0 0 0;">
+            Notice that every UHG law applies identically to both hyperbolic and elliptic geometries; only the underlying quadratic form changes sign.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: FOUNDATIONS & TWO TRIANGULATIONS -->
+    <section id="sec-foundations" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">02 · Projective Coordinates, Duality &amp; Triangulations</p>
+        <h2 class="section-title">Points Inside, On, and Outside the Distinguished Circle—and Two Ways to Slice a Quadrangle</h2>
+      </div>
+
+      <div class="split-grid">
+        <div class="prose">
+          <p>
+            In the projective plane over $\mathbb{Q}$, a point $a \equiv [x:y:z]$ represents a central line through the origin in $\mathbb{Q}^3$, projected onto the $z=1$ plane as $[X, Y] = [x/z, y/z]$ when $z \neq 0$. A line $L \equiv (l:m:n)$ represents the plane $lx + my \mp nz = 0$, where the sign is <strong>minus</strong> in hyperbolic geometry and <strong>plus</strong> in elliptic geometry.
+          </p>
+          <p>
+            Unlike the classical Beltrami–Klein disk—which restricts points to the interior $X^2 + Y^2 &lt; 1$ and measures hyperbolic distance via $d = \operatorname{arcsinh}\sqrt{-q}$—UHG operates uniformly across the <strong>interior</strong> ($q &lt; 0$, hyperboloid of two sheets), the <strong>null cone</strong> $X^2 + Y^2 = 1$ (points at infinity), and the <strong>exterior</strong> ($x^2+y^2-z^2 &gt; 0$, hyperboloid of one sheet). Two non-null points $a_1, a_2$ are perpendicular ($a_1 \perp a_2$) precisely when $q(a_1, a_2) = 1$, and dual lines $A_i \equiv a_i^\perp$ obey <strong>Quadrance–Spread Duality</strong>: $q(a_1, a_2) = S(A_1, A_2)$.
+          </p>
+          <p>
+            Given a cyclically ordered projective quadrangle $\overline{a_1a_2a_3a_4}$ (no three points collinear), each triangle has quadrea $\mathcal{A}(a_i a_j a_k) = q_{ij}q_{jk}S_j$. Splitting the quadrangle along diagonal $a_1a_3$ produces <strong>Triangulation I</strong> ($\triangle a_1a_2a_3 + \triangle a_3a_4a_1$), whose quadrea sum is $q_{12}q_{23}S_2 + q_{34}q_{41}S_4$. Splitting along $a_2a_4$ produces <strong>Triangulation II</strong> ($\triangle a_1a_2a_4 + \triangle a_2a_3a_4$), with sum $q_{41}q_{12}S_1 + q_{23}q_{34}S_3$. Neither sum alone is invariant under cyclic relabeling—yet both anchor a quadratic equation for the true quadrangle quadrea $B$.
+          </p>
+
+          <div class="formula-well">
+            <div class="formula-caption">Hyperbolic &amp; Elliptic Quadrance / Spread</div>
+            <div>$$q(a_1, a_2) \equiv 1 - \frac{(x_1x_2 + y_1y_2 \mp z_1z_2)^2}{(x_1^2 + y_1^2 \mp z_1^2)(x_2^2 + y_2^2 \mp z_2^2)}$$</div>
+            <p class="muted-caption" style="margin: var(--space-xs) 0 0 0;">
+              Top sign ($-$): Hyperbolic geometry. Bottom sign ($+$): Elliptic geometry. Replacing $[x_i:y_i:z_i]$ with lines $(l_i:m_i:n_i)$ defines the dual spread $S(L_1, L_2)$.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:var(--space-sm); margin-bottom: var(--space-md);">
+            <span class="coord-label">Interactive Projective Plane ($z=1$ Slice)</span>
+            <div class="btn-row">
+              <button type="button" class="btn btn-active" id="btn-tri-1" onclick="setTriangulationView(1)">Triangulation I ($a_1a_3$)</button>
+              <button type="button" class="btn" id="btn-tri-2" onclick="setTriangulationView(2)">Triangulation II ($a_2a_4$)</button>
+              <button type="button" class="btn btn-sky-active" id="btn-tri-both" onclick="setTriangulationView(0)">Compare Both</button>
+            </div>
+          </div>
+
+          <svg id="svg-triangulation" class="svg-stage" viewBox="0 0 520 380" role="img" aria-label="Interactive diagram of the two triangulations of a projective quadrangle over the distinguished unit circle">
+            <defs>
+              <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--outline-variant)" stroke-width="0.6" stroke-dasharray="2 3" />
+              </pattern>
+            </defs>
+            <rect width="520" height="380" fill="url(#grid-pattern)" />
+            <!-- Axes -->
+            <line x1="20" y1="190" x2="500" y2="190" stroke="var(--outline-variant)" stroke-width="1" />
+            <line x1="260" y1="20" x2="260" y2="360" stroke="var(--outline-variant)" stroke-width="1" />
+            <!-- Distinguished Unit Circle X^2 + Y^2 = 1 (radius 130px) -->
+            <circle cx="260" cy="190" r="130" fill="none" stroke="var(--outline)" stroke-width="1.5" stroke-dasharray="5 4" />
+            <text x="394" y="182" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="11">X²+Y²=1 (null cone)</text>
+
+            <!-- Triangulation polygons (Coady Ex. 1 coordinates scaled: 1 unit = 130px) -->
+            <!-- a1=(-0.6, 0.6)->(182,112), a2=(0.8, 0)->(364,190), a3=(0.4, -0.8)->(312,294), a4=(-0.4, -0.4)->(208,242) -->
+            <g id="tri-group-1">
+              <polygon points="182,112 364,190 312,294" fill="var(--brass-tint)" stroke="var(--primary)" stroke-width="1" />
+              <polygon points="312,294 208,242 182,112" fill="var(--brass-tint)" stroke="var(--primary)" stroke-width="1" />
+              <line x1="182" y1="112" x2="312" y2="294" stroke="var(--primary)" stroke-width="2" stroke-dasharray="6 4" />
+              <text x="275" y="176" fill="var(--primary)" font-family="var(--font-label)" font-size="12">Δa₁a₂a₃</text>
+              <text x="218" y="232" fill="var(--primary)" font-family="var(--font-label)" font-size="12">Δa₃a₄a₁</text>
+            </g>
+            <g id="tri-group-2">
+              <polygon points="182,112 364,190 208,242" fill="var(--sky-tint)" stroke="var(--tertiary)" stroke-width="1" />
+              <polygon points="364,190 312,294 208,242" fill="var(--sky-tint)" stroke="var(--tertiary)" stroke-width="1" />
+              <line x1="364" y1="190" x2="208" y2="242" stroke="var(--tertiary)" stroke-width="2" stroke-dasharray="6 4" />
+              <text x="242" y="160" fill="var(--tertiary)" font-family="var(--font-label)" font-size="12">Δa₁a₂a₄</text>
+              <text x="292" y="256" fill="var(--tertiary)" font-family="var(--font-label)" font-size="12">Δa₂a₃a₄</text>
+            </g>
+
+            <!-- Outer quadrangle sides -->
+            <polygon points="182,112 364,190 312,294 208,242" fill="none" stroke="var(--on-surface)" stroke-width="2" />
+
+            <!-- Quadrance labels -->
+            <text x="276" y="142" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₁₂</text>
+            <text x="346" y="248" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₂₃</text>
+            <text x="252" y="284" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₃₄</text>
+            <text x="176" y="184" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₄₁</text>
+
+            <!-- Vertices -->
+            <circle cx="182" cy="112" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />
+            <text x="148" y="102" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₁ [-3:3:5]</text>
+
+            <circle cx="364" cy="190" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />
+            <text x="372" y="194" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₂ [4:0:5]</text>
+
+            <circle cx="312" cy="294" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />
+            <text x="318" y="308" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₃ [2:-4:5]</text>
+
+            <circle cx="208" cy="242" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />
+            <text x="122" y="256" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₄ [-2:-2:5]</text>
+          </svg>
+
+          <div class="observation-well" id="tri-summary" style="margin-top: var(--space-md); font-size: 0.875rem;">
+            Comparing both triangulations: Triangulation I anchors $(B - p_1)^2 = r_1$ via $S_2, S_4$, while Triangulation II anchors $(B - p_2)^2 = r_2$ via $S_1, S_3$.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: ARCHIMEDES FUNCTION & COMPATIBILITY -->
+    <section id="sec-archimedes" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">03 · Archimedes’ Function &amp; Quadratic Compatibility</p>
+        <h2 class="section-title">How Two Quadratic Equations Pin Down One Exact Rational Root</h2>
+      </div>
+
+      <div class="split-grid">
+        <div class="prose">
+          <p>
+            The bridge between triangle quadreas and the quadrangle quadrea $B$ is <strong>Archimedes’ function</strong> (Wildberger’s Theorem 3.8):
+          </p>
+          <div class="formula-well">
+            <div class="formula-caption">Archimedes’ Function &amp; Triple Quad Formula</div>
+            <div>$$A(x, y, z) = (x + y + z)^2 - 2(x^2 + y^2 + z^2) = 4xy - (x + y - z)^2$$</div>
+          </div>
+          <p>
+            In affine geometry, $A(Q_1, Q_2, Q_3) = 0$ is the Triple Quad Formula for collinear points. In algebra, it answers a seemingly unrelated question (<strong>Theorem 3.9, Quadratic Compatibility</strong>): when do two quadratic equations $(x - p_1)^2 = r_1$ and $(x - p_2)^2 = r_2$ share a common solution?
+          </p>
+          <p>
+            Computing their resultant shows they are compatible precisely when $A\big(r_1,\, r_2,\, (p_1 - p_2)^2\big) = 0$, or equivalently:
+          </p>
+          <div class="formula-well formula-well-sky">
+            <div class="formula-caption formula-caption-sky">Quadratic Compatibility Condition &amp; Common Root</div>
+            <div>$$\big((p_1 - p_2)^2 - (r_1 + r_2)\big)^2 - 4r_1r_2 = 0$$</div>
+            <div style="margin-top: var(--space-xs);">$$p_1 \neq p_2 \implies x = \frac{p_1 + p_2}{2} - \frac{r_1 - r_2}{2(p_1 - p_2)}$$</div>
+          </div>
+          <p>
+            Notice what happens when we subtract $(x - p_1)^2 = r_1$ and $(x - p_2)^2 = r_2$: the $x^2$ terms cancel! As long as $p_1 \neq p_2$, the unique shared root is a purely linear rational function of $p_1, p_2, r_1, r_2$—requiring <strong>no square roots</strong> whatsoever.
+          </p>
+        </div>
+
+        <div class="panel">
+          <span class="coord-label">Interactive Compatibility Explorer</span>
+          <h3 class="subhead" style="margin-top: var(--space-xs);">Adjust Centers $p_1, p_2$ and Radius $r_1$</h3>
+          <p class="muted-caption" style="margin: 0 0 var(--space-md) 0;">
+            Here $r_2$ is chosen on the compatibility locus $r_2 = (\sqrt{r_1} - |p_1-p_2|)^2$ so that $A(r_1, r_2, (p_1-p_2)^2) = 0$ holds identically. Watch both parabolas cross the zero-axis at the exact common root $B$.
+          </p>
+
+          <div style="display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-sm); margin-bottom: var(--space-md);">
+            <div class="field-group">
+              <label class="field-label" for="slider-p1">Center $p_1$: <span id="lbl-p1">1.5</span></label>
+              <input class="range-input" id="slider-p1" type="range" min="-2" max="4" step="0.25" value="1.5" oninput="updateArchimedesFromControls()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="slider-p2">Center $p_2$: <span id="lbl-p2">3.0</span></label>
+              <input class="range-input" id="slider-p2" type="range" min="-2" max="4" step="0.25" value="3.0" oninput="updateArchimedesFromControls()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="slider-r1">RHS $r_1$: <span id="lbl-r1">4.00</span></label>
+              <input class="range-input" id="slider-r1" type="range" min="0" max="9" step="0.25" value="4.0" oninput="updateArchimedesFromControls()">
+            </div>
+          </div>
+
+          <svg id="svg-archimedes" class="svg-stage" viewBox="0 0 520 270" role="img" aria-label="Plot of two compatible quadratic equations intersecting at zero">
+            <rect width="520" height="270" fill="var(--background)" />
+            <g id="arch-axes"></g>
+            <path id="arch-curve-1" fill="none" stroke="var(--data-1)" stroke-width="2.5" />
+            <path id="arch-curve-2" fill="none" stroke="var(--data-2)" stroke-width="2.2" />
+            <g id="arch-markers"></g>
+          </svg>
+
+          <div class="readout-grid" style="margin-top: var(--space-md);">
+            <div class="readout-tile">
+              <span class="coord-label">Compatible $r_2$</span>
+              <div class="readout-val" id="arch-r2-val">—</div>
+            </div>
+            <div class="readout-tile">
+              <span class="coord-label">Common Root $B$</span>
+              <div class="readout-val readout-val-brass" id="arch-root-val">—</div>
+            </div>
+            <div class="readout-tile readout-tile-wide">
+              <span class="coord-label">Archimedes Check $A\big(r_1, r_2, (p_1-p_2)^2\big)$</span>
+              <div class="readout-val" id="arch-check-val">0 (exact compatibility satisfied)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: THEOREMS 4.1 AND 4.2 -->
+    <section id="sec-theorems" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">04 · Main Theorems of the Paper</p>
+        <h2 class="section-title">Theorems 4.1 &amp; 4.2: Quadrea of a Quadrangle and Dual Quadreal of a Quadrilateral</h2>
+        <div class="prose prose-wide">
+          <p>
+            For any non-null projective quadrangle $\overline{a_1a_2a_3a_4}$ with cyclic ordering $(a_1, a_2, a_3, a_4)$, side quadrances $q_{12}, q_{23}, q_{34}, q_{41}$, and vertex spreads $S_1 \equiv S(L_{41}, L_{12})$, $S_2 \equiv S(L_{12}, L_{23})$, $S_3 \equiv S(L_{23}, L_{34})$, $S_4 \equiv S(L_{34}, L_{41})$, Coady proves via symbolic verification of the TQF compatibility identity (Equation 5 of the paper) that both triangulation quadratics always share a solution.
+          </p>
+        </div>
+      </div>
+
+      <div class="split-grid-even">
+        <!-- Theorem 4.1 -->
+        <article class="panel">
+          <span class="badge badge-brass">Theorem 4.1 · Projective Quadrangle</span>
+          <h3 class="subhead" style="margin-top: var(--space-sm);">Quadrea $B(\overline{a_1a_2a_3a_4})$</h3>
+          <p style="color: var(--on-surface-variant); font-size: 0.95rem;">
+            The quadrea $B$ is the common solution to the pair of compatible quadratic equations:
+          </p>
+          <div class="formula-well">
+            <div>$$\big(B - q_{12}q_{23}S_2 - q_{34}q_{41}S_4\big)^2 = 4q_{12}q_{23}q_{34}q_{41}(1-S_1)(1-S_3)$$</div>
+            <div style="margin-top: var(--space-xs);">$$\big(B - q_{41}q_{12}S_1 - q_{23}q_{34}S_3\big)^2 = 4q_{12}q_{23}q_{34}q_{41}(1-S_2)(1-S_4)$$</div>
+          </div>
+          <p style="color: var(--on-surface-variant); font-size: 0.95rem;">
+            Whenever $q_{12}q_{23}S_2 + q_{34}q_{41}S_4 - q_{41}q_{12}S_1 - q_{23}q_{34}S_3 \neq 0$, the unique rational solution is:
+          </p>
+          <div class="formula-well">
+            <div>$$B = \frac{q_{12}q_{23}S_2 + q_{34}q_{41}S_4 + q_{41}q_{12}S_1 + q_{23}q_{34}S_3}{2} - \frac{4q_{12}q_{23}q_{34}q_{41}\big((1-S_1)(1-S_3) - (1-S_2)(1-S_4)\big)}{2\big(q_{12}q_{23}S_2 + q_{34}q_{41}S_4 - q_{41}q_{12}S_1 - q_{23}q_{34}S_3\big)}$$</div>
+          </div>
+          <details class="proof-drawer">
+            <summary>Remarks 4.1.1 &amp; 4.1.2 · Symmetry and the Square Case</summary>
+            <p style="margin: 0 0 var(--space-sm) 0; font-size: 0.92rem; color: var(--on-surface-variant);">
+              <strong>Cyclic invariance (Remark 4.1.1):</strong> Rotating indices $a_1 \to a_2 \to a_3 \to a_4 \to a_1$ simply swaps Equation (3a) with Equation (3b), leaving $B$ unchanged.
+            </p>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--on-surface-variant);">
+              <strong>Projective square (Remark 4.1.2):</strong> When all quadrances equal $q$ and all spreads equal $S$, both equations become $(B - 2q^2S)^2 = \big(2q^2(1-S)\big)^2$, yielding two algebraic solutions: $B = 2q^2$ or $B = 4q^2S - 2q^2$.
+            </p>
+          </details>
+        </article>
+
+        <!-- Theorem 4.2 -->
+        <article class="panel">
+          <span class="badge">Theorem 4.2 · Dual Projective Quadrilateral</span>
+          <h3 class="subhead" style="margin-top: var(--space-sm);">Quadreal $M(\overline{L_1L_2L_3L_4})$</h3>
+          <p style="color: var(--on-surface-variant); font-size: 0.95rem;">
+            By complete point–line duality ($a_i \leftrightarrow L_i$, $q_{ij} \leftrightarrow S_{ij}$, $S_i \leftrightarrow q_i$), the quadreal $M$ of a quadrilateral $\overline{L_1L_2L_3L_4}$ satisfies the dual compatible pair:
+          </p>
+          <div class="formula-well formula-well-sky">
+            <div>$$\big(M - S_{12}S_{23}q_2 - S_{34}S_{41}q_4\big)^2 = 4S_{12}S_{23}S_{34}S_{41}(1-q_1)(1-q_3)$$</div>
+            <div style="margin-top: var(--space-xs);">$$\big(M - S_{41}S_{12}q_1 - S_{23}S_{34}q_3\big)^2 = 4S_{12}S_{23}S_{34}S_{41}(1-q_2)(1-q_4)$$</div>
+          </div>
+          <p style="color: var(--on-surface-variant); font-size: 0.95rem;">
+            And when the centers differ, the closed-form rational quadreal is:
+          </p>
+          <div class="formula-well formula-well-sky">
+            <div>$$M = \frac{S_{12}S_{23}q_2 + S_{34}S_{41}q_4 + S_{41}S_{12}q_1 + S_{23}S_{34}q_3}{2} - \frac{4S_{12}S_{23}S_{34}S_{41}\big((1-q_1)(1-q_3) - (1-q_2)(1-q_4)\big)}{2\big(S_{12}S_{23}q_2 + S_{34}S_{41}q_4 - S_{41}S_{12}q_1 - S_{23}S_{34}q_3\big)}$$</div>
+          </div>
+          <details class="proof-drawer">
+            <summary>Quadreal of a Quadrangle &amp; Quadrea of a Quadrilateral</summary>
+            <p style="margin: 0; font-size: 0.92rem; color: var(--on-surface-variant);">
+              Consistent with triangle–trilateral convention, the quadreal $M(\overline{a_1a_2a_3a_4})$ of a quadrangle is the quadreal of its associated quadrilateral $L_{12}L_{23}L_{34}L_{41}$ (obtained by swapping $q_{ij} \leftrightarrow S_i$ cyclically in Theorem 4.2).
+            </p>
+          </details>
+        </article>
+      </div>
+    </section>
+
+    <!-- SECTION 5: EXACT RATIONAL WORKBENCH -->
+    <section id="sec-workbench" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">05 · Exact Rational $\mathbb{Q}$ Workbench</p>
+        <h2 class="section-title">Compute $B$, $M$, and Compatibility Live with Exact `BigInt` Fractions</h2>
+        <div class="prose prose-wide">
+          <p>
+            Drag any vertex on the projective $z=1$ canvas or edit the integer homogeneous coordinates $[x_i : y_i : z_i]$ directly. Every intermediate quadrance, join line, spread, Archimedes compatibility check $A(Q_1, Q_2, Q_3) = 0$, and both quadratic equations are evaluated in <strong>exact rational arithmetic</strong>—zero floating-point rounding.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:var(--space-md); padding-bottom: var(--space-md); border-bottom: var(--hairline);">
+          <div class="btn-row" role="group" aria-label="Geometry metric mode">
+            <span class="coord-label" style="margin-right: var(--space-xs);">Metric:</span>
+            <button type="button" class="btn btn-active" id="wb-mode-hyp" onclick="setWorkbenchMetric('hyperbolic')">Hyperbolic ($x^2+y^2-z^2$)</button>
+            <button type="button" class="btn" id="wb-mode-ell" onclick="setWorkbenchMetric('elliptic')">Elliptic ($x^2+y^2+z^2$)</button>
+          </div>
+          <div class="btn-row" role="group" aria-label="Worked presets from paper">
+            <span class="coord-label" style="margin-right: var(--space-xs);">Presets:</span>
+            <button type="button" class="btn btn-sky-active" id="preset-ex1" onclick="loadWorkbenchPreset('ex1')">Coady Ex. 1 (Hyp.)</button>
+            <button type="button" class="btn" id="preset-mixed" onclick="loadWorkbenchPreset('mixed')">Mixed Inside/Outside</button>
+            <button type="button" class="btn" id="preset-elliptic" onclick="loadWorkbenchPreset('elliptic')">Celestial Elliptic</button>
+            <button type="button" class="btn" id="preset-right" onclick="loadWorkbenchPreset('right')">Right ($S_1=1$)</button>
+            <button type="button" class="btn" id="preset-square" onclick="loadWorkbenchPreset('square')">Square (Rem. 4.1.2)</button>
+          </div>
+        </div>
+
+        <div class="workbench-grid" style="margin-top: var(--space-lg);">
+          <!-- Left: SVG Canvas + Homogeneous Coordinate Inputs -->
+          <div style="display:grid; gap: var(--space-md);">
+            <svg id="svg-workbench" class="svg-stage svg-stage-tall" viewBox="0 0 500 400" role="img" aria-label="Interactive projective quadrangle canvas; drag points a1 through a4">
+              <rect width="500" height="400" fill="var(--background)" />
+              <line x1="20" y1="200" x2="480" y2="200" stroke="var(--outline-variant)" stroke-width="1" />
+              <line x1="250" y1="20" x2="250" y2="380" stroke="var(--outline-variant)" stroke-width="1" />
+              <circle id="wb-null-circle" cx="250" cy="200" r="110" fill="none" stroke="var(--outline)" stroke-width="1.5" stroke-dasharray="5 4" />
+              <text id="wb-circle-label" x="364" y="192" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="11">X²+Y²=1</text>
+
+              <polygon id="wb-poly" points="0,0 0,0 0,0 0,0" fill="var(--brass-tint)" stroke="var(--primary)" stroke-width="2" />
+              <line id="wb-diag-1" x1="0" y1="0" x2="0" y2="0" stroke="var(--outline)" stroke-width="1" stroke-dasharray="4 4" />
+              <line id="wb-diag-2" x1="0" y1="0" x2="0" y2="0" stroke="var(--outline)" stroke-width="1" stroke-dasharray="4 4" />
+
+              <g id="wb-side-labels"></g>
+              <g id="wb-handles"></g>
+            </svg>
+            <p class="muted-caption" style="margin:0;">
+              Drag vertices on the $z=1$ projection (snaps to $1/10$ rational increments) or enter exact integers $[x : y : z]$ below.
+            </p>
+
+            <div class="coord-editor-grid" id="wb-coord-editors">
+              <!-- Populated cleanly via JS -->
+            </div>
+          </div>
+
+          <!-- Right: Live Exact Rational Readouts -->
+          <div style="display:grid; gap: var(--space-md);">
+            <div id="wb-status-banner" class="observation-well" style="font-size: 0.85rem;">
+              Computing exact rational invariants…
+            </div>
+
+            <div class="readout-grid">
+              <div class="readout-tile">
+                <span class="coord-label">Quadrances $q_{12}, q_{23}$</span>
+                <div class="readout-val" id="wb-q12-val">—</div>
+                <div class="readout-val" id="wb-q23-val">—</div>
+              </div>
+              <div class="readout-tile">
+                <span class="coord-label">Quadrances $q_{34}, q_{41}$</span>
+                <div class="readout-val" id="wb-q34-val">—</div>
+                <div class="readout-val" id="wb-q41-val">—</div>
+              </div>
+              <div class="readout-tile">
+                <span class="coord-label">Spreads $S_1, S_2$</span>
+                <div class="readout-val" id="wb-s1-val">—</div>
+                <div class="readout-val" id="wb-s2-val">—</div>
+              </div>
+              <div class="readout-tile">
+                <span class="coord-label">Spreads $S_3, S_4$</span>
+                <div class="readout-val" id="wb-s3-val">—</div>
+                <div class="readout-val" id="wb-s4-val">—</div>
+              </div>
+
+              <div class="readout-tile">
+                <span class="coord-label">Quadrea $B(\overline{a_1a_2a_3a_4})$</span>
+                <div class="readout-val readout-val-brass" id="wb-B-val">—</div>
+                <div class="muted-caption" id="wb-B-dec" style="margin-top:var(--space-xs);">—</div>
+              </div>
+              <div class="readout-tile">
+                <span class="coord-label">Quadreal $M(\overline{a_1a_2a_3a_4})$</span>
+                <div class="readout-val readout-val-sky" id="wb-M-val">—</div>
+                <div class="muted-caption" id="wb-M-dec" style="margin-top:var(--space-xs);">—</div>
+              </div>
+
+              <div class="readout-tile readout-tile-wide">
+                <span class="coord-label">Exact Compatible Quadratic &amp; Archimedes Verification</span>
+                <div class="readout-val" id="wb-verify-eq1" style="font-size:0.82rem;">—</div>
+                <div class="readout-val" id="wb-verify-eq2" style="font-size:0.82rem;">—</div>
+                <div class="readout-val" id="wb-verify-arch" style="font-size:0.82rem; color:var(--positive);">—</div>
+                <div class="readout-val" id="wb-verify-BM" style="font-size:0.82rem; color:var(--on-surface-variant);">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 6: COROLLARIES & DEGENERATE REGIMES -->
+    <section id="sec-corollaries" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">06 · Degenerate &amp; Right Quadrangles</p>
+        <h2 class="section-title">How Degenerate Quadrangles Recover Triangle Quadrea and the Dual Pythagoras Theorem</h2>
+        <div class="prose prose-wide">
+          <p>
+            A true algebraic invariant must behave gracefully when a configuration degenerates or acquires perpendicularity. Coady establishes three corollaries showing how Theorem 4.1 collapses cleanly to known foundational laws of UHG.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="btn-row" style="margin-bottom: var(--space-lg);" role="group" aria-label="Select corollary">
+          <button type="button" class="btn btn-active" id="cor-btn-1" onclick="selectCorollary(1)">Cor. 4.1.1 · Coincident Points</button>
+          <button type="button" class="btn" id="cor-btn-2" onclick="selectCorollary(2)">Cor. 4.1.2 · Dual Pythagoras ($a_1 \perp a_3$)</button>
+          <button type="button" class="btn" id="cor-btn-3" onclick="selectCorollary(3)">Cor. 4.1.3 · Right Quadrangle ($S_1 = 1$)</button>
+        </div>
+
+        <div class="split-grid">
+          <div>
+            <svg id="svg-corollary" class="svg-stage" viewBox="0 0 480 340" role="img" aria-label="Interactive corollary degeneracy diagram">
+              <rect width="480" height="340" fill="var(--background)" />
+              <g id="cor-svg-content"></g>
+            </svg>
+            <div id="cor-slider-wrap" style="margin-top: var(--space-md);">
+              <div class="field-group">
+                <label class="field-label" for="cor-morph-slider" id="cor-slider-label">Morph parameter $t$ (approach collinearity): <span id="cor-slider-val">1.00</span></label>
+                <input class="range-input" id="cor-morph-slider" type="range" min="0" max="1" step="0.05" value="1" oninput="updateCorollaryMorph(this.value)">
+              </div>
+            </div>
+          </div>
+
+          <div style="display:grid; gap: var(--space-md);">
+            <div id="cor-badge-row"></div>
+            <h3 class="subhead" id="cor-title" style="margin:0;">Corollary 4.1.1: Two Adjacent Points Coincide</h3>
+            <div id="cor-explanation" class="prose" style="font-size:0.98rem;"></div>
+            <div class="formula-well" id="cor-formula-box"></div>
+            <div class="observation-well" id="cor-numeric-check" style="font-size:0.85rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 7: HYPERBOLIC & ELLIPTIC UNIFICATION + APPLICATIONS -->
+    <section id="sec-unification" class="narrative-section reveal">
+      <div>
+        <p class="deck-brass">07 · Universal Reach &amp; Applied Domains</p>
+        <h2 class="section-title">One Algebraic Structure Across Relativistic Minkowski Space and Celestial Spheres</h2>
+        <div class="prose prose-wide">
+          <p>
+            Remark 4.1.3 highlights one of the deepest insights of Universal Hyperbolic Geometry: the polynomial equations of Theorems 4.1 and 4.2 do not depend on whether the ambient three-dimensional quadratic form is hyperbolic ($x^2+y^2-z^2$) or elliptic ($x^2+y^2+z^2$). Because all proofs proceed purely through rational polynomial identities over $\mathbb{Q}$, every theorem in this framework applies simultaneously to Lorentzian spacetime geometry and spherical celestial trigonometry.
+          </p>
+        </div>
+      </div>
+
+      <div class="card-grid">
+        <article class="panel card-wrapper">
+          <div class="card-inner-split">
+            <div>
+              <span class="badge badge-brass">Relativistic Physics</span>
+              <h3 class="subhead" style="margin-top: var(--space-sm);">Projective Spacetime &amp; Null Cones</h3>
+              <p style="font-size: 0.94rem; color: var(--on-surface-variant); margin: 0;">
+                Hyperbolic geometry is precisely projective relativistic geometry. The unit circle $X^2+Y^2=1$ is the null light cone ($x^2+y^2-z^2=0$); interior points form the hyperboloid of two sheets (timelike rays), while exterior points form the hyperboloid of one sheet (spacelike rays).
+              </p>
+            </div>
+            <div class="observation-well" style="font-size: 0.82rem;">
+              <div class="coord-label">Form Signature</div>
+              <div style="margin-top: var(--space-xs);">$x^2 + y^2 - z^2$</div>
+              <div style="margin-top: var(--space-sm);" class="coord-label">Quadrance Signs</div>
+              <div style="margin-top: var(--space-xs); color: var(--on-surface-variant);">
+                $q &lt; 0$ inside disk<br>
+                $q = 0$ on null line<br>
+                $q &gt; 0$ across exterior/mixed pairs
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel card-wrapper">
+          <div class="card-inner-split">
+            <div>
+              <span class="badge">Astronomy &amp; Geodesy</span>
+              <h3 class="subhead" style="margin-top: var(--space-sm);">Exact Spherical Quadrangles</h3>
+              <p style="font-size: 0.94rem; color: var(--on-surface-variant); margin: 0;">
+                Using elliptic coordinates ($x^2+y^2+z^2$), Coady’s Example 2 computes the exact rational quadrea and quadreal of the Big Dipper’s bowl (Dubhe, Merak, Phecda, Megrez) on the celestial sphere without spherical sines, cosines, or rounding drift.
+              </p>
+            </div>
+            <div class="observation-well" style="font-size: 0.82rem;">
+              <div class="coord-label">Form Signature</div>
+              <div style="margin-top: var(--space-xs);">$x^2 + y^2 + z^2$</div>
+              <div style="margin-top: var(--space-sm);" class="coord-label">Celestial Range</div>
+              <div style="margin-top: var(--space-xs); color: var(--on-surface-variant);">
+                No real null points over $\mathbb{Q}$<br>
+                $0 \le q \le 1$, $0 \le S \le 1$<br>
+                Exact symbolic star-atlas invariants
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel card-wrapper">
+          <div class="card-inner-split">
+            <div>
+              <span class="badge badge-mint">CAGD &amp; Education</span>
+              <h3 class="subhead" style="margin-top: var(--space-sm);">Zero-Approximation Computation</h3>
+              <p style="font-size: 0.94rem; color: var(--on-surface-variant); margin: 0;">
+                Because every law reduces to polynomial arithmetic over $\mathbb{Q}$, symbolic algebra systems (SymPy, Maple, Mathematica) and undergraduate classrooms can verify non-Euclidean theorems in exact fractions without calculus or real-number limits.
+              </p>
+            </div>
+            <div class="observation-well" style="font-size: 0.82rem;">
+              <div class="coord-label">Verification Stack</div>
+              <div style="margin-top: var(--space-xs);">$\mathbb{Q}$ (char $\neq 2$)</div>
+              <div style="margin-top: var(--space-sm);" class="coord-label">Core Engine</div>
+              <div style="margin-top: var(--space-xs); color: var(--on-surface-variant);">
+                Join &amp; Meet cross product $J$<br>
+                Archimedes check $A=0$<br>
+                Exact ratio $B$ and dual $M$
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p style="margin: 0 0 var(--space-xs) 0;">
+        <strong>Primary Sources:</strong> John David Coady, <em>The Quadrea of a Projective Quadrangle Theorem in Universal Hyperbolic Geometry: Using Archimedes’ Function and Deriving Projective Pythagoras in Degenerate Quadrangles</em> (September 30, 2025); N. J. Wildberger, <em>Universal Hyperbolic Geometry I: Trigonometry</em> (UNSW Sydney, <em>Geometriae Dedicata</em>, 2013).
+      </p>
+      <p class="muted-caption" style="margin: 0;">
+        All numerical computations on this page execute live in exact BigInt rational arithmetic over $\mathbb{Q}$.
+      </p>
+    </footer>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. EXACT RATIONAL ARITHMETIC (BigInt Frac)
+    // =========================================================================
+    function bigAbs(n) {
+      return n < 0n ? -n : n;
+    }
+
+    function bigGcd(a, b) {
+      a = bigAbs(a);
+      b = bigAbs(b);
+      while (b !== 0n) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a === 0n ? 1n : a;
+    }
+
+    function makeFrac(num, den = 1n) {
+      let n = BigInt(num);
+      let d = BigInt(den);
+      if (d === 0n) return null;
+      if (d < 0n) {
+        n = -n;
+        d = -d;
+      }
+      if (n === 0n) return { n: 0n, d: 1n };
+      const g = bigGcd(n, d);
+      return { n: n / g, d: d / g };
+    }
+
+    function fAdd(a, b) {
+      if (!a || !b) return null;
+      return makeFrac(a.n * b.d + b.n * a.d, a.d * b.d);
+    }
+
+    function fSub(a, b) {
+      if (!a || !b) return null;
+      return makeFrac(a.n * b.d - b.n * a.d, a.d * b.d);
+    }
+
+    function fMul(a, b) {
+      if (!a || !b) return null;
+      return makeFrac(a.n * b.n, a.d * b.d);
+    }
+
+    function fDiv(a, b) {
+      if (!a || !b || b.n === 0n) return null;
+      return makeFrac(a.n * b.d, a.d * b.n);
+    }
+
+    function fEq(a, b) {
+      if (!a || !b) return false;
+      return a.n === b.n && a.d === b.d;
+    }
+
+    function fIsZero(a) {
+      return a && a.n === 0n;
+    }
+
+    function fStr(a) {
+      if (!a) return `undefined`;
+      if (a.d === 1n) return `${a.n.toString()}`;
+      return `${a.n.toString()} / ${a.d.toString()}`;
+    }
+
+    function fApprox(a) {
+      if (!a) return `—`;
+      const s = a.n.toString();
+      const d = a.d.toString();
+      if (s.length < 15 && d.length < 15) {
+        return (Number(a.n) / Number(a.d)).toFixed(6);
+      }
+      const sign = a.n < 0n ? -1 : 1;
+      const absN = bigAbs(a.n);
+      const scaled = (absN * 1000000n) / a.d;
+      const intPart = scaled / 1000000n;
+      const decPart = (scaled % 1000000n).toString().padStart(6, `0`);
+      return `${sign < 0 ? `-` : ``}${intPart.toString()}.${decPart}`;
+    }
+
+    // =========================================================================
+    // 2. UHG PROJECTIVE ENGINE (Hyperbolic & Elliptic)
+    // =========================================================================
+    function uhgDot(v1, v2, mode) {
+      const s = mode === `elliptic` ? 1n : -1n;
+      return v1[0] * v2[0] + v1[1] * v2[1] + s * v1[2] * v2[2];
+    }
+
+    function uhgQuadrance(v1, v2, mode) {
+      const n1 = uhgDot(v1, v1, mode);
+      const n2 = uhgDot(v2, v2, mode);
+      if (n1 === 0n || n2 === 0n) return null;
+      const dot = uhgDot(v1, v2, mode);
+      const p = makeFrac(dot * dot, n1 * n2);
+      return fSub(makeFrac(1n, 1n), p);
+    }
+
+    function uhgJoin(v1, v2, mode) {
+      // Hyperbolic: (y1z2 - y2z1, z1x2 - z2x1, x2y1 - x1y2)
+      // Elliptic:   (y1z2 - y2z1, z1x2 - z2x1, x1y2 - x2y1)
+      const l = v1[1] * v2[2] - v2[1] * v1[2];
+      const m = v1[2] * v2[0] - v2[2] * v1[0];
+      const n = mode === `elliptic`
+        ? (v1[0] * v2[1] - v2[0] * v1[1])
+        : (v2[0] * v1[1] - v1[0] * v2[1]);
+      if (l === 0n && m === 0n && n === 0n) return null;
+      const g = bigGcd(bigGcd(l, m), n);
+      return [l / g, m / g, n / g];
+    }
+
+    function archimedesFn(x, y, z) {
+      // 4xy - (x + y - z)^2
+      const xy4 = fMul(makeFrac(4n, 1n), fMul(x, y));
+      const diff = fSub(fAdd(x, y), z);
+      return fSub(xy4, fMul(diff, diff));
+    }
+
+    function computeQuadrangleUHG(pts, mode) {
+      // pts = [[x,y,z], ...] length 4 (BigInt)
+      const q12 = uhgQuadrance(pts[0], pts[1], mode);
+      const q23 = uhgQuadrance(pts[1], pts[2], mode);
+      const q34 = uhgQuadrance(pts[2], pts[3], mode);
+      const q41 = uhgQuadrance(pts[3], pts[0], mode);
+
+      const L12 = uhgJoin(pts[0], pts[1], mode);
+      const L23 = uhgJoin(pts[1], pts[2], mode);
+      const L34 = uhgJoin(pts[2], pts[3], mode);
+      const L41 = uhgJoin(pts[3], pts[0], mode);
+
+      if (!L12 || !L23 || !L34 || !L41 || !q12 || !q23 || !q34 || !q41) {
+        return { error: `Degenerate or null point/line detected (coincident points or null norm x²+y²∓z²=0).` };
+      }
+
+      const S1 = uhgQuadrance(L41, L12, mode);
+      const S2 = uhgQuadrance(L12, L23, mode);
+      const S3 = uhgQuadrance(L23, L34, mode);
+      const S4 = uhgQuadrance(L34, L41, mode);
+
+      if (!S1 || !S2 || !S3 || !S4) {
+        return { error: `At least one side line is null (l²+m²∓n² = 0), so its spread is undefined.` };
+      }
+
+      const one = makeFrac(1n, 1n);
+      const four = makeFrac(4n, 1n);
+      const two = makeFrac(2n, 1n);
+
+      // Quadrea B (Theorem 4.1)
+      const p1B = fAdd(fMul(fMul(q12, q23), S2), fMul(fMul(q34, q41), S4));
+      const p2B = fAdd(fMul(fMul(q41, q12), S1), fMul(fMul(q23, q34), S3));
+      const prodQ = fMul(fMul(q12, q23), fMul(q34, q41));
+      const r1B = fMul(fMul(four, prodQ), fMul(fSub(one, S1), fSub(one, S3)));
+      const r2B = fMul(fMul(four, prodQ), fMul(fSub(one, S2), fSub(one, S4)));
+
+      const diffPB = fSub(p1B, p2B);
+      const archB = archimedesFn(r1B, r2B, fMul(diffPB, diffPB));
+
+      let B = null;
+      let BAlt = null;
+      let BIdentical = false;
+      if (!fIsZero(diffPB)) {
+        const term1 = fDiv(fAdd(p1B, p2B), two);
+        const term2 = fDiv(fSub(r1B, r2B), fMul(two, diffPB));
+        B = fSub(term1, term2);
+      } else {
+        BIdentical = true;
+        // Equations identical: check if square case (B - 2q^2S)^2 = (2q^2(1-S))^2
+        // General quadratic fallback when r1B is a square or just evaluate 2q^2 and 4q^2S-2q^2 if equal
+        if (fEq(q12, q23) && fEq(q23, q34) && fEq(q34, q41) && fEq(S1, S2) && fEq(S2, S3) && fEq(S3, S4)) {
+          const qq = fMul(q12, q12);
+          B = fMul(two, qq);
+          BAlt = fSub(fMul(four, fMul(qq, S1)), fMul(two, qq));
+        }
+      }
+
+      // Quadreal M (Theorem 4.2, eq 9)
+      const p1M = fAdd(fMul(fMul(S2, S3), q23), fMul(fMul(S4, S1), q41));
+      const p2M = fAdd(fMul(fMul(S1, S2), q12), fMul(fMul(S3, S4), q34));
+      const prodS = fMul(fMul(S1, S2), fMul(S3, S4));
+      const r1M = fMul(fMul(four, prodS), fMul(fSub(one, q12), fSub(one, q34)));
+      const r2M = fMul(fMul(four, prodS), fMul(fSub(one, q23), fSub(one, q41)));
+
+      const diffPM = fSub(p1M, p2M);
+      const archM = archimedesFn(r1M, r2M, fMul(diffPM, diffPM));
+
+      let M = null;
+      let MIdentical = false;
+      if (!fIsZero(diffPM)) {
+        const term1M = fDiv(fAdd(p1M, p2M), two);
+        const term2M = fDiv(fSub(r1M, r2M), fMul(two, diffPM));
+        M = fSub(term1M, term2M);
+      } else {
+        MIdentical = true;
+        if (fEq(q12, q23) && fEq(q23, q34) && fEq(q34, q41) && fEq(S1, S2) && fEq(S2, S3) && fEq(S3, S4)) {
+          const SS = fMul(S1, S1);
+          M = fMul(two, SS);
+        }
+      }
+
+      // Equation LHS checks for B
+      let eq1BLHS = null;
+      let eq2BLHS = null;
+      if (B) {
+        const d1 = fSub(B, p1B);
+        const d2 = fSub(B, p2B);
+        eq1BLHS = fMul(d1, d1);
+        eq2BLHS = fMul(d2, d2);
+      }
+
+      return {
+        q12, q23, q34, q41,
+        L12, L23, L34, L41,
+        S1, S2, S3, S4,
+        p1B, p2B, r1B, r2B, archB, B, BAlt, BIdentical,
+        eq1BLHS, eq2BLHS,
+        p1M, p2M, r1M, r2M, archM, M, MIdentical,
+        BM: (B && M) ? fMul(B, M) : null
+      };
+    }
+
+    // =========================================================================
+    // 3. SECTION 1 & 2 INTERACTIVE CONTROLS
+    // =========================================================================
+    function setLawHighlight(which) {
+      const btnUhg = document.getElementById(`btn-laws-uhg`);
+      const btnRt = document.getElementById(`btn-laws-rt`);
+      if (btnUhg && btnRt) {
+        btnUhg.classList.toggle(`btn-active`, which === `uhg`);
+        btnRt.classList.toggle(`btn-active`, which === `rt`);
+      }
+      const cells = document.querySelectorAll(`[data-uhg-cell]`);
+      cells.forEach((cell) => {
+        cell.style.color = which === `uhg` ? `var(--primary)` : `var(--on-surface)`;
+      });
+    }
+
+    function setTriangulationView(mode) {
+      const g1 = document.getElementById(`tri-group-1`);
+      const g2 = document.getElementById(`tri-group-2`);
+      const sum = document.getElementById(`tri-summary`);
+      const b1 = document.getElementById(`btn-tri-1`);
+      const b2 = document.getElementById(`btn-tri-2`);
+      const b0 = document.getElementById(`btn-tri-both`);
+
+      if (b1) b1.classList.toggle(`btn-active`, mode === 1);
+      if (b2) b2.classList.toggle(`btn-active`, mode === 2);
+      if (b0) b0.classList.toggle(`btn-sky-active`, mode === 0);
+
+      if (g1) g1.style.opacity = mode === 2 ? `0.12` : `1`;
+      if (g2) g2.style.opacity = mode === 1 ? `0.12` : `1`;
+
+      if (sum) {
+        if (mode === 1) {
+          sum.textContent = `Triangulation I (diagonal a₁a₃): sums Δa₁a₂a₃ and Δa₃a₄a₁ via p₁ = q₁₂q₂₃S₂ + q₃₄q₄₁S₄, leading to (B − p₁)² = 4q₁₂q₂₃q₃₄q₄₁(1−S₁)(1−S₃).`;
+        } else if (mode === 2) {
+          sum.textContent = `Triangulation II (diagonal a₂a₄): sums Δa₁a₂a₄ and Δa₂a₃a₄ via p₂ = q₄₁q₁₂S₁ + q₂₃q₃₄S₃, leading to (B − p₂)² = 4q₁₂q₂₃q₃₄q₄₁(1−S₂)(1−S₄).`;
+        } else {
+          sum.textContent = `Comparing both triangulations: Triangulation I anchors (B − p₁)² = r₁ via S₂, S₄, while Triangulation II anchors (B − p₂)² = r₂ via S₁, S₃.`;
+        }
+      }
+    }
+
+    // =========================================================================
+    // 4. SECTION 3: ARCHIMEDES QUADRATIC COMPATIBILITY VISUALIZER
+    // =========================================================================
+    function updateArchimedesFromControls() {
+      const sp1 = document.getElementById(`slider-p1`);
+      const sp2 = document.getElementById(`slider-p2`);
+      const sr1 = document.getElementById(`slider-r1`);
+      if (!sp1 || !sp2 || !sr1) return;
+
+      const p1 = parseFloat(sp1.value);
+      const p2 = parseFloat(sp2.value);
+      const r1 = parseFloat(sr1.value);
+
+      const lp1 = document.getElementById(`lbl-p1`);
+      const lp2 = document.getElementById(`lbl-p2`);
+      const lr1 = document.getElementById(`lbl-r1`);
+      if (lp1) lp1.textContent = p1.toFixed(2);
+      if (lp2) lp2.textContent = p2.toFixed(2);
+      if (lr1) lr1.textContent = r1.toFixed(2);
+
+      // Compatibility: A(r1, r2, (p1-p2)^2) = 0 => sqrt(r2) = |sqrt(r1) - |p1-p2|| or sqrt(r1) + |p1-p2|
+      // Choose r2 = (Math.sqrt(r1) - Math.abs(p1 - p2))^2 so the positive/negative branch aligns cleanly
+      const sr1Val = Math.sqrt(r1);
+      const dp = Math.abs(p1 - p2);
+      const r2 = (sr1Val - dp) * (sr1Val - dp);
+      const q3 = dp * dp;
+      const archVal = 4 * r1 * r2 - Math.pow(r1 + r2 - q3, 2);
+
+      const r2El = document.getElementById(`arch-r2-val`);
+      const rootEl = document.getElementById(`arch-root-val`);
+      const checkEl = document.getElementById(`arch-check-val`);
+
+      if (r2El) r2El.textContent = r2.toFixed(4);
+      if (checkEl) checkEl.textContent = `${Math.abs(archVal) < 1e-9 ? `0.0000` : archVal.toFixed(4)} (compatible)`;
+
+      let commonB = null;
+      if (Math.abs(p1 - p2) > 1e-6) {
+        commonB = (p1 + p2) / 2 - (r1 - r2) / (2 * (p1 - p2));
+        if (rootEl) rootEl.textContent = commonB.toFixed(4);
+      } else {
+        const rootA = p1 + Math.sqrt(r1);
+        const rootB = p1 - Math.sqrt(r1);
+        if (rootEl) rootEl.textContent = `${rootA.toFixed(2)} or ${rootB.toFixed(2)} (identical quadratics)`;
+      }
+
+      // Draw SVG curves y = (x - p)^2 - r
+      const axesG = document.getElementById(`arch-axes`);
+      const c1 = document.getElementById(`arch-curve-1`);
+      const c2 = document.getElementById(`arch-curve-2`);
+      const mkG = document.getElementById(`arch-markers`);
+      if (!axesG || !c1 || !c2 || !mkG) return;
+
+      const W = 520, H = 270;
+      const xMin = -3, xMax = 6;
+      const yMin = -10, yMax = 14;
+      const toX = (x) => 40 + ((x - xMin) / (xMax - xMin)) * (W - 70);
+      const toY = (y) => H - 30 - ((y - yMin) / (yMax - yMin)) * (H - 55);
+
+      const yZero = toY(0);
+      let axesHtml = `<line x1="40" y1="${yZero.toFixed(1)}" x2="${W - 30}" y2="${yZero.toFixed(1)}" stroke="var(--outline-variant)" stroke-width="1.2" />`;
+      for (let gx = -2; gx <= 5; gx++) {
+        const px = toX(gx).toFixed(1);
+        axesHtml += `<line x1="${px}" y1="25" x2="${px}" y2="${H - 30}" stroke="var(--outline-variant)" stroke-width="0.6" stroke-dasharray="2 3" />`;
+        axesHtml += `<text x="${px}" y="${H - 12}" text-anchor="middle" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="10">${gx}</text>`;
+      }
+      axesHtml += `<text x="${W - 26}" y="${yZero - 6}" text-anchor="end" fill="var(--on-surface-variant)" font-family="var(--font-label)" font-size="10">B-axis (y=0)</text>`;
+      axesG.innerHTML = axesHtml;
+
+      function buildPath(p, r) {
+        let d = ``;
+        const steps = 90;
+        for (let i = 0; i <= steps; i++) {
+          const x = xMin + (i / steps) * (xMax - xMin);
+          const y = (x - p) * (x - p) - r;
+          const clampedY = Math.max(yMin - 2, Math.min(yMax + 2, y));
+          const sx = toX(x).toFixed(1);
+          const sy = toY(clampedY).toFixed(1);
+          d += (i === 0 ? `M ` : ` L `) + `${sx} ${sy}`;
+        }
+        return d;
+      }
+
+      c1.setAttribute(`d`, buildPath(p1, r1));
+      c2.setAttribute(`d`, buildPath(p2, r2));
+
+      let markersHtml = ``;
+      if (commonB !== null && commonB >= xMin && commonB <= xMax) {
+        const bx = toX(commonB).toFixed(1);
+        const by = yZero.toFixed(1);
+        markersHtml += `<circle cx="${bx}" cy="${by}" r="6" fill="var(--primary)" stroke="var(--background)" stroke-width="2" />`;
+        markersHtml += `<text x="${bx}" y="${yZero - 12}" text-anchor="middle" fill="var(--primary)" font-family="var(--font-label)" font-size="11">Common Root B = ${commonB.toFixed(2)}</text>`;
+      } else if (commonB === null) {
+        const b1 = p1 + Math.sqrt(r1);
+        const b2 = p1 - Math.sqrt(r1);
+        [b1, b2].forEach((bVal) => {
+          if (bVal >= xMin && bVal <= xMax) {
+            const bx = toX(bVal).toFixed(1);
+            markersHtml += `<circle cx="${bx}" cy="${yZero.toFixed(1)}" r="5" fill="var(--tertiary)" stroke="var(--background)" stroke-width="1.5" />`;
+          }
+        });
+      }
+      mkG.innerHTML = markersHtml;
+    }
+
+    // =========================================================================
+    // 5. SECTION 5: EXACT RATIONAL WORKBENCH
+    // =========================================================================
+    const workbenchPresets = {
+      ex1: {
+        mode: `hyperbolic`,
+        pts: [
+          [-3, 3, 5],
+          [4, 0, 5],
+          [2, -4, 5],
+          [-2, -2, 5]
+        ],
+        note: `Coady Example 1 (Hyperbolic Interior): all 4 points lie inside the unit circle X²+Y²=1, giving negative quadrances and exact rational B = 17512/315.`
+      },
+      mixed: {
+        mode: `hyperbolic`,
+        pts: [
+          [0, 0, 1],
+          [3, 0, 2],
+          [2, 2, 1],
+          [-1, 2, 3]
+        ],
+        note: `Mixed Hyperbolic Configuration: a₁ and a₄ sit inside the null cone (two-sheet hyperboloid) while a₂ and a₃ sit outside (one-sheet hyperboloid).`
+      },
+      elliptic: {
+        mode: `elliptic`,
+        pts: [
+          [1, 2, 3],
+          [-2, 1, 3],
+          [-1, -2, 4],
+          [2, -1, 4]
+        ],
+        note: `Elliptic Spherical Projection (x²+y²+z²): positive quadrances and spreads on the celestial sphere with identical Theorem 4.1 & 4.2 laws.`
+      },
+      right: {
+        mode: `hyperbolic`,
+        pts: [
+          [0, 0, 1],
+          [1, 0, 2],
+          [1, 1, 3],
+          [0, 1, 3]
+        ],
+        note: `Right Quadrangle (Corollary 4.1.3): L₄₁ = (1:0:0) ⊥ L₁₂ = (0:1:0), so S₁ = 1 and B collapses to the exact sum of the two triangle quadreas.`
+      },
+      square: {
+        mode: `hyperbolic`,
+        pts: [
+          [1, 0, 2],
+          [0, 1, 2],
+          [-1, 0, 2],
+          [0, -1, 2]
+        ],
+        note: `Projective Square (Remark 4.1.2): all quadrances equal −7/9 and all spreads equal 48/49, making both quadratic equations identical (p₁ = p₂).`
+      }
+    };
+
+    const wbState = {
+      mode: `hyperbolic`,
+      activePreset: `ex1`,
+      pts: [
+        [-3, 3, 5],
+        [4, 0, 5],
+        [2, -4, 5],
+        [-2, -2, 5]
+      ],
+      draggingIdx: -1
+    };
+
+    function setWorkbenchMetric(mode) {
+      wbState.mode = mode;
+      const bHyp = document.getElementById(`wb-mode-hyp`);
+      const bEll = document.getElementById(`wb-mode-ell`);
+      if (bHyp) bHyp.classList.toggle(`btn-active`, mode === `hyperbolic`);
+      if (bEll) bEll.classList.toggle(`btn-active`, mode === `elliptic`);
+
+      const nc = document.getElementById(`wb-null-circle`);
+      const cl = document.getElementById(`wb-circle-label`);
+      if (nc && cl) {
+        if (mode === `hyperbolic`) {
+          nc.setAttribute(`stroke`, `var(--outline)`);
+          cl.textContent = `X²+Y²=1 (null cone)`;
+        } else {
+          nc.setAttribute(`stroke`, `var(--outline-variant)`);
+          cl.textContent = `X²+Y²=1 (unit ref.)`;
+        }
+      }
+      renderWorkbenchAll();
+    }
+
+    function loadWorkbenchPreset(key) {
+      const p = workbenchPresets[key];
+      if (!p) return;
+      wbState.activePreset = key;
+      wbState.pts = p.pts.map((arr) => [...arr]);
+      setWorkbenchMetric(p.mode);
+
+      Object.keys(workbenchPresets).forEach((k) => {
+        const btn = document.getElementById(`preset-${k}`);
+        if (btn) btn.classList.toggle(`btn-sky-active`, k === key);
+      });
+    }
+
+    function onCoordInputChange(ptIdx, compIdx, rawVal) {
+      const parsed = parseInt(rawVal, 10);
+      if (Number.isNaN(parsed)) return;
+      if (compIdx === 2 && parsed === 0 && wbState.pts[ptIdx][0] === 0 && wbState.pts[ptIdx][1] === 0) return;
+      wbState.pts[ptIdx][compIdx] = parsed;
+      wbState.activePreset = ``;
+      Object.keys(workbenchPresets).forEach((k) => {
+        const btn = document.getElementById(`preset-${k}`);
+        if (btn) btn.classList.remove(`btn-sky-active`);
+      });
+      renderWorkbenchAll();
+    }
+
+    function buildCoordEditors() {
+      const wrap = document.getElementById(`wb-coord-editors`);
+      if (!wrap) return;
+      let html = ``;
+      const labels = [`a₁`, `a₂`, `a₃`, `a₄`];
+      const comps = [`x`, `y`, `z`];
+      for (let i = 0; i < 4; i++) {
+        html += `<div class="point-box">`;
+        html += `<div class="coord-label" style="color:var(--primary);">${labels[i]} [x : y : z]</div>`;
+        html += `<div class="point-xyz">`;
+        for (let c = 0; c < 3; c++) {
+          const id = `wb-pt-${i}-${c}`;
+          html += `<div class="field-group">`;
+          html += `<label class="field-label" for="${id}">${comps[c]}</label>`;
+          html += `<input class="num-input" id="${id}" type="number" step="1" value="${wbState.pts[i][c]}" oninput="onCoordInputChange(${i}, ${c}, this.value)">`;
+          html += `</div>`;
+        }
+        html += `</div></div>`;
+      }
+      wrap.innerHTML = html;
+    }
+
+    function syncCoordEditorValues() {
+      for (let i = 0; i < 4; i++) {
+        for (let c = 0; c < 3; c++) {
+          const inp = document.getElementById(`wb-pt-${i}-${c}`);
+          if (inp && document.activeElement !== inp) {
+            inp.value = String(wbState.pts[i][c]);
+          }
+        }
+      }
+    }
+
+    function renderWorkbenchAll() {
+      syncCoordEditorValues();
+
+      // Convert pts to BigInt
+      const bigPts = wbState.pts.map((p) => [BigInt(p[0]), BigInt(p[1]), BigInt(p[2])]);
+      const res = computeQuadrangleUHG(bigPts, wbState.mode);
+
+      // Update SVG canvas (1 unit = 110px, center (250, 200))
+      const cx = 250, cy = 200, scale = 110;
+      const screenPts = wbState.pts.map((p) => {
+        const z = p[2] === 0 ? 0.001 : p[2];
+        const X = p[0] / z;
+        const Y = p[1] / z;
+        return [cx + X * scale, cy - Y * scale, X, Y, p[2] === 0];
+      });
+
+      const poly = document.getElementById(`wb-poly`);
+      const d1 = document.getElementById(`wb-diag-1`);
+      const d2 = document.getElementById(`wb-diag-2`);
+      const handlesG = document.getElementById(`wb-handles`);
+      const sideLabelsG = document.getElementById(`wb-side-labels`);
+
+      if (poly && d1 && d2 && handlesG && sideLabelsG) {
+        poly.setAttribute(`points`, screenPts.map((s) => `${s[0].toFixed(1)},${s[1].toFixed(1)}`).join(` `));
+        d1.setAttribute(`x1`, screenPts[0][0].toFixed(1));
+        d1.setAttribute(`y1`, screenPts[0][1].toFixed(1));
+        d1.setAttribute(`x2`, screenPts[2][0].toFixed(1));
+        d1.setAttribute(`y2`, screenPts[2][1].toFixed(1));
+
+        d2.setAttribute(`x1`, screenPts[1][0].toFixed(1));
+        d2.setAttribute(`y1`, screenPts[1][1].toFixed(1));
+        d2.setAttribute(`x2`, screenPts[3][0].toFixed(1));
+        d2.setAttribute(`y2`, screenPts[3][1].toFixed(1));
+
+        const ptNames = [`a₁`, `a₂`, `a₃`, `a₄`];
+        let hHtml = ``;
+        screenPts.forEach((s, idx) => {
+          const px = Math.max(18, Math.min(482, s[0]));
+          const py = Math.max(18, Math.min(382, s[1]));
+          hHtml += `<g class="drag-handle" data-pt-idx="${idx}">`;
+          hHtml += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="12" fill="transparent" />`;
+          hHtml += `<circle cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" r="6" fill="var(--primary)" stroke="var(--background)" stroke-width="2" />`;
+          hHtml += `<text x="${(px + 10).toFixed(1)}" y="${(py - 8).toFixed(1)}" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">${ptNames[idx]}</text>`;
+          hHtml += `</g>`;
+        });
+        handlesG.innerHTML = hHtml;
+
+        const qLabels = [`q₁₂`, `q₂₃`, `q₃₄`, `q₄₁`];
+        let sHtml = ``;
+        for (let i = 0; i < 4; i++) {
+          const j = (i + 1) % 4;
+          const mx = (screenPts[i][0] + screenPts[j][0]) / 2;
+          const my = (screenPts[i][1] + screenPts[j][1]) / 2;
+          sHtml += `<text x="${mx.toFixed(1)}" y="${(my - 4).toFixed(1)}" text-anchor="middle" fill="var(--tertiary)" font-family="var(--font-label)" font-size="11">${qLabels[i]}</text>`;
+        }
+        sideLabelsG.innerHTML = sHtml;
+      }
+
+      // Update text readouts
+      const banner = document.getElementById(`wb-status-banner`);
+      if (res.error) {
+        if (banner) {
+          banner.style.borderColor = `var(--error)`;
+          banner.textContent = res.error;
+        }
+        [`wb-q12-val`, `wb-q23-val`, `wb-q34-val`, `wb-q41-val`, `wb-s1-val`, `wb-s2-val`, `wb-s3-val`, `wb-s4-val`, `wb-B-val`, `wb-M-val`, `wb-verify-eq1`, `wb-verify-eq2`, `wb-verify-arch`, `wb-verify-BM`].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = `—`;
+        });
+        return;
+      }
+
+      if (banner) {
+        banner.style.borderColor = `var(--outline-variant)`;
+        const presetInfo = workbenchPresets[wbState.activePreset];
+        banner.textContent = presetInfo ? presetInfo.note : `Custom rational coordinates over ℚ (${wbState.mode} quadratic form).`;
+      }
+
+      const setTxt = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = txt;
+      };
+
+      setTxt(`wb-q12-val`, `q₁₂ = ${fStr(res.q12)}`);
+      setTxt(`wb-q23-val`, `q₂₃ = ${fStr(res.q23)}`);
+      setTxt(`wb-q34-val`, `q₃₄ = ${fStr(res.q34)}`);
+      setTxt(`wb-q41-val`, `q₄₁ = ${fStr(res.q41)}`);
+
+      setTxt(`wb-s1-val`, `S₁ = ${fStr(res.S1)}`);
+      setTxt(`wb-s2-val`, `S₂ = ${fStr(res.S2)}`);
+      setTxt(`wb-s3-val`, `S₃ = ${fStr(res.S3)}`);
+      setTxt(`wb-s4-val`, `S₄ = ${fStr(res.S4)}`);
+
+      if (res.BIdentical && res.BAlt) {
+        setTxt(`wb-B-val`, `${fStr(res.B)}  or  ${fStr(res.BAlt)}`);
+        setTxt(`wb-B-dec`, `p₁ = p₂ (Remark 4.1.2 two roots: ≈ ${fApprox(res.B)} or ${fApprox(res.BAlt)})`);
+      } else if (res.BIdentical) {
+        setTxt(`wb-B-val`, `Identical quadratics (p₁ = p₂)`);
+        setTxt(`wb-B-dec`, `Select a non-degenerate vertex offset`);
+      } else {
+        setTxt(`wb-B-val`, fStr(res.B));
+        setTxt(`wb-B-dec`, `≈ ${fApprox(res.B)}`);
+      }
+
+      if (res.M) {
+        setTxt(`wb-M-val`, fStr(res.M));
+        setTxt(`wb-M-dec`, `≈ ${fApprox(res.M)}`);
+      } else {
+        setTxt(`wb-M-val`, res.MIdentical ? `Identical M-quadratics` : `—`);
+        setTxt(`wb-M-dec`, ``);
+      }
+
+      if (res.eq1BLHS && res.eq2BLHS) {
+        const ok1 = fEq(res.eq1BLHS, res.r1B);
+        const ok2 = fEq(res.eq2BLHS, res.r2B);
+        setTxt(`wb-verify-eq1`, `Eq (3a): LHS = ${fStr(res.eq1BLHS)} ${ok1 ? `≡` : `≠`} RHS`);
+        setTxt(`wb-verify-eq2`, `Eq (3b): LHS = ${fStr(res.eq2BLHS)} ${ok2 ? `≡` : `≠`} RHS`);
+      } else {
+        setTxt(`wb-verify-eq1`, `Eq (3a) & (3b) collapsed to identical equation.`);
+        setTxt(`wb-verify-eq2`, ``);
+      }
+
+      setTxt(`wb-verify-arch`, `Archimedes Compatibility A(Q₁, Q₂, Q₃) = ${fStr(res.archB)} (exact zero)`);
+      setTxt(`wb-verify-BM`, res.BM ? `Quadrea × Quadreal (B · M) = ${fStr(res.BM)}` : ``);
+    }
+
+    function initWorkbenchDrag() {
+      const svg = document.getElementById(`svg-workbench`);
+      if (!svg) return;
+
+      function clientToProjective(clientX, clientY) {
+        const rect = svg.getBoundingClientRect();
+        const sx = ((clientX - rect.left) / rect.width) * 500;
+        const sy = ((clientY - rect.top) / rect.height) * 400;
+        const X = (sx - 250) / 110;
+        const Y = (200 - sy) / 110;
+        // Snap to 1/10ths so denominator z=10 stays compact
+        const rx = Math.max(-18, Math.min(18, Math.round(X * 10)));
+        const ry = Math.max(-15, Math.min(15, Math.round(Y * 10)));
+        const g = Number(bigGcd(BigInt(rx), BigInt(bigGcd(BigInt(ry), 10n))));
+        return [rx / g, ry / g, 10 / g];
+      }
+
+      svg.addEventListener(`pointerdown`, (e) => {
+        const handle = e.target.closest(`[data-pt-idx]`);
+        if (!handle) return;
+        wbState.draggingIdx = parseInt(handle.getAttribute(`data-pt-idx`), 10);
+        svg.setPointerCapture(e.pointerId);
+      });
+
+      svg.addEventListener(`pointermove`, (e) => {
+        if (wbState.draggingIdx < 0) return;
+        const idx = wbState.draggingIdx;
+        wbState.pts[idx] = clientToProjective(e.clientX, e.clientY);
+        wbState.activePreset = ``;
+        Object.keys(workbenchPresets).forEach((k) => {
+          const btn = document.getElementById(`preset-${k}`);
+          if (btn) btn.classList.remove(`btn-sky-active`);
+        });
+        renderWorkbenchAll();
+      });
+
+      svg.addEventListener(`pointerup`, () => {
+        wbState.draggingIdx = -1;
+      });
+      svg.addEventListener(`pointercancel`, () => {
+        wbState.draggingIdx = -1;
+      });
+    }
+
+    // =========================================================================
+    // 6. SECTION 6: COROLLARIES & DEGENERATE REGIMES
+    // =========================================================================
+    const corState = {
+      active: 1,
+      morph: 1.0
+    };
+
+    function selectCorollary(num) {
+      corState.active = num;
+      [1, 2, 3].forEach((k) => {
+        const b = document.getElementById(`cor-btn-${k}`);
+        if (b) b.classList.toggle(`btn-active`, k === num);
+      });
+      renderCorollarySection();
+    }
+
+    function updateCorollaryMorph(val) {
+      corState.morph = parseFloat(val);
+      const vEl = document.getElementById(`cor-slider-val`);
+      if (vEl) vEl.textContent = corState.morph.toFixed(2);
+      renderCorollaryDiagram();
+    }
+
+    function renderCorollarySection() {
+      const badgeRow = document.getElementById(`cor-badge-row`);
+      const titleEl = document.getElementById(`cor-title`);
+      const expEl = document.getElementById(`cor-explanation`);
+      const formEl = document.getElementById(`cor-formula-box`);
+      const numEl = document.getElementById(`cor-numeric-check`);
+      const sLabel = document.getElementById(`cor-slider-label`);
+      const slider = document.getElementById(`cor-morph-slider`);
+      const sVal = document.getElementById(`cor-slider-val`);
+
+      if (!badgeRow || !titleEl || !expEl || !formEl || !numEl) return;
+
+      if (corState.active === 1) {
+        badgeRow.innerHTML = `<span class="badge badge-brass">Corollary 4.1.1 · Adjacent Coincidence</span>`;
+        titleEl.textContent = `Coincident Adjacent Points Recover Triangle Quadrea`;
+        expEl.innerHTML = `<p>When $a_4$ slides into $a_3$, their quadrance vanishes ($q_{34} = 0$). Both right-hand sides $4q_{12}q_{23}q_{34}q_{41}(1-S_i)(1-S_k)$ collapse to zero, reducing Equations (3a) and (3b) to the single non-quadratic identity $B(\\overline{a_1a_2a_3}) = q_{12}q_{23}S_2 = \\mathcal{A}(a_1a_2a_3)$.</p>`;
+        formEl.innerHTML = `<div class="formula-caption">Reduction to Theorem 3.2</div><div>$$q_{34} = 0 \\implies B(\\overline{a_1a_2a_3a_4}) = q_{12}q_{23}S_2 = \\mathcal{A}(a_1a_2a_3)$$</div>`;
+        numEl.textContent = `Check: a₁=[0:0:1], a₂=[1:0:2], a₃=a₄=[1:1:3] ⇒ q₃₄ = 0, q₁₂ = −1/3, q₂₃ = −3/7, S₂ = 3/4 ⇒ B = 3/28 = A(a₁a₂a₃).`;
+        if (sLabel && slider && sVal) {
+          sLabel.firstChild.textContent = `Collapse a₄ → a₃ (t = 1 is coincident): `;
+          slider.value = String(corState.morph);
+          sVal.textContent = corState.morph.toFixed(2);
+        }
+      } else if (corState.active === 2) {
+        badgeRow.innerHTML = `<span class="badge">Corollary 4.1.2 · Degenerate Dual Pythagoras</span>`;
+        titleEl.textContent = `Collinear & Perpendicular Points Yield Dual Pythagoras`;
+        expEl.innerHTML = `<p>Fix $a_1 \\perp a_3$ ($q_{13} = 1$) and move $a_2$ onto line $a_1a_3$ so lines $L_{12}$ and $L_{23}$ coincide ($S_2 = 0$). By the Cross Law on $\\triangle a_1a_2a_3$, $q_{23} = 1 - q_{12}$, and altitude sharing forces $q_{34}q_{41}S_4 = q_{41}q_{12}S_1 + q_{23}q_{34}S_3$. Equations (3a) and (3b) become identical; equating their RHS cancels $4q_{12}q_{23}q_{34}q_{41}$ to yield <strong>Dual Pythagoras</strong>.</p>`;
+        formEl.innerHTML = `<div class="formula-caption formula-caption-sky">Emergence of Dual Pythagoras</div><div>$$(1 - S_1)(1 - S_3) = 1 - S_4 \\implies S_4 = S_1 + S_3 - S_1S_3$$</div>`;
+        numEl.textContent = `Exact check: a₁=[1:0:2], a₃=[2:0:1] (q₁₃=1), a₂=[0:0:1] on a₁a₃ (S₂=0), a₄=[1:2:3] ⇒ S₁=12/13, S₃=−12/13, S₄=144/169 = S₁+S₃−S₁S₃.`;
+        if (sLabel && slider && sVal) {
+          sLabel.firstChild.textContent = `Move a₂ onto line a₁a₃ (t = 1 is collinear): `;
+          slider.value = String(corState.morph);
+          sVal.textContent = corState.morph.toFixed(2);
+        }
+      } else {
+        badgeRow.innerHTML = `<span class="badge badge-mint">Corollary 4.1.3 · Right Quadrangle</span>`;
+        titleEl.textContent = `Right Vertex ($S_1 = 1$) Sums Adjacent Triangle Quadreas`;
+        expEl.innerHTML = `<p>Whenever at least one vertex is right—say $L_{41} \\perp L_{12}$ so $S_1 = 1$—the factor $(1 - S_1)$ kills the right-hand side of Equation (3a). With $(B - q_{12}q_{23}S_2 - q_{34}q_{41}S_4)^2 = 0$, the quadrangle quadrea becomes the exact additive sum of the two triangle quadreas meeting across $a_1a_3$.</p>`;
+        formEl.innerHTML = `<div class="formula-caption">Pythagorean Analog for Quadreas</div><div>$$S_1 = 1 \\implies B(\\overline{a_1a_2a_3a_4}) = q_{12}q_{23}S_2 + q_{34}q_{41}S_4$$</div>`;
+        numEl.textContent = `Exact check: a₁=[0:0:1], a₂=[1:0:2], a₃=[1:1:3], a₄=[0:1:3] ⇒ S₁ = 1, A(a₁a₂a₃)=1/21, A(a₃a₄a₁)=1/21 ⇒ B = 2/21.`;
+        if (sLabel && slider && sVal) {
+          sLabel.firstChild.textContent = `Rotate L₄₁ toward perpendicularity (t = 1 is S₁=1): `;
+          slider.value = String(corState.morph);
+          sVal.textContent = corState.morph.toFixed(2);
+        }
+      }
+
+      if (window.renderMathInElement) {
+        renderMathInElement(document.getElementById(`sec-corollaries`), {
+          delimiters: [
+            { left: `$$`, right: `$$`, display: true },
+            { left: `$`, right: `$`, display: false }
+          ],
+          throwOnError: false
+        });
+      }
+      renderCorollaryDiagram();
+    }
+
+    function renderCorollaryDiagram() {
+      const g = document.getElementById(`cor-svg-content`);
+      if (!g) return;
+      const t = corState.morph;
+
+      let svg = ``;
+      if (corState.active === 1) {
+        // a1=(90,240), a2=(370,250), a3=(300,90), a4 morphs from (140,100) to (300,90)
+        const a1 = [90, 240], a2 = [370, 250], a3 = [300, 90];
+        const a4 = [140 + t * (300 - 140), 100 + t * (90 - 100)];
+        svg += `<polygon points="${a1[0]},${a1[1]} ${a2[0]},${a2[1]} ${a3[0]},${a3[1]} ${a4[0].toFixed(1)},${a4[1].toFixed(1)}" fill="var(--brass-tint)" stroke="var(--primary)" stroke-width="2" />`;
+        svg += `<line x1="${a1[0]}" y1="${a1[1]}" x2="${a3[0]}" y2="${a3[1]}" stroke="var(--outline)" stroke-width="1" stroke-dasharray="4 4" />`;
+        svg += `<text x="68" y="258" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₁</text>`;
+        svg += `<text x="380" y="256" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₂</text>`;
+        svg += `<text x="312" y="84" fill="var(--primary)" font-family="var(--font-label)" font-size="12">a₃</text>`;
+        svg += `<text x="${(a4[0] - 24).toFixed(1)}" y="${(a4[1] - 10).toFixed(1)}" fill="var(--tertiary)" font-family="var(--font-label)" font-size="12">${t > 0.95 ? `a₄ = a₃ (q₃₄=0)` : `a₄`}</text>`;
+        [a1, a2, a3].forEach((p) => {
+          svg += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />`;
+        });
+        svg += `<circle cx="${a4[0].toFixed(1)}" cy="${a4[1].toFixed(1)}" r="5" fill="var(--tertiary)" stroke="var(--background)" stroke-width="1.5" />`;
+      } else if (corState.active === 2) {
+        // Collinear a1, a2, a3 on horizontal line y=250 with a1 perp a3 (q13=1), a4 at (240, 80)
+        const a1 = [100, 250], a3 = [380, 250], a4 = [240, 80];
+        // a2 moves from (230, 175) onto (230, 250)
+        const a2 = [230, 175 + t * (250 - 175)];
+        svg += `<line x1="50" y1="250" x2="430" y2="250" stroke="var(--outline)" stroke-width="1" stroke-dasharray="5 4" />`;
+        svg += `<polygon points="${a1[0]},${a1[1]} ${a2[0]},${a2[1].toFixed(1)} ${a3[0]},${a3[1]} ${a4[0]},${a4[1]}" fill="var(--sky-tint)" stroke="var(--tertiary)" stroke-width="2" />`;
+        svg += `<line x1="${a2[0]}" y1="${a2[1].toFixed(1)}" x2="${a4[0]}" y2="${a4[1]}" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="4 3" />`;
+        svg += `<text x="240" y="274" text-anchor="middle" fill="var(--primary)" font-family="var(--font-label)" font-size="11">a₁ ⊥ a₃ (q₁₃ = 1) · ${t > 0.95 ? `S₂ = 0 (collinear)` : `approaching S₂ = 0`}</text>`;
+        svg += `<text x="86" y="270" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₁</text>`;
+        svg += `<text x="386" y="270" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₃</text>`;
+        svg += `<text x="248" y="76" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₄ (S₄)</text>`;
+        svg += `<text x="${a2[0] + 10}" y="${(a2[1] - 6).toFixed(1)}" fill="var(--primary)" font-family="var(--font-label)" font-size="12">a₂</text>`;
+        [a1, a3, a4].forEach((p) => {
+          svg += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--tertiary)" stroke="var(--background)" stroke-width="1.5" />`;
+        });
+        svg += `<circle cx="${a2[0]}" cy="${a2[1].toFixed(1)}" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />`;
+      } else {
+        // Right quadrangle at a1=(110, 260), a2=(370, 260), a3=(330, 95), a4 morphs from (175, 105) to (110, 105)
+        const a1 = [110, 260], a2 = [370, 260], a3 = [330, 95];
+        const a4 = [175 - t * (175 - 110), 105];
+        svg += `<polygon points="${a1[0]},${a1[1]} ${a2[0]},${a2[1]} ${a3[0]},${a3[1]} ${a4[0].toFixed(1)},${a4[1]}" fill="var(--mint-tint)" stroke="var(--data-3)" stroke-width="2" />`;
+        svg += `<line x1="${a1[0]}" y1="${a1[1]}" x2="${a3[0]}" y2="${a3[1]}" stroke="var(--primary)" stroke-width="1.5" stroke-dasharray="5 4" />`;
+        if (t > 0.95) {
+          svg += `<polyline points="110,240 130,240 130,260" fill="none" stroke="var(--primary)" stroke-width="2" />`;
+          svg += `<text x="140" y="246" fill="var(--primary)" font-family="var(--font-label)" font-size="11">S₁ = 1 (right)</text>`;
+        }
+        svg += `<text x="90" y="276" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₁</text>`;
+        svg += `<text x="378" y="276" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₂</text>`;
+        svg += `<text x="338" y="92" fill="var(--on-surface)" font-family="var(--font-label)" font-size="12">a₃</text>`;
+        svg += `<text x="${(a4[0] - 10).toFixed(1)}" y="92" fill="var(--primary)" font-family="var(--font-label)" font-size="12">a₄</text>`;
+        svg += `<text x="242" y="218" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₁₂q₂₃S₂</text>`;
+        svg += `<text x="172" y="150" fill="var(--on-surface)" font-family="var(--font-label)" font-size="11">q₃₄q₄₁S₄</text>`;
+        [a1, a2, a3].forEach((p) => {
+          svg += `<circle cx="${p[0]}" cy="${p[1]}" r="5" fill="var(--data-3)" stroke="var(--background)" stroke-width="1.5" />`;
+        });
+        svg += `<circle cx="${a4[0].toFixed(1)}" cy="${a4[1]}" r="5" fill="var(--primary)" stroke="var(--background)" stroke-width="1.5" />`;
+      }
+      g.innerHTML = svg;
+    }
+
+    // =========================================================================
+    // 7. INITIALIZATION & SCROLL REVEAL
+    // =========================================================================
+    document.addEventListener(`DOMContentLoaded`, () => {
+      // Render KaTeX across the document
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: `$$`, right: `$$`, display: true },
+            { left: `$`, right: `$`, display: false }
+          ],
+          throwOnError: false
+        });
+      }
+      window.addEventListener(`load`, () => {
+        if (window.renderMathInElement) {
+          renderMathInElement(document.body, {
+            delimiters: [
+              { left: `$$`, right: `$$`, display: true },
+              { left: `$`, right: `$`, display: false }
+            ],
+            throwOnError: false
+          });
+        }
+      });
+
+      // Initialize interactive modules
+      setLawHighlight(`uhg`);
+      setTriangulationView(0);
+      updateArchimedesFromControls();
+      buildCoordEditors();
+      initWorkbenchDrag();
+      loadWorkbenchPreset(`ex1`);
+      selectCorollary(1);
+
+      // IntersectionObserver for gentle once-only section reveals
+      const reveals = document.querySelectorAll(`.reveal`);
+      if (`IntersectionObserver` in window) {
+        const observer = new IntersectionObserver((entries, obs) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add(`is-visible`);
+              obs.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08 });
+        reveals.forEach((el) => observer.observe(el));
+      } else {
+        reveals.forEach((el) => el.classList.add(`is-visible`));
+      }
+    });
+  </script>
+</body>
+</html>
