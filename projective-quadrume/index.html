@@ -1,0 +1,2402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="artifact-type" content="narrative">
+<meta name="design-style" content="figure">
+<title>The Projective Quadrume of a Tetrahedron</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Roboto+Mono:wght@100..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/contrib/auto-render.min.js"></script>
+<style>
+:root {
+  color-scheme: light;
+
+  /* Page and surfaces */
+  --background: #ffffff;
+  --surface-container-low: #f7f7f7;
+  --surface-container: #f2f2f2;
+  --surface-container-high: #ececec;
+
+  /* Ink */
+  --on-surface: #121212;
+  --on-surface-variant: #5f5f5f;
+
+  /* Rules */
+  --outline: #8a8a8a;
+  --outline-variant: #e3e3e3;
+
+  /* Accents */
+  --primary: #121212;
+  --on-primary: #ffffff;
+  --primary-container: #e8e8e8;
+  --on-primary-container: #121212;
+  --secondary: #1f5fa8;
+  --tertiary: #b43c0b;
+  --error: #b42318;
+  --on-error: #ffffff;
+
+  /* Data series */
+  --data-1: #e8590c;
+  --data-2: #2f6db5;
+  --data-3: #1b8a6b;
+  --data-4: #8e5bb5;
+  --data-context: #c4c4c4;
+
+  /* Semantic */
+  --positive: #1b8a6b;
+  --warning: #b45309;
+  --focus: #121212;
+
+  /* Fonts */
+  --font-headline: 'Schibsted Grotesk', sans-serif;
+  --font-body: 'Newsreader', serif;
+  --font-label: 'Roboto Mono', monospace;
+
+  /* Shape */
+  --rounded: 0.25rem;
+  --rounded-lg: 0;
+  --rounded-full: 0.25rem;
+
+  /* Style effects */
+  --ink-rule: 1px solid var(--on-surface);
+  --hairline: 1px solid var(--outline-variant);
+  --grid-dash: 2 3;
+  --story-stroke: 3px;
+  --compare-stroke: 2px;
+  --context-stroke: 1.4px;
+  --bar-height: 6px;
+  --highlight-1: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-1) 15%, var(--background)) 60%);
+  --highlight-2: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-2) 15%, var(--background)) 60%);
+  --highlight-3: linear-gradient(transparent 60%, color-mix(in srgb, var(--data-3) 15%, var(--background)) 60%);
+
+  /* Type scale (Narrative) */
+  --display-size: clamp(2.5rem, 1.5rem + 4vw, 4.35rem);
+  --headline-size: clamp(1.65rem, 1.2rem + 1.8vw, 2.35rem);
+  --subhead-size: clamp(1.2rem, 1.05rem + 0.5vw, 1.45rem);
+  --body-size: clamp(1.0625rem, 1rem + 0.2vw, 1.1875rem);
+  --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+  /* Spacing scale (4pt base) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+}
+
+/* Base reset */
+*, *::before, *::after { box-sizing: border-box; }
+html, body {
+  overflow-x: clip;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background);
+  color: var(--on-surface);
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+header { position: static !important; }
+
+.page-grid {
+  display: grid;
+  gap: var(--space-xl);
+  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+  max-width: 1120px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.page-grid * { min-width: 0; }
+
+/* Focus rings */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+/* Editorial typography */
+.kicker {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--tertiary);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.article-header {
+  border-bottom: var(--ink-rule);
+  padding-bottom: var(--space-xl);
+}
+
+.article-title {
+  font-family: var(--font-headline);
+  font-size: var(--display-size);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-md) 0;
+  max-width: 18ch;
+}
+
+.article-deck {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.05rem + 0.45vw, 1.375rem);
+  line-height: 1.48;
+  color: var(--on-surface-variant);
+  max-width: 62ch;
+  margin: 0 0 var(--space-lg) 0;
+}
+
+.byline-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md) var(--space-xl);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+
+.prose-col {
+  max-width: 65ch;
+}
+
+.prose-col p {
+  margin: 0 0 var(--space-md) 0;
+}
+
+.prose-col p:last-child {
+  margin-bottom: 0;
+}
+
+.section-block {
+  padding-top: var(--space-lg);
+  border-top: var(--hairline);
+}
+
+.section-heading {
+  font-family: var(--font-headline);
+  font-size: var(--headline-size);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-md) 0;
+  max-width: 28ch;
+}
+
+.subhead {
+  font-family: var(--font-headline);
+  font-size: var(--subhead-size);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--on-surface);
+  margin: var(--space-lg) 0 var(--space-sm) 0;
+}
+
+/* Color-keyed inline highlights matching plotted elements */
+.hl-1 {
+  background: var(--highlight-1);
+  color: var(--tertiary);
+  font-weight: 500;
+  padding: 0 2px;
+}
+.hl-2 {
+  background: var(--highlight-2);
+  color: var(--secondary);
+  font-weight: 500;
+  padding: 0 2px;
+}
+.hl-3 {
+  background: var(--highlight-3);
+  color: var(--positive);
+  font-weight: 500;
+  padding: 0 2px;
+}
+
+/* Ink-ruled stat row */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-lg);
+  margin: var(--space-md) 0;
+}
+
+.stat {
+  border-top: var(--ink-rule);
+  padding-top: var(--space-sm);
+  border-radius: var(--rounded-lg);
+}
+
+.stat-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--on-surface-variant);
+  margin-bottom: var(--space-xs);
+}
+
+.stat-value {
+  font-family: var(--font-label);
+  font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.65rem);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.stat-delta {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--tertiary);
+  margin-top: var(--space-xs);
+}
+
+.stat-delta.compare {
+  color: var(--secondary);
+}
+
+.stat-delta.positive {
+  color: var(--positive);
+}
+
+.stat-bar {
+  height: var(--bar-height);
+  background: var(--surface-container-high);
+  margin-top: var(--space-sm);
+}
+
+.stat-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--data-1);
+  transition: width var(--dur-long) var(--ease-out);
+}
+
+/* Equation Showcase & Formula Cards */
+.formula-anchor {
+  background: var(--surface-container-low);
+  border-top: 2px solid var(--on-surface);
+  border-bottom: var(--hairline);
+  padding: var(--space-lg);
+  margin: var(--space-lg) 0;
+}
+
+.formula-anchor-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.formula-tag {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--tertiary);
+}
+
+.formula-ref {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+
+.formula-display {
+  overflow-x: auto;
+  padding: var(--space-sm) 0;
+  font-size: 1.12rem;
+}
+
+.formula-notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: var(--hairline);
+}
+
+.formula-note-item {
+  font-size: 0.95rem;
+  line-height: 1.48;
+  color: var(--on-surface-variant);
+}
+
+.formula-note-item strong {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface);
+  font-weight: 500;
+  display: block;
+  margin-bottom: var(--space-xs);
+}
+
+/* Two-column editorial split (prose + figure/diagram) */
+.split-figure {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  gap: var(--space-xl);
+  align-items: start;
+  margin: var(--space-lg) 0;
+}
+
+.chart-panel {
+  border-top: var(--ink-rule);
+  padding-top: var(--space-md);
+}
+
+.chart-title {
+  font-family: var(--font-headline);
+  font-size: var(--subhead-size);
+  font-weight: 600;
+  color: var(--on-surface);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.chart-sub {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+  margin: 0 0 var(--space-md) 0;
+}
+
+.chart-source {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+  margin-top: var(--space-xs);
+}
+
+/* Dimension Ladder */
+.ladder-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.tab-btn {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  background: var(--surface-container);
+  color: var(--on-surface-variant);
+  border: 1px solid var(--outline-variant);
+  border-radius: var(--rounded-full);
+  padding: var(--space-sm) var(--space-md);
+  min-height: 44px;
+  cursor: pointer;
+  transition: background-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+}
+
+.tab-btn:hover {
+  background: var(--surface-container-high);
+  color: var(--on-surface);
+  border-color: var(--outline);
+}
+
+.tab-btn[aria-selected="true"] {
+  background: var(--primary);
+  color: var(--on-primary);
+  border-color: var(--primary);
+}
+
+.ladder-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: var(--space-lg);
+  background: var(--surface-container-low);
+  padding: var(--space-lg);
+  border-top: var(--ink-rule);
+  border-bottom: var(--hairline);
+}
+
+.ladder-svg-wrap {
+  background: var(--background);
+  border: var(--hairline);
+  padding: var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 240px;
+}
+
+/* Step-by-step Derivation Walkthrough */
+.proof-steps {
+  display: grid;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.proof-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  border-bottom: var(--hairline);
+}
+
+.proof-step:first-child {
+  border-top: var(--hairline);
+}
+
+.step-num {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  color: var(--tertiary);
+  padding-top: 0.2rem;
+  min-width: 4.5rem;
+}
+
+.step-body h4 {
+  font-family: var(--font-headline);
+  font-size: 1.08rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.step-body p {
+  margin: 0 0 var(--space-sm) 0;
+  max-width: 62ch;
+}
+
+/* Interactive Workbench */
+.workbench {
+  margin: var(--space-lg) 0;
+  border-top: 2px solid var(--on-surface);
+  padding-top: var(--space-lg);
+}
+
+.workbench-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: end;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.preset-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.btn {
+  font-family: var(--font-headline);
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: var(--rounded);
+  padding: 0.55rem 0.9rem;
+  min-height: 44px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  transition: background-color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--on-primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--primary) 86%, var(--background));
+}
+
+.btn-secondary {
+  background: var(--background);
+  color: var(--on-surface);
+  border: 1px solid var(--outline);
+}
+
+.btn-secondary:hover {
+  border-color: var(--on-surface);
+  background: var(--surface-container-low);
+}
+
+.btn-secondary.active {
+  background: var(--primary-container);
+  border-color: var(--on-surface);
+}
+
+.workbench-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: var(--space-xl);
+  align-items: start;
+}
+
+.controls-panel {
+  background: var(--surface-container-low);
+  padding: var(--space-lg);
+  border-top: var(--ink-rule);
+  container-type: inline-size;
+}
+
+.control-section-title {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--on-surface-variant);
+  margin: 0 0 var(--space-sm) 0;
+}
+
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.field-label {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+
+.mono-input, .mono-select {
+  font-family: var(--font-label);
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  background: var(--background);
+  color: var(--on-surface);
+  border: 1px solid var(--outline);
+  border-radius: var(--rounded);
+  padding: 0.5rem 0.6rem;
+  min-height: 44px;
+  width: 100%;
+  transition: border-color var(--dur-micro) var(--ease-out), box-shadow var(--dur-micro) var(--ease-out);
+}
+
+.mono-select {
+  padding-right: 1.75rem;
+}
+
+.mono-input:focus, .mono-select:focus {
+  border-color: var(--on-surface);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--on-surface) 14%, transparent);
+  outline: none;
+}
+
+.mono-input.invalid {
+  border-color: var(--error);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--error) 16%, transparent);
+}
+
+.vertex-grid {
+  display: grid;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-lg);
+}
+
+.vertex-row {
+  display: grid;
+  grid-template-columns: 3.4rem repeat(4, minmax(0, 1fr));
+  gap: var(--space-xs);
+  align-items: end;
+}
+
+.vertex-badge {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  color: var(--on-surface);
+  padding-bottom: 0.65rem;
+}
+
+.vertex-badge.is-apex {
+  color: var(--tertiary);
+}
+
+.vertex-badge.is-face {
+  color: var(--secondary);
+}
+
+.apex-selector-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-md);
+  align-items: end;
+  padding-top: var(--space-md);
+  border-top: var(--hairline);
+}
+
+.canvas-well {
+  position: relative;
+  border-top: var(--ink-rule);
+  padding-top: var(--space-md);
+}
+
+.canvas-stage {
+  position: relative;
+  width: 100%;
+  min-height: 360px;
+  height: 360px;
+  background: var(--background);
+  border-bottom: var(--ink-rule);
+  cursor: grab;
+  touch-action: none;
+}
+
+.canvas-stage:active {
+  cursor: grabbing;
+}
+
+.canvas-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+
+.canvas-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--on-surface-variant);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.swatch {
+  display: inline-block;
+  width: 12px;
+  height: 3px;
+}
+
+.swatch-1 { background: var(--data-1); }
+.swatch-2 { background: var(--data-2); }
+.swatch-3 { background: var(--data-3); }
+.swatch-ctx { background: var(--data-context); }
+
+.workbench-error {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  color: var(--error);
+  background: color-mix(in srgb, var(--error) 8%, var(--background));
+  border-left: 3px solid var(--error);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-md);
+  display: none;
+}
+
+.workbench-error.visible {
+  display: block;
+}
+
+/* Output matrix & identity verification */
+.results-section {
+  margin-top: var(--space-lg);
+}
+
+.matrix-verification-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-lg);
+  margin-top: var(--space-lg);
+}
+
+.data-table-wrap {
+  overflow-x: auto;
+}
+
+table.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+table.data-table th {
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--on-surface-variant);
+  text-align: left;
+  padding: var(--space-sm) var(--space-sm);
+  border-bottom: var(--ink-rule);
+}
+
+table.data-table th.num,
+table.data-table td.num {
+  text-align: right;
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+}
+
+table.data-table td {
+  padding: var(--space-sm) var(--space-sm);
+  border-bottom: var(--hairline);
+  vertical-align: top;
+}
+
+table.data-table td.mono {
+  font-family: var(--font-label);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+
+.identity-box {
+  background: var(--surface-container-low);
+  padding: var(--space-md);
+  border-top: var(--ink-rule);
+  font-family: var(--font-label);
+  font-size: 0.85rem;
+}
+
+.identity-row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-xs) 0;
+  border-bottom: var(--hairline);
+}
+
+.identity-row:last-child {
+  border-bottom: none;
+}
+
+.status-chip {
+  display: inline-block;
+  font-family: var(--font-label);
+  font-size: var(--label-size);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--rounded-full);
+  background: var(--surface-container);
+  color: var(--on-surface);
+}
+
+.status-chip.verified {
+  background: color-mix(in srgb, var(--positive) 14%, var(--background));
+  color: var(--positive);
+}
+
+.status-chip.degenerate {
+  background: color-mix(in srgb, var(--warning) 14%, var(--background));
+  color: var(--warning);
+}
+
+/* Code / SymPy block */
+.code-panel {
+  background: var(--surface-container-low);
+  border-top: var(--ink-rule);
+  border-bottom: var(--hairline);
+  padding: var(--space-md);
+  margin: var(--space-md) 0;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+pre.code-block {
+  font-family: var(--font-label);
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  overflow-x: auto;
+  margin: 0;
+  color: var(--on-surface);
+}
+
+details.inline-details {
+  border-top: var(--hairline);
+  border-bottom: var(--hairline);
+  padding: var(--space-sm) 0;
+  margin: var(--space-md) 0;
+}
+
+details.inline-details summary {
+  font-family: var(--font-headline);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: var(--space-xs) 0;
+  color: var(--on-surface);
+}
+
+details.inline-details summary:hover {
+  color: var(--secondary);
+}
+
+.sources-footer {
+  border-top: var(--ink-rule);
+  padding-top: var(--space-lg);
+  margin-top: var(--space-xl);
+  font-size: 0.95rem;
+  color: var(--on-surface-variant);
+}
+
+/* Container queries and responsive layout */
+@container (max-width: 440px) {
+  .metric-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vertex-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .vertex-badge {
+    grid-column: 1 / -1;
+    padding-bottom: 0;
+  }
+}
+
+@media (max-width: 860px) {
+  .split-figure,
+  .ladder-grid,
+  .workbench-grid,
+  .matrix-verification-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+    padding: var(--space-md);
+    gap: var(--space-lg);
+  }
+  .apex-selector-row {
+    grid-template-columns: 1fr;
+  }
+  .canvas-stage {
+    min-height: 290px;
+    height: 290px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<main class="page-grid">
+
+  <!-- MASTHEAD -->
+  <header class="article-header">
+    <p class="kicker">Projective Rational Trigonometry &middot; Universal Geometry</p>
+    <h1 class="article-title">The Projective Quadrume of a Tetrahedron</h1>
+    <p class="article-deck">
+      How John D. Coady extends N. J. Wildberger’s algebraic geometry from planar triangles to 3D projective simplices—and why every tetrahedron’s normalized Gram volume factors exactly into a face quadrea times an altitude quadrance.
+    </p>
+    <div class="byline-row">
+      <span>SOURCE PAPER: ON THE PROJECTIVE QUADRUME AND THE RECURSIVE FACTORIZATION OF PROJECTIVE SIMPLICES</span>
+      <span>SETTING: \(\mathbb{P}^3\) OVER \(\mathbb{F},\ \operatorname{char}(\mathbb{F}) \neq 2\)</span>
+    </div>
+  </header>
+
+  <!-- HEADLINE ANCHOR METRICS -->
+  <section aria-label="Core algebraic invariants">
+    <div class="stat-strip">
+      <div class="stat">
+        <div class="stat-label">Projective Quadrume (k = 4)</div>
+        <div class="stat-value">\(\mathcal{V} = \dfrac{\det(G_4)}{Q(v_1)Q(v_2)Q(v_3)Q(v_4)}\)</div>
+        <div class="stat-delta">Normalized 4&times;4 Gram determinant in \(\mathbb{P}^3\)</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Exact Factorization</div>
+        <div class="stat-value">\(\mathcal{V} = \mathcal{S} \times h(a_4)\)</div>
+        <div class="stat-delta compare">Face quadrea &times; altitude quadrance</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Recursive Law (k &le; n)</div>
+        <div class="stat-value">\(\mathcal{Q}_k = \mathcal{Q}_{k-1} \times h(a_k)\)</div>
+        <div class="stat-delta positive">Valid across Euclidean, hyperbolic &amp; finite fields</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 1: MOTIVATION & PRELIMINARIES -->
+  <section class="section-block" id="sec-foundations">
+    <p class="kicker">01 &middot; Algebraic Foundations</p>
+    <h2 class="section-heading">Why projective volume belongs to polynomial algebra, not calculus</h2>
+    <div class="prose-col">
+      <p>
+        Classical non-Euclidean geometry measures a tetrahedron using real coordinates, transcendental functions such as \(\sinh x\) and \(\cos \theta\), and square roots that force numerical approximations. Building on N. J. Wildberger’s <em>rational trigonometry</em> and <em>universal hyperbolic geometry</em>, John D. Coady replaces distance and angle with purely algebraic invariants defined over any field \(\mathbb{F}\) of characteristic not equal to \(2\), equipped with a non-degenerate symmetric bilinear form \(B(u, v)\).
+      </p>
+      <p>
+        Keeping \(\operatorname{char}(\mathbb{F}) \neq 2\) guarantees that \(2\) remains invertible and that the symmetric bilinear form does not collapse into an alternating form. Within an \(n\)-dimensional ambient vector space \(V_n\), every non-null vector \(v \in V_n\) defines a projective point \(a = [v] \in \mathbb{P}^{n-1}\), and its fundamental self-measurement is its <strong>vector quadrance</strong> \(Q(v) \equiv B(v, v) \neq 0\).
+      </p>
+    </div>
+
+    <div class="formula-anchor">
+      <div class="formula-anchor-header">
+        <span class="formula-tag">Definitions 2.1 &ndash; 2.3 &middot; Projective Gram Volume</span>
+        <span class="formula-ref">Generalizes \(k = 2, 3, 4, \dots, n\)</span>
+      </div>
+      <div class="formula-display">
+        \[
+          q(a_1, a_2) \equiv 1 - \frac{B(v_1, v_2)^2}{Q(v_1)\,Q(v_2)}
+          \qquad\text{and}\qquad
+          \mathcal{Q}_k \equiv \frac{\det(G_k)}{\prod_{i=1}^{k} Q(v_i)}
+          \quad\text{with}\quad [G_k]_{ij} = B(v_i, v_j)
+        \]
+      </div>
+      <div class="formula-notes">
+        <div class="formula-note-item">
+          <strong>Scale Invariance (Proposition 2.4)</strong>
+          Scaling any representative \(v_i \to \lambda_i v_i\) multiplies row \(i\) and column \(i\) of \(G_k\) by \(\lambda_i\), scaling \(\det(G_k)\) by \(\prod \lambda_i^2\). The denominator \(\prod Q(\lambda_i v_i)\) scales by the exact same \(\prod \lambda_i^2\) and cancels identically.
+        </div>
+        <div class="formula-note-item">
+          <strong>Null Vectors Excluded</strong>
+          A vector \(v\) is <em>null</em> when \(Q(v) = 0\). Because projective normalization divides by \(Q(v_i)\), projective points in the factorization are represented by non-null vectors.
+        </div>
+      </div>
+    </div>
+
+    <!-- Interactive Dimension Ladder -->
+    <div class="chart-panel" id="dimension-ladder">
+      <h3 class="chart-title">The projective simplex hierarchy from edges to hypervolumes</h3>
+      <p class="chart-sub">Select a simplex dimension \(k\) to inspect its Gram matrix order, invariant name, and recursive relation</p>
+      <div class="ladder-tabs" role="tablist" aria-label="Simplex dimension selector">
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="selectDimension(2, this)">k = 2 &middot; Edge (\(\mathbb{P}^1\))</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="selectDimension(3, this)">k = 3 &middot; Triangle (\(\mathbb{P}^2\))</button>
+        <button class="tab-btn" role="tab" aria-selected="true" onclick="selectDimension(4, this)">k = 4 &middot; Tetrahedron (\(\mathbb{P}^3\))</button>
+        <button class="tab-btn" role="tab" aria-selected="false" onclick="selectDimension(5, this)">k = n &middot; Simplex (\(\mathbb{P}^{n-1}\))</button>
+      </div>
+      <div class="ladder-grid">
+        <div>
+          <div class="stat-label" id="ladder-kicker">k = 4 &middot; 3-Simplex in \(\mathbb{P}^3\)</div>
+          <h4 class="subhead" id="ladder-title" style="margin-top: var(--space-xs);">Projective Quadrume \(\mathcal{V}\)</h4>
+          <p id="ladder-desc" style="margin-bottom: var(--space-md);">
+            Coady’s central invariant for four non-coplanar projective points \(a_1, a_2, a_3, a_4\). Defined as the normalized \(4 \times 4\) Gram determinant, it extends Wildberger’s planar quadrea into three-dimensional projective space and factorizes into the quadrea of a face times the opposite altitude quadrance.
+          </p>
+          <div id="ladder-formula" style="overflow-x: auto; padding: var(--space-sm) 0; border-top: var(--hairline);">
+            \[
+              \mathcal{V} = \frac{\det(G_4)}{Q(v_1)Q(v_2)Q(v_3)Q(v_4)} = \mathcal{S} \times h(a_4)
+            \]
+          </div>
+        </div>
+        <div class="ladder-svg-wrap" id="ladder-diagram" aria-label="Schematic diagram of the selected projective simplex"></div>
+      </div>
+      <p class="chart-source">Source: Coady (2026), Definition 2.3, Definition 3.1, and Theorem 4.2.</p>
+    </div>
+  </section>
+
+  <!-- SECTION 2: THE QUADRUME FORMULA -->
+  <section class="section-block" id="sec-quadrume-formula">
+    <p class="kicker">02 &middot; The Core Formula</p>
+    <h2 class="section-heading">The projective quadrume \(\mathcal{V}\) of a tetrahedron in \(\mathbb{P}^3\)</h2>
+    <div class="prose-col">
+      <p>
+        Let \(a_1, a_2, a_3, a_4\) be four non-coplanar projective points in \(\mathbb{P}^3\), represented by non-null vectors \(v_1, v_2, v_3, v_4\) in the four-dimensional vector space \(V_4\). Writing the pairwise bilinear products as \(B(v_i, v_j)\) and the self-quadrances as \(Q(v_i) = B(v_i, v_i)\), the <span class="hl-1">projective quadrume \(\mathcal{V}\)</span> is the normalized \(4 \times 4\) Gram determinant:
+      </p>
+    </div>
+
+    <div class="formula-anchor">
+      <div class="formula-anchor-header">
+        <span class="formula-tag">Definition 3.1 &middot; Projective Quadrume Formula</span>
+        <span class="formula-ref">Equation (7) in Coady (2026)</span>
+      </div>
+      <div class="formula-display">
+        \[
+          \mathcal{V}(a_1, a_2, a_3, a_4) \equiv \frac{\det(G_4)}{Q(v_1)\,Q(v_2)\,Q(v_3)\,Q(v_4)}
+          = \frac{1}{\prod_{i=1}^{4} B(v_i, v_i)}
+          \det
+          \begin{pmatrix}
+            B(v_1,v_1) & B(v_1,v_2) & B(v_1,v_3) & B(v_1,v_4) \\
+            B(v_2,v_1) & B(v_2,v_2) & B(v_2,v_3) & B(v_2,v_4) \\
+            B(v_3,v_1) & B(v_3,v_2) & B(v_3,v_3) & B(v_3,v_4) \\
+            B(v_4,v_1) & B(v_4,v_2) & B(v_4,v_3) & B(v_4,v_4)
+          \end{pmatrix}
+        \]
+      </div>
+      <div class="formula-notes">
+        <div class="formula-note-item">
+          <strong>Squared Hypervolume &amp; Sign (Remark 4.5)</strong>
+          Because \(\mathcal{V}\) is built from a Gram determinant, it behaves like a <em>squared</em> volume. In Euclidean signature \((+,+,+,+)\), \(\mathcal{V} \ge 0\) and \(\sqrt{|\mathcal{V}|}\) is proportional to normalized Euclidean tetrahedral volume (via Cayley–Menger). In indefinite Lorentzian signature \((+,+,+,-)\), \(\mathcal{V}\) can be negative without taking absolute values.
+        </div>
+        <div class="formula-note-item">
+          <strong>Exterior Algebra View (Remark 2.5)</strong>
+          In the fourth exterior power \(\bigwedge^4 V_4\), the numerator equals the squared norm \(\langle v_1 \wedge v_2 \wedge v_3 \wedge v_4,\, v_1 \wedge v_2 \wedge v_3 \wedge v_4 \rangle\). Only the component of \(v_4\) orthogonal to \(\operatorname{span}(v_1, v_2, v_3)\) survives the wedge product.
+        </div>
+        <div class="formula-note-item">
+          <strong>Complete Vertex Symmetry</strong>
+          Swapping any two vertices exchanges two rows and two columns of \(G_4\), leaving \(\det(G_4)\) unchanged. Consequently, \(\mathcal{V}\) is symmetric across all four faces—even though each face yields a different pair \((\mathcal{S}, h)\).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: FACTORIZATION THEOREM -->
+  <section class="section-block" id="sec-factorization">
+    <p class="kicker">03 &middot; The Factorization Theorem</p>
+    <h2 class="section-heading">Why \(\mathcal{V}\) splits cleanly into face quadrea times altitude quadrance</h2>
+
+    <div class="split-figure">
+      <div class="prose-col">
+        <p>
+          In elementary geometry, the volume of a tetrahedron equals one-third of its base area multiplied by its perpendicular height. Coady proves an exact algebraic counterpart in \(\mathbb{P}^3\)—with no factor of \(1/3\), no square roots, and no reliance on real numbers.
+        </p>
+        <p>
+          Pick three vertices \(a_1, a_2, a_3\) spanning a three-dimensional subspace \(U = \operatorname{span}(v_1, v_2, v_3) \subset V_4\) on which the bilinear form \(B|_U\) is non-degenerate. Their normalized \(3 \times 3\) Gram determinant defines the <span class="hl-2">face quadrea \(\mathcal{S}\)</span> of triangle \(a_1 a_2 a_3\).
+        </p>
+        <p>
+          Next, construct the unique projective point \(n \in \mathbb{P}^3\) dual to the plane \(a_1 a_2 a_3\), meaning \(B(n, v_i) = 0\) for \(i \in \{1, 2, 3\}\). Measuring the separation between the fourth vertex \(a_4\) and the dual point \(n\) gives the <span class="hl-3">projective altitude quadrance \(h(a_4)\)</span>. Multiplying the two recovers the <span class="hl-1">projective quadrume \(\mathcal{V}\)</span> identically.
+        </p>
+      </div>
+
+      <div class="chart-panel">
+        <h3 class="chart-title">Geometric anatomy of the factorization</h3>
+        <p class="chart-sub">Base face \(U = \operatorname{span}(v_1, v_2, v_3)\), dual normal \(n \in U^\perp\), and apex \(a_4\)</p>
+        <svg viewBox="0 0 460 300" width="100%" height="auto" aria-label="Schematic showing tetrahedron a1 a2 a3 a4, shaded base face with quadrea S, dual normal vector n, and altitude quadrance h(a4)">
+          <!-- Grid backdrop -->
+          <line x1="20" y1="260" x2="440" y2="260" stroke="var(--outline-variant)" stroke-width="1" stroke-dasharray="2 3"/>
+          <line x1="20" y1="190" x2="440" y2="190" stroke="var(--outline-variant)" stroke-width="1" stroke-dasharray="2 3"/>
+          <line x1="20" y1="120" x2="440" y2="120" stroke="var(--outline-variant)" stroke-width="1" stroke-dasharray="2 3"/>
+
+          <!-- Shaded base face U = span(v1, v2, v3) -->
+          <polygon points="80,235 370,245 265,175" fill="color-mix(in srgb, var(--data-2) 12%, var(--background))" stroke="var(--data-2)" stroke-width="2.2" stroke-linejoin="round"/>
+          <!-- Back edge dashed -->
+          <line x1="80" y1="235" x2="265" y2="175" stroke="var(--data-2)" stroke-width="1.6" stroke-dasharray="4 4"/>
+
+          <!-- Tetrahedron edges to apex a4 -->
+          <line x1="80" y1="235" x2="210" y2="55" stroke="var(--data-1)" stroke-width="2.2"/>
+          <line x1="370" y1="245" x2="210" y2="55" stroke="var(--data-1)" stroke-width="2.2"/>
+          <line x1="265" y1="175" x2="210" y2="55" stroke="var(--data-context)" stroke-width="1.6" stroke-dasharray="4 3"/>
+
+          <!-- Dual normal line U^perp and altitude projection -->
+          <line x1="235" y1="215" x2="235" y2="30" stroke="var(--data-3)" stroke-width="1.8" stroke-dasharray="3 3"/>
+          <!-- Projection vector v4_perp -->
+          <line x1="210" y1="55" x2="235" y2="55" stroke="var(--data-context)" stroke-width="1.2" stroke-dasharray="2 2"/>
+          <line x1="235" y1="215" x2="210" y2="55" stroke="var(--data-3)" stroke-width="2.4"/>
+
+          <!-- Right-angle tick at base -->
+          <polyline points="235,203 247,203 247,215" fill="none" stroke="var(--data-3)" stroke-width="1.4"/>
+
+          <!-- Points -->
+          <circle cx="80" cy="235" r="4.5" fill="var(--data-2)"/>
+          <circle cx="370" cy="245" r="4.5" fill="var(--data-2)"/>
+          <circle cx="265" cy="175" r="4.5" fill="var(--data-2)"/>
+          <circle cx="210" cy="55" r="5.5" fill="var(--data-1)"/>
+          <circle cx="235" cy="30" r="4.5" fill="var(--data-3)"/>
+          <circle cx="235" cy="215" r="3" fill="var(--data-3)"/>
+
+          <!-- Direct Mono Labels -->
+          <text x="58" y="254" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--secondary)">a₁ [v₁]</text>
+          <text x="378" y="252" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--secondary)">a₂ [v₂]</text>
+          <text x="275" y="172" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--secondary)">a₃ [v₃]</text>
+
+          <text x="160" y="48" font-family="Roboto Mono, monospace" font-size="12.5" font-weight="600" fill="var(--tertiary)">a₄ [v₄]</text>
+          <text x="246" y="34" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--positive)">n ∈ U⊥</text>
+
+          <!-- Annotations -->
+          <text x="195" y="232" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--secondary)">Face quadrea 𝒮</text>
+          <text x="248" y="128" font-family="Roboto Mono, monospace" font-size="12" font-weight="500" fill="var(--positive)">h(a₄) = 1 − q(a₄, n)</text>
+          <text x="248" y="144" font-family="Roboto Mono, monospace" font-size="11" fill="var(--on-surface-variant)">= B(v₄, n)² / Q(v₄)Q(n)</text>
+
+          <text x="28" y="82" font-family="Roboto Mono, monospace" font-size="12" font-weight="600" fill="var(--tertiary)">𝒱 = 𝒮 × h(a₄)</text>
+          <line x1="115" y1="78" x2="178" y2="95" stroke="var(--tertiary)" stroke-width="1"/>
+        </svg>
+        <p class="chart-source">Schematic representation in affine chart; orthogonal complement \(U^\perp\) is defined with respect to \(B\).</p>
+      </div>
+    </div>
+
+    <div class="formula-anchor">
+      <div class="formula-anchor-header">
+        <span class="formula-tag">Theorem 3.3 &amp; Corollary 3.4 &middot; Identity &amp; Factorization</span>
+        <span class="formula-ref">Equations (8)&ndash;(10) in Coady (2026)</span>
+      </div>
+      <div class="formula-display">
+        \[
+          \det(G_4)\, Q(n) = \det(G_3)\, B(v_4, n)^2
+          \qquad\Longrightarrow\qquad
+          \mathcal{V} = \mathcal{S} \times h(a_4)
+          \quad\text{where}\quad
+          h(a_4) \equiv 1 - q(a_4, n) = \frac{B(v_4, n)^2}{Q(v_4)\, Q(n)}
+        \]
+      </div>
+    </div>
+
+    <h3 class="subhead">Step-by-step derivation from cofactors to congruence</h3>
+    <div class="proof-steps">
+      <div class="proof-step">
+        <div class="step-num">STEP 01</div>
+        <div class="step-body">
+          <h4>Construct the dual point \(n\) via signed cofactors (Proposition 2.7)</h4>
+          <p>
+            Represent the bilinear form \(B\) by the symmetric \(4\times 4\) matrix \(G\), and assemble the \(3\times 4\) matrix \(M\) whose rows are \(v_1^T G,\ v_2^T G,\ v_3^T G\). Deleting column \(i \in \{0,1,2,3\}\) yields the \(3\times 3\) minor \(M_{\hat{i}}\), and the dual vector \(n\) has entries \(n_i = (-1)^i \det(M_{\hat{i}})\). By Laplace expansion, \(B(v_k, n) = v_k^T G n = 0\) for all \(k \in \{1, 2, 3\}\). Because \(B|_U\) and \(B\) are non-degenerate, the orthogonal complement \(U^\perp = \operatorname{span}(n)\) is non-degenerate, forcing \(Q(n) = B(n, n) \neq 0\).
+          </p>
+        </div>
+      </div>
+      <div class="proof-step">
+        <div class="step-num">STEP 02</div>
+        <div class="step-body">
+          <h4>Orthogonally project \(v_4\) onto \(U^\perp\) and block-diagonalize \(G_4\) (Lemma 2.6)</h4>
+          <p>
+            Under the direct sum \(V_4 = U \oplus U^\perp\), split \(v_4 = v_{4\parallel} + v_{4\perp}\) with \(v_{4\parallel} \in U\) and \(v_{4\perp} = \frac{B(v_4, n)}{Q(n)}\, n \in U^\perp\). Subtracting the linear combination \(v_{4\parallel} = \sum_{i=1}^3 \mu_i v_i\) via an upper-triangular transition matrix \(P\) with \(\det(P) = 1\) diagonalizes the Gram matrix:
+          </p>
+          <div style="overflow-x: auto;">
+            \[
+              G'_4 = P G_4 P^T = \begin{pmatrix} G_3 & \mathbf{0} \\ \mathbf{0}^T & Q(v_{4\perp}) \end{pmatrix}
+              \quad\Longrightarrow\quad
+              \det(G_4) = \det(G_3) \cdot Q(v_{4\perp}) = \det(G_3)\,\frac{B(v_4, n)^2}{Q(n)}
+            \]
+          </div>
+        </div>
+      </div>
+      <div class="proof-step">
+        <div class="step-num">STEP 03</div>
+        <div class="step-body">
+          <h4>Establish the Polynomial Gram Identity and normalize</h4>
+          <p>
+            Multiplying by \(Q(n)\) produces \(\det(G_4)\,Q(n) = \det(G_3)\,B(v_4, n)^2\). Since both sides are polynomials in the 16 vertex coordinates and agree on the Zariski-dense set where \(B|_U\) is non-degenerate, the polynomial identity holds identically for <em>all</em> configurations—even degenerate ones. Whenever \(Q(v_i) \neq 0\) and \(Q(n) \neq 0\), dividing both sides by \(Q(v_1)Q(v_2)Q(v_3)Q(v_4)Q(n)\) yields \(\mathcal{V} = \mathcal{S} \times h(a_4)\).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: INTERACTIVE WORKBENCH -->
+  <section class="section-block" id="sec-workbench">
+    <p class="kicker">04 &middot; Exact Rational Calculator &amp; 3D Explorer</p>
+    <h2 class="section-heading">Compute \(\mathcal{V} = \mathcal{S} \times h(a_{\text{apex}})\) with zero floating-point error</h2>
+    <div class="prose-col">
+      <p>
+        Every coordinate and bilinear metric coefficient below is evaluated using exact arbitrary-precision rational arithmetic (\(\mathbb{Q}\)). Switch signatures between Euclidean and Lorentzian/hyperbolic space, change which vertex serves as the apex to verify that \(\mathcal{V}\) remains invariant while \(\mathcal{S}\) and \(h\) trade off, or test a degenerate configuration to watch \(\det(G_4)\,Q(n) - \det(G_3)\,B(v_{\text{apex}}, n)^2 = 0\) hold unconditionally.
+      </p>
+    </div>
+
+    <div class="workbench">
+      <div class="workbench-toolbar">
+        <div class="preset-group" role="group" aria-label="Tetrahedron presets">
+          <button class="btn btn-secondary active" id="preset-regular" onclick="loadPreset('regular', this)">Regular Euclidean</button>
+          <button class="btn btn-secondary" id="preset-hyperbolic" onclick="loadPreset('hyperbolic', this)">Hyperbolic (+,+,+,-)</button>
+          <button class="btn btn-secondary" id="preset-rational" onclick="loadPreset('rational', this)">Asymmetric Rational</button>
+          <button class="btn btn-secondary" id="preset-coplanar" onclick="loadPreset('coplanar', this)">Degenerate Coplanar</button>
+          <button class="btn btn-secondary" id="preset-nullface" onclick="loadPreset('nullface', this)">Degenerate Face (Q(n)=0)</button>
+        </div>
+        <button class="btn btn-primary" onclick="resetPreset()">Reset Current Preset</button>
+      </div>
+
+      <div class="workbench-grid">
+        <!-- Left column: Inputs -->
+        <div class="controls-panel">
+          <p class="control-section-title">Diagonal Metric \(G = \operatorname{diag}(g_0, g_1, g_2, g_3)\)</p>
+          <div class="metric-row">
+            <div class="field-group">
+              <label class="field-label" for="g0">g₀</label>
+              <input class="mono-input" id="g0" type="text" value="1" oninput="handleWorkbenchInput()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="g1">g₁</label>
+              <input class="mono-input" id="g1" type="text" value="1" oninput="handleWorkbenchInput()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="g2">g₂</label>
+              <input class="mono-input" id="g2" type="text" value="1" oninput="handleWorkbenchInput()">
+            </div>
+            <div class="field-group">
+              <label class="field-label" for="g3">g₃</label>
+              <input class="mono-input" id="g3" type="text" value="1" oninput="handleWorkbenchInput()">
+            </div>
+          </div>
+
+          <p class="control-section-title">Projective Vertices \(a_i = [x_{i0} : x_{i1} : x_{i2} : x_{i3}]\) (integers or a/b)</p>
+          <div class="vertex-grid">
+            <div class="vertex-row">
+              <span class="vertex-badge is-face" id="badge-v1">a₁ [v₁]</span>
+              <div class="field-group">
+                <label class="field-label" for="v1-0">x₀</label>
+                <input class="mono-input" id="v1-0" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v1-1">x₁</label>
+                <input class="mono-input" id="v1-1" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v1-2">x₂</label>
+                <input class="mono-input" id="v1-2" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v1-3">x₃</label>
+                <input class="mono-input" id="v1-3" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+            </div>
+
+            <div class="vertex-row">
+              <span class="vertex-badge is-face" id="badge-v2">a₂ [v₂]</span>
+              <div class="field-group">
+                <label class="field-label" for="v2-0">x₀</label>
+                <input class="mono-input" id="v2-0" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v2-1">x₁</label>
+                <input class="mono-input" id="v2-1" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v2-2">x₂</label>
+                <input class="mono-input" id="v2-2" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v2-3">x₃</label>
+                <input class="mono-input" id="v2-3" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+            </div>
+
+            <div class="vertex-row">
+              <span class="vertex-badge is-face" id="badge-v3">a₃ [v₃]</span>
+              <div class="field-group">
+                <label class="field-label" for="v3-0">x₀</label>
+                <input class="mono-input" id="v3-0" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v3-1">x₁</label>
+                <input class="mono-input" id="v3-1" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v3-2">x₂</label>
+                <input class="mono-input" id="v3-2" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v3-3">x₃</label>
+                <input class="mono-input" id="v3-3" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+            </div>
+
+            <div class="vertex-row">
+              <span class="vertex-badge is-apex" id="badge-v4">a₄ [v₄]</span>
+              <div class="field-group">
+                <label class="field-label" for="v4-0">x₀</label>
+                <input class="mono-input" id="v4-0" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v4-1">x₁</label>
+                <input class="mono-input" id="v4-1" type="text" value="-1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v4-2">x₂</label>
+                <input class="mono-input" id="v4-2" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="v4-3">x₃</label>
+                <input class="mono-input" id="v4-3" type="text" value="1" oninput="handleWorkbenchInput()">
+              </div>
+            </div>
+          </div>
+
+          <div class="apex-selector-row">
+            <div class="field-group">
+              <label class="field-label" for="apex-select">Factorization Apex (Opposite Face = Other 3 Vertices)</label>
+              <select class="mono-select" id="apex-select" onchange="handleWorkbenchInput()">
+                <option value="3" selected>Apex a₄ &middot; Base face a₁a₂a₃</option>
+                <option value="0">Apex a₁ &middot; Base face a₂a₃a₄</option>
+                <option value="1">Apex a₂ &middot; Base face a₁a₃a₄</option>
+                <option value="2">Apex a₃ &middot; Base face a₁a₂a₄</option>
+              </select>
+            </div>
+            <button class="btn btn-secondary" onclick="toggleSignature()">Flip g₃ Sign</button>
+          </div>
+
+          <div class="workbench-error" id="wb-error" role="alert"></div>
+        </div>
+
+        <!-- Right column: Interactive 3D Wireframe Projection -->
+        <div class="canvas-well">
+          <h3 class="chart-title">Affine 3D Projection (\(x_0/x_3,\ x_1/x_3,\ x_2/x_3\))</h3>
+          <p class="chart-sub" id="canvas-caption">Drag anywhere on the figure to orbit; base face in blue, apex edges &amp; dual altitude in orange/green</p>
+          <div class="canvas-stage" id="tetra-stage">
+            <canvas id="tetra-canvas" aria-label="Interactive 3D wireframe projection of the tetrahedron and its base face"></canvas>
+          </div>
+          <div class="canvas-controls">
+            <div class="canvas-legend">
+              <span class="legend-item"><span class="swatch swatch-2"></span>Base face</span>
+              <span class="legend-item"><span class="swatch swatch-1"></span>Apex edges</span>
+              <span class="legend-item"><span class="swatch swatch-3"></span>Altitude / Dual \(n\)</span>
+            </div>
+            <button class="btn btn-secondary" style="min-height: 36px; padding: 0.3rem 0.65rem; font-size: 0.8rem;" onclick="resetOrbit()">Reset Camera</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exact Outputs -->
+      <div class="results-section">
+        <div class="stat-strip">
+          <div class="stat">
+            <div class="stat-label">Projective Quadrume \(\mathcal{V}\)</div>
+            <div class="stat-value" id="out-V">—</div>
+            <div class="stat-delta" id="out-V-dec">Exact rational invariant</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Base Face Quadrea \(\mathcal{S}\)</div>
+            <div class="stat-value" id="out-S">—</div>
+            <div class="stat-delta compare" id="out-S-dec">Normalized 3&times;3 Gram det</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Altitude Quadrance \(h(\text{apex})\)</div>
+            <div class="stat-value" id="out-h">—</div>
+            <div class="stat-delta positive" id="out-h-dec">1 &minus; q(apex, n)</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Factorization Product \(\mathcal{S} \times h\)</div>
+            <div class="stat-value" id="out-prod">—</div>
+            <div class="stat-delta" id="out-status"><span class="status-chip verified">Exact match</span></div>
+          </div>
+        </div>
+
+        <div class="matrix-verification-grid">
+          <div class="data-table-wrap">
+            <h4 class="subhead" style="margin-top: 0;">Exact \(4 \times 4\) Gram Matrix \(G_4\)</h4>
+            <table class="data-table" id="gram-table">
+              <thead>
+                <tr>
+                  <th>\(B(v_i, v_j)\)</th>
+                  <th class="num">\(v_1\)</th>
+                  <th class="num">\(v_2\)</th>
+                  <th class="num">\(v_3\)</th>
+                  <th class="num">\(v_4\)</th>
+                </tr>
+              </thead>
+              <tbody id="gram-tbody"></tbody>
+            </table>
+          </div>
+
+          <div>
+            <h4 class="subhead" style="margin-top: 0;">Polynomial Identity Verification (Theorem 3.3)</h4>
+            <div class="identity-box" id="identity-box">
+              <div class="identity-row">
+                <span>Cofactor dual vector \(n\)</span>
+                <span id="id-n" style="text-align: right;">—</span>
+              </div>
+              <div class="identity-row">
+                <span>Dual quadrance \(Q(n) = B(n,n)\)</span>
+                <span id="id-Qn">—</span>
+              </div>
+              <div class="identity-row">
+                <span>\(\det(G_4)\) and \(\det(G_3)\)</span>
+                <span id="id-dets">—</span>
+              </div>
+              <div class="identity-row">
+                <span>\(\text{LHS} = \det(G_4)\,Q(n)\)</span>
+                <span id="id-lhs">—</span>
+              </div>
+              <div class="identity-row">
+                <span>\(\text{RHS} = \det(G_3)\,B(v_{\text{apex}}, n)^2\)</span>
+                <span id="id-rhs">—</span>
+              </div>
+              <div class="identity-row">
+                <span>\(\Delta = \text{LHS} - \text{RHS}\)</span>
+                <span id="id-diff">—</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: N-DIMENSIONAL RECURSIVE GENERALIZATION -->
+  <section class="section-block" id="sec-generalization">
+    <p class="kicker">05 &middot; Higher-Dimensional Simplices</p>
+    <h2 class="section-heading">A universal recursion from \(\mathbb{P}^1\) to \(\mathbb{P}^{n-1}\)</h2>
+    <div class="prose-col">
+      <p>
+        The tetrahedron factorization \(\mathcal{V} = \mathcal{S} \times h(a_4)\) is the \(k = 4\) instance of a general theorem holding for any \(k\) linearly independent projective points \(a_1, \dots, a_k\) in \(\mathbb{P}^{n-1}\) (\(k \le n\)). Whenever the bilinear form restricted to the \((k-1)\)-dimensional face span \(U_{k-1} = \operatorname{span}(v_1, \dots, v_{k-1})\) is non-degenerate, its orthogonal complement inside \(U_k = \operatorname{span}(v_1, \dots, v_k)\) is one-dimensional and spanned by a unique dual normal vector \(n \in U_k\).
+      </p>
+    </div>
+
+    <div class="formula-anchor">
+      <div class="formula-anchor-header">
+        <span class="formula-tag">Theorem 4.2 &amp; Remark 4.3 &middot; Recursive Factorization</span>
+        <span class="formula-ref">Equations (11)&ndash;(17) in Coady (2026)</span>
+      </div>
+      <div class="formula-display">
+        \[
+          \mathcal{Q}_k = \mathcal{Q}_{k-1} \times h(a_k)
+          \qquad\text{and if every flag subspace } U_1 \subset \dots \subset U_{k-1} \text{ is non-degenerate:}\qquad
+          \mathcal{Q}_k = \prod_{j=2}^{k} h(a_j)
+        \]
+      </div>
+    </div>
+
+    <div class="data-table-wrap" style="margin: var(--space-lg) 0;">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Order</th>
+            <th>Projective Object</th>
+            <th>Ambient Space</th>
+            <th>Normalized Invariant \(\mathcal{Q}_k\)</th>
+            <th>Recursive Decomposition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="mono">k = 2</td>
+            <td>Line segment (1-simplex)</td>
+            <td class="mono">\(\mathbb{P}^1 \subset \mathbb{P}^{n-1}\)</td>
+            <td>Projective quadrance \(q(a_1, a_2)\)</td>
+            <td class="mono">\(\mathcal{Q}_2 = h(a_2) = q(a_1, a_2)\)</td>
+          </tr>
+          <tr>
+            <td class="mono">k = 3</td>
+            <td>Triangle (2-simplex)</td>
+            <td class="mono">\(\mathbb{P}^2 \subset \mathbb{P}^{n-1}\)</td>
+            <td>Projective quadrea \(\mathcal{S}\)</td>
+            <td class="mono">\(\mathcal{S} = q(a_1, a_2) \times h(a_3)\)</td>
+          </tr>
+          <tr>
+            <td class="mono">k = 4</td>
+            <td>Tetrahedron (3-simplex)</td>
+            <td class="mono">\(\mathbb{P}^3 \subset \mathbb{P}^{n-1}\)</td>
+            <td><strong>Projective quadrume \(\mathcal{V}\)</strong></td>
+            <td class="mono">\(\mathcal{V} = \mathcal{S} \times h(a_4)\)</td>
+          </tr>
+          <tr>
+            <td class="mono">k &le; n</td>
+            <td>General \((k-1)\)-simplex</td>
+            <td class="mono">\(\mathbb{P}^{n-1}\)</td>
+            <td>Projective Gram volume \(\mathcal{Q}_k\)</td>
+            <td class="mono">\(\mathcal{Q}_k = \mathcal{Q}_{k-1} \times h(a_k)\)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="prose-col">
+      <h3 class="subhead">Boundary and degeneracy conditions (Proposition 4.4)</h3>
+      <p>
+        Even though the polynomial determinant relation \(\det(G_k)\,Q(n) = \det(G_{k-1})\,B(v_k, n)^2\) holds for every coordinate tuple, the normalized projective factorization \(\mathcal{Q}_k = \mathcal{Q}_{k-1} \times h(a_k)\) becomes undefined in two distinct situations:
+      </p>
+      <ul>
+        <li><strong>Null vertex:</strong> At least one representative vector is null (\(Q(v_i) = 0\)), which sets the projective denominator to zero.</li>
+        <li><strong>Degenerate base span:</strong> \(\det(G_{k-1}) = 0\), which occurs either when \(a_1, \dots, a_{k-1}\) are linearly dependent, or when they are independent in an indefinite metric yet \(B|_{U_{k-1}}\) is degenerate (\(U_{k-1} \cap U_{k-1}^\perp \neq \{0\}\)), forcing \(Q(n) = 0\).</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- SECTION 6: SYMBOLIC VERIFICATION & SOURCES -->
+  <section class="section-block" id="sec-verification">
+    <p class="kicker">06 &middot; Symbolic Verification</p>
+    <h2 class="section-heading">Independent proof in the 16-variable polynomial ring</h2>
+    <div class="prose-col">
+      <p>
+        Because any symmetric bilinear form over a field of characteristic not \(2\) can be diagonalized, Coady confirmed Theorem 3.3 symbolically in SymPy over the polynomial ring \(\mathbb{F}[a_0, \dots, d_3]\) using a general diagonal metric \(G = \operatorname{diag}(g_0, g_1, g_2, g_3)\). Expanding \(\Delta = \det(G_4)\,Q(n) - \det(G_3)\,B(v_4, n)^2\) reduces identically to \(0\).
+      </p>
+    </div>
+
+    <details class="inline-details">
+      <summary>View SymPy verification script (Appendix A of Coady 2026)</summary>
+      <div class="code-panel">
+        <div class="code-header">
+          <span class="formula-ref">Python 3 &middot; SymPy exact polynomial verification</span>
+          <button class="btn btn-secondary" id="copy-sympy-btn" style="min-height: 36px; padding: 0.3rem 0.7rem; font-size: 0.8rem;" onclick="copySympyCode(this)">Copy Script</button>
+        </div>
+        <pre class="code-block" id="sympy-code">import sympy as sp
+
+def run_symbolic_proof():
+    A = list(sp.symbols('a0:4'))
+    B_pt = list(sp.symbols('b0:4'))
+    C = list(sp.symbols('c0:4'))
+    D = list(sp.symbols('d0:4'))
+
+    g0, g1, g2, g3 = sp.symbols('g0 g1 g2 g3')
+    G = sp.diag(g0, g1, g2, g3)
+
+    def B_form(u, v):
+        return (sp.Matrix(u).T * G * sp.Matrix(v))[0, 0]
+
+    def symbolic_dual_point(A, B_pt, C):
+        M = sp.Matrix([
+            list(sp.Matrix(A).T * G),
+            list(sp.Matrix(B_pt).T * G),
+            list(sp.Matrix(C).T * G)
+        ])
+        n = []
+        for i in range(4):
+            M_sub = M.copy()
+            M_sub.col_del(i)
+            n.append(((-1)**i) * M_sub.det())
+        return n
+
+    pts = [A, B_pt, C, D]
+    G4 = sp.Matrix([[B_form(u, v) for v in pts] for u in pts])
+    G3 = G4[:3, :3]
+
+    n = symbolic_dual_point(A, B_pt, C)
+    LHS = G4.det() * B_form(n, n)
+    RHS = G3.det() * (B_form(D, n) ** 2)
+
+    difference = sp.simplify(LHS - RHS)
+    print("Symbolic Difference (LHS - RHS) =", difference)
+    print("Is the identity proved?", difference == 0)
+
+if __name__ == "__main__":
+    run_symbolic_proof()</pre>
+      </div>
+    </details>
+
+    <footer class="sources-footer">
+      <p style="margin: 0 0 var(--space-xs) 0;">
+        <strong>Primary Source:</strong> John D. Coady, <em>On the Projective Quadrume and the Recursive Factorization of Projective Simplices</em> (July 2026).
+      </p>
+      <p style="margin: 0;">
+        <strong>Related Foundations:</strong> N. J. Wildberger, <em>Divine Proportions: Rational Trigonometry to Universal Geometry</em> (Wild Egg Books, 2005); <em>Universal Hyperbolic Geometry I: Trigonometry</em> (<em>Geometriae Dedicata</em>, 2013); <em>Affine and Projective Universal Geometry</em> (2024); and John D. Coady, <em>The Quadrea of a Projective Quadrangle Theorem in Universal Hyperbolic Geometry</em> (2025).
+      </p>
+    </footer>
+  </section>
+
+</main>
+
+<script>
+/* =========================================================
+   Exact BigInt Rational Arithmetic (Q)
+   ========================================================= */
+function bigAbs(a) {
+  return a < 0n ? -a : a;
+}
+
+function bigGcd(a, b) {
+  a = bigAbs(a);
+  b = bigAbs(b);
+  while (b !== 0n) {
+    const t = a % b;
+    a = b;
+    b = t;
+  }
+  return a === 0n ? 1n : a;
+}
+
+class Rat {
+  constructor(n, d = 1n) {
+    if (d === 0n) throw new Error(`Division by zero in rational number`);
+    if (d < 0n) {
+      n = -n;
+      d = -d;
+    }
+    if (n === 0n) {
+      this.n = 0n;
+      this.d = 1n;
+    } else {
+      const g = bigGcd(n, d);
+      this.n = n / g;
+      this.d = d / g;
+    }
+  }
+  static from(val) {
+    if (val instanceof Rat) return val;
+    return new Rat(BigInt(val), 1n);
+  }
+  add(o) {
+    return new Rat(this.n * o.d + o.n * this.d, this.d * o.d);
+  }
+  sub(o) {
+    return new Rat(this.n * o.d - o.n * this.d, this.d * o.d);
+  }
+  mul(o) {
+    return new Rat(this.n * o.n, this.d * o.d);
+  }
+  div(o) {
+    if (o.n === 0n) throw new Error(`Division by zero`);
+    return new Rat(this.n * o.d, this.d * o.n);
+  }
+  neg() {
+    return new Rat(-this.n, this.d);
+  }
+  isZero() {
+    return this.n === 0n;
+  }
+  equals(o) {
+    return this.n === o.n && this.d === o.d;
+  }
+  toNumber() {
+    return Number(this.n) / Number(this.d);
+  }
+  toString() {
+    if (this.d === 1n) return this.n.toString();
+    return `${this.n.toString()}/${this.d.toString()}`;
+  }
+  toDec(digits = 5) {
+    const v = this.toNumber();
+    if (!Number.isFinite(v)) return `—`;
+    return v.toFixed(digits);
+  }
+}
+
+function parseRat(str) {
+  const s = String(str).trim();
+  if (!s) return null;
+  if (s.includes(`/`)) {
+    const parts = s.split(`/`);
+    if (parts.length !== 2) return null;
+    const p0 = parts[0].trim();
+    const p1 = parts[1].trim();
+    if (!/^[+-]?\d+$/.test(p0) || !/^[+-]?\d+$/.test(p1)) return null;
+    const d = BigInt(p1);
+    if (d === 0n) return null;
+    return new Rat(BigInt(p0), d);
+  }
+  if (/^[+-]?\d+$/.test(s)) {
+    return new Rat(BigInt(s), 1n);
+  }
+  if (/^[+-]?\d*\.\d+$/.test(s)) {
+    const neg = s.startsWith(`-`);
+    const clean = s.replace(/^[+-]/, ``);
+    const [whole, frac] = clean.split(`.`);
+    const denom = 10n ** BigInt(frac.length);
+    const num = BigInt((whole || `0`) + frac);
+    return new Rat(neg ? -num : num, denom);
+  }
+  return null;
+}
+
+function det3(m) {
+  const a = m[0][0].mul(m[1][1].mul(m[2][2]).sub(m[1][2].mul(m[2][1])));
+  const b = m[0][1].mul(m[1][0].mul(m[2][2]).sub(m[1][2].mul(m[2][0])));
+  const c = m[0][2].mul(m[1][0].mul(m[2][1]).sub(m[1][1].mul(m[2][0])));
+  return a.sub(b).add(c);
+}
+
+function det4(m) {
+  let sum = new Rat(0n);
+  for (let col = 0; col < 4; col++) {
+    const sub = [];
+    for (let r = 1; r < 4; r++) {
+      const row = [];
+      for (let c = 0; c < 4; c++) {
+        if (c !== col) row.push(m[r][c]);
+      }
+      sub.push(row);
+    }
+    const minor = det3(sub);
+    const term = m[0][col].mul(minor);
+    sum = (col % 2 === 0) ? sum.add(term) : sum.sub(term);
+  }
+  return sum;
+}
+
+/* =========================================================
+   Dimension Ladder Interactive Section
+   ========================================================= */
+const LADDER_DATA = {
+  2: {
+    kicker: `k = 2 · 1-Simplex (Edge) in ℙ¹ ⊂ ℙⁿ⁻¹`,
+    title: `Projective Quadrance q(a₁, a₂)`,
+    desc: `Two non-null projective points determine a projective line. Their normalized 2×2 Gram determinant simplifies directly to Wildberger’s projective quadrance, the projective counterpart of squared separation.`,
+    tex: `\\[ \\mathcal{Q}_2 = \\frac{\\det(G_2)}{Q(v_1)\\,Q(v_2)} = 1 - \\frac{B(v_1,v_2)^2}{Q(v_1)\\,Q(v_2)} = q(a_1, a_2) \\]`,
+    svg: `
+      <svg viewBox="0 0 280 180" width="100%" height="180" aria-hidden="true">
+        <line x1="40" y1="115" x2="240" y2="65" stroke="var(--data-1)" stroke-width="3"/>
+        <circle cx="65" cy="109" r="5" fill="var(--data-2)"/>
+        <circle cx="215" cy="71" r="5" fill="var(--data-1)"/>
+        <text x="52" y="134" font-family="Roboto Mono, monospace" font-size="12" fill="var(--secondary)">a₁</text>
+        <text x="210" y="56" font-family="Roboto Mono, monospace" font-size="12" fill="var(--tertiary)">a₂</text>
+        <text x="112" y="114" font-family="Roboto Mono, monospace" font-size="12" fill="var(--tertiary)">q(a₁, a₂)</text>
+      </svg>`
+  },
+  3: {
+    kicker: `k = 3 · 2-Simplex (Triangle) in ℙ² ⊂ ℙⁿ⁻¹`,
+    title: `Projective Quadrea 𝒮`,
+    desc: `Three non-collinear projective points span a plane. Their normalized 3×3 Gram determinant equals Wildberger’s projective quadrea, which factors into the edge quadrance q(a₁, a₂) times the altitude quadrance h(a₃).`,
+    tex: `\\[ \\mathcal{Q}_3 = \\frac{\\det(G_3)}{Q(v_1)\\,Q(v_2)\\,Q(v_3)} = \\mathcal{S} = q(a_1, a_2) \\times h(a_3) \\]`,
+    svg: `
+      <svg viewBox="0 0 280 180" width="100%" height="180" aria-hidden="true">
+        <polygon points="50,140 230,140 155,40" fill="color-mix(in srgb, var(--data-2) 12%, var(--background))" stroke="var(--data-2)" stroke-width="2.2"/>
+        <line x1="155" y1="40" x2="155" y2="140" stroke="var(--data-3)" stroke-width="2" stroke-dasharray="3 3"/>
+        <polyline points="155,128 167,128 167,140" fill="none" stroke="var(--data-3)" stroke-width="1.4"/>
+        <circle cx="50" cy="140" r="4.5" fill="var(--data-2)"/>
+        <circle cx="230" cy="140" r="4.5" fill="var(--data-2)"/>
+        <circle cx="155" cy="40" r="5" fill="var(--data-1)"/>
+        <text x="42" y="160" font-family="Roboto Mono, monospace" font-size="12" fill="var(--secondary)">a₁</text>
+        <text x="225" y="160" font-family="Roboto Mono, monospace" font-size="12" fill="var(--secondary)">a₂</text>
+        <text x="164" y="42" font-family="Roboto Mono, monospace" font-size="12" fill="var(--tertiary)">a₃</text>
+        <text x="162" y="102" font-family="Roboto Mono, monospace" font-size="11" fill="var(--positive)">h(a₃)</text>
+      </svg>`
+  },
+  4: {
+    kicker: `k = 4 · 3-Simplex (Tetrahedron) in ℙ³`,
+    title: `Projective Quadrume 𝒱`,
+    desc: `Coady’s central invariant for four non-coplanar projective points a₁, a₂, a₃, a₄. Defined as the normalized 4×4 Gram determinant, it extends Wildberger’s planar quadrea into three-dimensional projective space and factorizes into the quadrea of a face times the opposite altitude quadrance.`,
+    tex: `\\[ \\mathcal{V} = \\frac{\\det(G_4)}{Q(v_1)\\,Q(v_2)\\,Q(v_3)\\,Q(v_4)} = \\mathcal{S} \\times h(a_4) \\]`,
+    svg: `
+      <svg viewBox="0 0 280 180" width="100%" height="180" aria-hidden="true">
+        <polygon points="52,144 228,148 175,104" fill="color-mix(in srgb, var(--data-2) 12%, var(--background))" stroke="var(--data-2)" stroke-width="2"/>
+        <line x1="52" y1="144" x2="140" y2="32" stroke="var(--data-1)" stroke-width="2.2"/>
+        <line x1="228" y1="148" x2="140" y2="32" stroke="var(--data-1)" stroke-width="2.2"/>
+        <line x1="175" y1="104" x2="140" y2="32" stroke="var(--data-context)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <line x1="140" y1="32" x2="152" y2="128" stroke="var(--data-3)" stroke-width="2"/>
+        <circle cx="52" cy="144" r="4" fill="var(--data-2)"/>
+        <circle cx="228" cy="148" r="4" fill="var(--data-2)"/>
+        <circle cx="175" cy="104" r="4" fill="var(--data-2)"/>
+        <circle cx="140" cy="32" r="5" fill="var(--data-1)"/>
+        <text x="36" y="158" font-family="Roboto Mono, monospace" font-size="11" fill="var(--secondary)">a₁</text>
+        <text x="234" y="158" font-family="Roboto Mono, monospace" font-size="11" fill="var(--secondary)">a₂</text>
+        <text x="182" y="103" font-family="Roboto Mono, monospace" font-size="11" fill="var(--secondary)">a₃</text>
+        <text x="148" y="34" font-family="Roboto Mono, monospace" font-size="11" fill="var(--tertiary)">a₄</text>
+        <text x="158" y="84" font-family="Roboto Mono, monospace" font-size="11" fill="var(--positive)">h(a₄)</text>
+      </svg>`
+  },
+  5: {
+    kicker: `k ≤ n · General (k−1)-Simplex in ℙⁿ⁻¹`,
+    title: `Projective Gram Volume 𝒬ₖ`,
+    desc: `In arbitrary dimension, any k linearly independent non-null points form a simplex whose normalized k×k Gram determinant telescopes recursively along a non-degenerate flag U₁ ⊂ U₂ ⊂ … ⊂ Uₖ₋₁ into a product of altitude quadrances.`,
+    tex: `\\[ \\mathcal{Q}_k = \\mathcal{Q}_{k-1} \\times h(a_k) = \\prod_{j=2}^{k} h(a_j) \\]`,
+    svg: `
+      <svg viewBox="0 0 280 180" width="100%" height="180" aria-hidden="true">
+        <polygon points="48,136 168,154 234,116 142,88" fill="color-mix(in srgb, var(--data-2) 10%, var(--background))" stroke="var(--data-2)" stroke-width="1.8"/>
+        <line x1="48" y1="136" x2="234" y2="116" stroke="var(--data-context)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <line x1="168" y1="154" x2="142" y2="88" stroke="var(--data-context)" stroke-width="1.2" stroke-dasharray="3 3"/>
+        <line x1="48" y1="136" x2="140" y2="26" stroke="var(--data-1)" stroke-width="2"/>
+        <line x1="168" y1="154" x2="140" y2="26" stroke="var(--data-1)" stroke-width="2"/>
+        <line x1="234" y1="116" x2="140" y2="26" stroke="var(--data-1)" stroke-width="2"/>
+        <line x1="142" y1="88" x2="140" y2="26" stroke="var(--data-context)" stroke-width="1.4" stroke-dasharray="3 3"/>
+        <line x1="140" y1="26" x2="146" y2="122" stroke="var(--data-3)" stroke-width="2"/>
+        <circle cx="140" cy="26" r="5" fill="var(--data-1)"/>
+        <text x="150" y="28" font-family="Roboto Mono, monospace" font-size="11" fill="var(--tertiary)">aₖ</text>
+        <text x="154" y="76" font-family="Roboto Mono, monospace" font-size="11" fill="var(--positive)">h(aₖ)</text>
+        <text x="86" y="168" font-family="Roboto Mono, monospace" font-size="11" fill="var(--secondary)">Face 𝒬ₖ₋₁</text>
+      </svg>`
+  }
+};
+
+function renderLatexIn(el) {
+  if (!el || typeof window.renderMathInElement !== `function`) return;
+  window.renderMathInElement(el, {
+    delimiters: [
+      { left: `\\[`, right: `\\]`, display: true },
+      { left: `\\(`, right: `\\)`, display: false }
+    ],
+    throwOnError: false
+  });
+}
+
+function selectDimension(k, btn) {
+  const data = LADDER_DATA[k];
+  if (!data) return;
+  const tabs = document.querySelectorAll(`.ladder-tabs .tab-btn`);
+  tabs.forEach((b) => b.setAttribute(`aria-selected`, `false`));
+  if (btn) btn.setAttribute(`aria-selected`, `true`);
+
+  const kickerEl = document.getElementById(`ladder-kicker`);
+  const titleEl = document.getElementById(`ladder-title`);
+  const descEl = document.getElementById(`ladder-desc`);
+  const formulaEl = document.getElementById(`ladder-formula`);
+  const diagEl = document.getElementById(`ladder-diagram`);
+
+  if (kickerEl) kickerEl.textContent = data.kicker;
+  if (titleEl) titleEl.textContent = data.title;
+  if (descEl) descEl.textContent = data.desc;
+  if (formulaEl) {
+    formulaEl.innerHTML = data.tex;
+    renderLatexIn(formulaEl);
+  }
+  if (diagEl) diagEl.innerHTML = data.svg;
+}
+
+/* =========================================================
+   Workbench State, Presets & Exact Computation
+   ========================================================= */
+const PRESETS = {
+  regular: {
+    g: [`1`, `1`, `1`, `1`],
+    v: [
+      [`1`, `1`, `1`, `1`],
+      [`1`, `-1`, `-1`, `1`],
+      [`-1`, `1`, `-1`, `1`],
+      [`-1`, `-1`, `1`, `1`]
+    ],
+    apex: `3`
+  },
+  hyperbolic: {
+    g: [`1`, `1`, `1`, `-1`],
+    v: [
+      [`1`, `0`, `0`, `2`],
+      [`0`, `1`, `0`, `2`],
+      [`0`, `0`, `1`, `2`],
+      [`1/2`, `1/2`, `1/2`, `3`]
+    ],
+    apex: `3`
+  },
+  rational: {
+    g: [`1`, `2`, `1`, `1`],
+    v: [
+      [`1`, `0`, `1/2`, `1`],
+      [`-1`, `1`, `0`, `1`],
+      [`0`, `-1`, `3/2`, `1`],
+      [`1/2`, `1/2`, `2`, `1`]
+    ],
+    apex: `3`
+  },
+  coplanar: {
+    g: [`1`, `1`, `1`, `1`],
+    v: [
+      [`1`, `0`, `0`, `1`],
+      [`0`, `1`, `0`, `1`],
+      [`0`, `0`, `1`, `1`],
+      [`1`, `1`, `-1`, `1`]
+    ],
+    apex: `3`
+  },
+  nullface: {
+    g: [`1`, `1`, `1`, `-1`],
+    v: [
+      [`1`, `0`, `0`, `1`],
+      [`0`, `1`, `0`, `1`],
+      [`0`, `0`, `1`, `1`],
+      [`0`, `0`, `0`, `1`]
+    ],
+    apex: `3`
+  }
+};
+
+let currentPresetKey = `regular`;
+let latestGeometry = null;
+
+function loadPreset(key, btn) {
+  const p = PRESETS[key];
+  if (!p) return;
+  currentPresetKey = key;
+
+  document.querySelectorAll(`.preset-group .btn-secondary`).forEach((b) => {
+    b.classList.remove(`active`);
+  });
+  if (btn) btn.classList.add(`active`);
+
+  for (let i = 0; i < 4; i++) {
+    const gEl = document.getElementById(`g${i}`);
+    if (gEl) gEl.value = p.g[i];
+    for (let j = 0; j < 4; j++) {
+      const vEl = document.getElementById(`v${i + 1}-${j}`);
+      if (vEl) vEl.value = p.v[i][j];
+    }
+  }
+  const apexEl = document.getElementById(`apex-select`);
+  if (apexEl) apexEl.value = p.apex;
+
+  handleWorkbenchInput();
+}
+
+function resetPreset() {
+  const btn = document.getElementById(`preset-${currentPresetKey}`);
+  loadPreset(currentPresetKey, btn);
+}
+
+function toggleSignature() {
+  const g3El = document.getElementById(`g3`);
+  if (!g3El) return;
+  const r = parseRat(g3El.value);
+  if (!r) {
+    g3El.value = `-1`;
+  } else {
+    g3El.value = r.neg().toString();
+  }
+  handleWorkbenchInput();
+}
+
+function bForm(u, v, g) {
+  let acc = new Rat(0n);
+  for (let i = 0; i < 4; i++) {
+    acc = acc.add(g[i].mul(u[i]).mul(v[i]));
+  }
+  return acc;
+}
+
+function computeDualPoint(faceVecs, g) {
+  // M has 3 rows: v_i^T G
+  const M = faceVecs.map((v) => v.map((coord, idx) => coord.mul(g[idx])));
+  const n = [];
+  for (let i = 0; i < 4; i++) {
+    const sub = M.map((row) => row.filter((_, cIdx) => cIdx !== i));
+    const d = det3(sub);
+    n.push((i % 2 === 0) ? d : d.neg());
+  }
+  return n;
+}
+
+function handleWorkbenchInput() {
+  const errEl = document.getElementById(`wb-error`);
+  if (errEl) {
+    errEl.classList.remove(`visible`);
+    errEl.textContent = ``;
+  }
+
+  const g = [];
+  let hasError = false;
+
+  for (let i = 0; i < 4; i++) {
+    const el = document.getElementById(`g${i}`);
+    const parsed = el ? parseRat(el.value) : null;
+    if (el) el.classList.toggle(`invalid`, !parsed);
+    if (!parsed) hasError = true;
+    else g.push(parsed);
+  }
+
+  const verts = [];
+  for (let i = 0; i < 4; i++) {
+    const vec = [];
+    for (let j = 0; j < 4; j++) {
+      const el = document.getElementById(`v${i + 1}-${j}`);
+      const parsed = el ? parseRat(el.value) : null;
+      if (el) el.classList.toggle(`invalid`, !parsed);
+      if (!parsed) hasError = true;
+      else vec.push(parsed);
+    }
+    verts.push(vec);
+  }
+
+  if (hasError) {
+    if (errEl) {
+      errEl.textContent = `Invalid rational input: please enter integers (e.g. -3), fractions (e.g. 1/2), or terminating decimals with non-zero denominators.`;
+      errEl.classList.add(`visible`);
+    }
+    return;
+  }
+
+  const apexSelect = document.getElementById(`apex-select`);
+  const apexIdx = apexSelect ? parseInt(apexSelect.value, 10) : 3;
+
+  // Update vertex badges to reflect face vs apex
+  for (let i = 0; i < 4; i++) {
+    const badge = document.getElementById(`badge-v${i + 1}`);
+    if (!badge) continue;
+    badge.classList.remove(`is-apex`, `is-face`);
+    badge.classList.add(i === apexIdx ? `is-apex` : `is-face`);
+  }
+
+  // Compute full 4x4 Gram matrix G4
+  const G4 = verts.map((u) => verts.map((v) => bForm(u, v, g)));
+  const Qv = [0, 1, 2, 3].map((i) => G4[i][i]);
+  const dG4 = det4(G4);
+
+  // Face vertices (all except apexIdx)
+  const faceIndices = [0, 1, 2, 3].filter((idx) => idx !== apexIdx);
+  const faceVecs = faceIndices.map((idx) => verts[idx]);
+  const apexVec = verts[apexIdx];
+
+  const G3 = faceIndices.map((r) => faceIndices.map((c) => G4[r][c]));
+  const dG3 = det3(G3);
+
+  const nVec = computeDualPoint(faceVecs, g);
+  const Qn = bForm(nVec, nVec, g);
+  const B_apex_n = bForm(apexVec, nVec, g);
+
+  // Polynomial identity Theorem 3.3
+  const LHS = dG4.mul(Qn);
+  const RHS = dG3.mul(B_apex_n).mul(B_apex_n);
+  const diff = LHS.sub(RHS);
+
+  // Normalized projective quantities
+  const anyNullVertex = Qv.some((q) => q.isZero());
+  const prodQ4 = Qv[0].mul(Qv[1]).mul(Qv[2]).mul(Qv[3]);
+  const prodQ3 = faceIndices.reduce((acc, idx) => acc.mul(Qv[idx]), new Rat(1n));
+
+  let V_rat = null;
+  let S_rat = null;
+  let h_rat = null;
+  let prod_rat = null;
+  let statusText = `Exact factorization match`;
+  let statusClass = `verified`;
+
+  if (anyNullVertex) {
+    statusText = `Undefined: null vertex Q(vᵢ) = 0`;
+    statusClass = `degenerate`;
+  } else {
+    V_rat = dG4.div(prodQ4);
+    S_rat = dG3.div(prodQ3);
+    if (Qn.isZero()) {
+      statusText = `h undefined: degenerate base span Q(n) = 0`;
+      statusClass = `degenerate`;
+    } else {
+      h_rat = B_apex_n.mul(B_apex_n).div(Qv[apexIdx].mul(Qn));
+      prod_rat = S_rat.mul(h_rat);
+      if (dG4.isZero()) {
+        statusText = `Coplanar / degenerate simplex (𝒱 = 0)`;
+        statusClass = `degenerate`;
+      }
+    }
+  }
+
+  // Update DOM Outputs
+  const setTxt = (id, txt) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = txt;
+  };
+
+  setTxt(`out-V`, V_rat ? V_rat.toString() : `Undefined`);
+  setTxt(`out-V-dec`, V_rat ? `≈ ${V_rat.toDec(6)}` : `Requires non-null vertices`);
+
+  setTxt(`out-S`, S_rat ? S_rat.toString() : `Undefined`);
+  setTxt(`out-S-dec`, S_rat ? `≈ ${S_rat.toDec(6)}` : `Requires non-null face`);
+
+  setTxt(`out-h`, h_rat ? h_rat.toString() : `Undefined`);
+  setTxt(`out-h-dec`, h_rat ? `≈ ${h_rat.toDec(6)}` : `Requires Q(v_apex) ≠ 0 and Q(n) ≠ 0`);
+
+  setTxt(`out-prod`, prod_rat ? prod_rat.toString() : `Undefined`);
+
+  const statusEl = document.getElementById(`out-status`);
+  if (statusEl) {
+    statusEl.innerHTML = `<span class="status-chip ${statusClass}">${statusText}</span>`;
+  }
+
+  // Update Gram Matrix table
+  const tbody = document.getElementById(`gram-tbody`);
+  if (tbody) {
+    tbody.innerHTML = G4.map((row, rIdx) => {
+      const cells = row.map((val) => `<td class="num">${val.toString()}</td>`).join(``);
+      const tag = rIdx === apexIdx ? `v${rIdx + 1} (apex)` : `v${rIdx + 1}`;
+      return `<tr><td class="mono">${tag}</td>${cells}</tr>`;
+    }).join(``);
+  }
+
+  // Update Identity Verification box
+  setTxt(`id-n`, `[${nVec.map((c) => c.toString()).join(` : `)}]`);
+  setTxt(`id-Qn`, Qn.toString());
+  setTxt(`id-dets`, `${dG4.toString()}  /  ${dG3.toString()}`);
+  setTxt(`id-lhs`, LHS.toString());
+  setTxt(`id-rhs`, RHS.toString());
+
+  const diffEl = document.getElementById(`id-diff`);
+  if (diffEl) {
+    diffEl.innerHTML = diff.isZero()
+      ? `<span class="status-chip verified">0 (Identity Verified)</span>`
+      : `<span class="status-chip degenerate">${diff.toString()}</span>`;
+  }
+
+  // Update 3D Visualization geometry
+  latestGeometry = {
+    verts: verts.map((v) => v.map((c) => c.toNumber())),
+    nVec: nVec.map((c) => c.toNumber()),
+    g: g.map((c) => c.toNumber()),
+    apexIdx,
+    faceIndices
+  };
+  drawTetrahedron();
+}
+
+/* =========================================================
+   Interactive 3D Wireframe Renderer (Canvas)
+   ========================================================= */
+const camera = {
+  yaw: 0.62,
+  pitch: 0.42,
+  dragging: false,
+  lastX: 0,
+  lastY: 0
+};
+
+function resetOrbit() {
+  camera.yaw = 0.62;
+  camera.pitch = 0.42;
+  drawTetrahedron();
+}
+
+function getCssToken(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function drawTetrahedron() {
+  const canvas = document.getElementById(`tetra-canvas`);
+  const stage = document.getElementById(`tetra-stage`);
+  if (!canvas || !stage || !latestGeometry) return;
+
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const w = stage.clientWidth || 440;
+  const h = stage.clientHeight || 360;
+  if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+  }
+
+  const ctx = canvas.getContext(`2d`);
+  if (!ctx) return;
+
+  ctx.save();
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, w, h);
+
+  const colBg = getCssToken(`--background`);
+  const colInk = getCssToken(`--on-surface`);
+  const colVar = getCssToken(`--on-surface-variant`);
+  const colGrid = getCssToken(`--outline-variant`);
+  const colStory = getCssToken(`--data-1`);
+  const colStoryText = getCssToken(`--tertiary`);
+  const colCompare = getCssToken(`--data-2`);
+  const colCompareText = getCssToken(`--secondary`);
+  const colAlt = getCssToken(`--data-3`);
+  const colCtx = getCssToken(`--data-context`);
+
+  // Subtle newsroom dashed horizontal guide lines
+  ctx.strokeStyle = colGrid;
+  ctx.lineWidth = 1;
+  ctx.setLineDash([2, 3]);
+  for (let yFrac of [0.25, 0.5, 0.75]) {
+    ctx.beginPath();
+    ctx.moveTo(0, h * yFrac);
+    ctx.lineTo(w, h * yFrac);
+    ctx.stroke();
+  }
+  ctx.setLineDash([]);
+
+  // Project 4D homogeneous points to 3D affine chart (x0/x3, x1/x3, x2/x3)
+  const pts3 = latestGeometry.verts.map((v) => {
+    const denom = Math.abs(v[3]) > 1e-6 ? v[3] : 1.0;
+    return [v[0] / denom, v[1] / denom, v[2] / denom];
+  });
+
+  // Compute centroid & bounding radius for framing
+  const center = [0, 0, 0];
+  for (const p of pts3) {
+    center[0] += p[0] / 4;
+    center[1] += p[1] / 4;
+    center[2] += p[2] / 4;
+  }
+
+  let maxR = 0.001;
+  for (const p of pts3) {
+    const dx = p[0] - center[0];
+    const dy = p[1] - center[1];
+    const dz = p[2] - center[2];
+    const dist = Math.hypot(dx, dy, dz);
+    if (dist > maxR) maxR = dist;
+  }
+
+  // Also compute orthogonal foot of apex onto the base face plane in 3D for visual clarity
+  const facePts = latestGeometry.faceIndices.map((i) => pts3[i]);
+  const apexPt = pts3[latestGeometry.apexIdx];
+  const e1 = [facePts[1][0] - facePts[0][0], facePts[1][1] - facePts[0][1], facePts[1][2] - facePts[0][2]];
+  const e2 = [facePts[2][0] - facePts[0][0], facePts[2][1] - facePts[0][1], facePts[2][2] - facePts[0][2]];
+  const normal3 = [
+    e1[1] * e2[2] - e1[2] * e2[1],
+    e1[2] * e2[0] - e1[0] * e2[2],
+    e1[0] * e2[1] - e1[1] * e2[0]
+  ];
+  const nLen2 = normal3[0] ** 2 + normal3[1] ** 2 + normal3[2] ** 2;
+  let footPt = null;
+  if (nLen2 > 1e-9) {
+    const rel = [apexPt[0] - facePts[0][0], apexPt[1] - facePts[0][1], apexPt[2] - facePts[0][2]];
+    const t = (rel[0] * normal3[0] + rel[1] * normal3[1] + rel[2] * normal3[2]) / nLen2;
+    footPt = [apexPt[0] - t * normal3[0], apexPt[1] - t * normal3[1], apexPt[2] - t * normal3[2]];
+  }
+
+  const scale = Math.min(w, h) * 0.32 / maxR;
+  const cy = Math.cos(camera.yaw), sy = Math.sin(camera.yaw);
+  const cp = Math.cos(camera.pitch), sp = Math.sin(camera.pitch);
+
+  function project(p) {
+    const x = p[0] - center[0];
+    const y = p[1] - center[1];
+    const z = p[2] - center[2];
+    // Rotate around Y (yaw), then X (pitch)
+    const x1 = x * cy - z * sy;
+    const z1 = x * sy + z * cy;
+    const y2 = y * cp - z1 * sp;
+    const z2 = y * sp + z1 * cp;
+    return {
+      sx: w * 0.5 + x1 * scale,
+      sy: h * 0.52 - y2 * scale,
+      depth: z2
+    };
+  }
+
+  const projVerts = pts3.map(project);
+  const projFoot = footPt ? project(footPt) : null;
+
+  // Draw base face polygon fill (subtle comparison tint)
+  const [f0, f1, f2] = latestGeometry.faceIndices;
+  ctx.beginPath();
+  ctx.moveTo(projVerts[f0].sx, projVerts[f0].sy);
+  ctx.lineTo(projVerts[f1].sx, projVerts[f1].sy);
+  ctx.lineTo(projVerts[f2].sx, projVerts[f2].sy);
+  ctx.closePath();
+  ctx.fillStyle = `rgba(47, 109, 181, 0.11)`;
+  ctx.fill();
+
+  // Base face edges
+  ctx.strokeStyle = colCompare;
+  ctx.lineWidth = 2.2;
+  ctx.stroke();
+
+  // Altitude line from apex to foot on base face
+  const ap = projVerts[latestGeometry.apexIdx];
+  if (projFoot) {
+    ctx.save();
+    ctx.strokeStyle = colAlt;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([4, 3]);
+    ctx.beginPath();
+    ctx.moveTo(ap.sx, ap.sy);
+    ctx.lineTo(projFoot.sx, projFoot.sy);
+    ctx.stroke();
+    ctx.restore();
+
+    ctx.fillStyle = colAlt;
+    ctx.beginPath();
+    ctx.arc(projFoot.sx, projFoot.sy, 3.5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // Apex edges
+  ctx.strokeStyle = colStory;
+  ctx.lineWidth = 2.4;
+  for (const fIdx of latestGeometry.faceIndices) {
+    ctx.beginPath();
+    ctx.moveTo(ap.sx, ap.sy);
+    ctx.lineTo(projVerts[fIdx].sx, projVerts[fIdx].sy);
+    ctx.stroke();
+  }
+
+  // Draw vertices & direct mono labels sorted back-to-front
+  const order = [0, 1, 2, 3].sort((a, b) => projVerts[a].depth - projVerts[b].depth);
+  ctx.font = `500 12px "Roboto Mono", monospace`;
+
+  for (const idx of order) {
+    const pv = projVerts[idx];
+    const isApex = idx === latestGeometry.apexIdx;
+    ctx.fillStyle = isApex ? colStory : colCompare;
+    ctx.beginPath();
+    ctx.arc(pv.sx, pv.sy, isApex ? 5.5 : 4.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = colBg;
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    const label = isApex ? `a${idx + 1} (apex)` : `a${idx + 1}`;
+    ctx.fillStyle = isApex ? colStoryText : colCompareText;
+    ctx.fillText(label, pv.sx + 9, pv.sy - 6);
+  }
+
+  // Corner annotation showing affine chart note
+  ctx.fillStyle = colVar;
+  ctx.font = `400 11px "Roboto Mono", monospace`;
+  ctx.fillText(`yaw ${(camera.yaw * 57.3).toFixed(0)}° · pitch ${(camera.pitch * 57.3).toFixed(0)}°`, 12, h - 12);
+
+  ctx.restore();
+}
+
+function setupCanvasInteractions() {
+  const stage = document.getElementById(`tetra-stage`);
+  if (!stage) return;
+
+  stage.addEventListener(`pointerdown`, (e) => {
+    camera.dragging = true;
+    camera.lastX = e.clientX;
+    camera.lastY = e.clientY;
+    stage.setPointerCapture(e.pointerId);
+  });
+
+  stage.addEventListener(`pointermove`, (e) => {
+    if (!camera.dragging) return;
+    const dx = e.clientX - camera.lastX;
+    const dy = e.clientY - camera.lastY;
+    camera.lastX = e.clientX;
+    camera.lastY = e.clientY;
+    camera.yaw += dx * 0.01;
+    camera.pitch = Math.max(-1.45, Math.min(1.45, camera.pitch + dy * 0.01));
+    drawTetrahedron();
+  });
+
+  const endDrag = () => {
+    camera.dragging = false;
+  };
+  stage.addEventListener(`pointerup`, endDrag);
+  stage.addEventListener(`pointercancel`, endDrag);
+  window.addEventListener(`resize`, drawTetrahedron);
+}
+
+/* =========================================================
+   Copy SymPy Code Action
+   ========================================================= */
+function copySympyCode(btn) {
+  const pre = document.getElementById(`sympy-code`);
+  if (!pre || !btn) return;
+  const text = pre.textContent || ``;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = `Copied`;
+      setTimeout(() => { btn.textContent = orig; }, 1600);
+    }).catch(() => {
+      btn.textContent = `Select & copy manually`;
+    });
+  } else {
+    btn.textContent = `Select & copy manually`;
+  }
+}
+
+/* =========================================================
+   Boot
+   ========================================================= */
+document.addEventListener(`DOMContentLoaded`, () => {
+  selectDimension(4, document.querySelectorAll(`.ladder-tabs .tab-btn`)[2]);
+  loadPreset(`regular`, document.getElementById(`preset-regular`));
+  setupCanvasInteractions();
+
+  const waitForKatex = () => {
+    if (typeof window.renderMathInElement === `function`) {
+      renderLatexIn(document.body);
+    } else {
+      setTimeout(waitForKatex, 60);
+    }
+  };
+  waitForKatex();
+});
+</script>
+</body>
+</html>
