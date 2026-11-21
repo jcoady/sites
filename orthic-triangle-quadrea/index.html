@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="artifact-type" content="narrative">
+  <meta name="design-style" content="nocturne">
+  <title>Invariant Quadrea of Orthocenter Triangles in Universal Hyperbolic Geometry</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..700;1,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.18.2/dist/contrib/auto-render.min.js"></script>
+
+  <style>
+    :root {
+      color-scheme: dark;
+
+      /* Page and surfaces: Prussian midnight steps */
+      --background: #0a101d;
+      --surface-container-low: #0e1626;
+      --surface-container: #111b2e;
+      --surface-container-high: #17243c;
+
+      /* Text */
+      --on-surface: #f2ece1;
+      --on-surface-variant: #9ba8bf;
+
+      /* Borders */
+      --outline: #384d73;
+      --outline-variant: #21304d;
+
+      /* Accents */
+      --primary: #dfaa5b;
+      --on-primary: #0a101d;
+      --primary-container: #2b261c;
+      --on-primary-container: #f5dcb0;
+      --secondary: #687a99;
+      --tertiary: #7cc4e8;
+      --error: #f27474;
+      --on-error: #1a0606;
+
+      /* Data series */
+      --data-1: #dfaa5b;
+      --data-2: #7cc4e8;
+      --data-3: #52d19c;
+      --data-4: #e07a5f;
+      --data-context: #4a5d80;
+
+      /* Semantic */
+      --positive: #52d19c;
+      --warning: #dfaa5b;
+      --focus: #dfaa5b;
+
+      /* Fonts */
+      --font-headline: 'EB Garamond', serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+      --font-label: 'JetBrains Mono', monospace;
+
+      /* Shape */
+      --rounded: 0.25rem;
+      --rounded-lg: 0.375rem;
+      --rounded-full: 9999px;
+
+      /* Style effects */
+      --hairline: 1px solid var(--outline-variant);
+      --hairline-strong: 1px solid var(--outline);
+      --panel-highlight: inset 0 1px 0 rgba(242, 236, 225, 0.05);
+      --brass-glow: radial-gradient(circle at 88% 12%, rgba(223, 170, 91, 0.08), transparent 45%);
+      --heading-tracking: -0.015em;
+      --label-tracking: 0.06em;
+      --sky-tint: color-mix(in srgb, var(--tertiary) 12%, transparent);
+      --sky-border: color-mix(in srgb, var(--tertiary) 35%, transparent);
+      --brass-tint: color-mix(in srgb, var(--primary) 14%, transparent);
+      --brass-border: color-mix(in srgb, var(--primary) 38%, transparent);
+      --mint-tint: color-mix(in srgb, var(--positive) 12%, transparent);
+      --mint-border: color-mix(in srgb, var(--positive) 35%, transparent);
+      --coral-tint: color-mix(in srgb, var(--data-4) 12%, transparent);
+      --coral-border: color-mix(in srgb, var(--data-4) 35%, transparent);
+      --error-tint: color-mix(in srgb, var(--error) 12%, transparent);
+      --error-border: color-mix(in srgb, var(--error) 45%, transparent);
+
+      /* Type scale (Narrative) */
+      --display-size: clamp(2.45rem, 1.4rem + 3.6vw, 4.25rem);
+      --headline-size: clamp(1.75rem, 1.2rem + 1.8vw, 2.5rem);
+      --subhead-size: clamp(1.18rem, 1.05rem + 0.5vw, 1.45rem);
+      --body-size: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
+      --label-size: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+
+      /* Spacing scale (4pt base) */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2.5rem;
+      --space-2xl: 4rem;
+      --space-3xl: 5.5rem;
+
+      /* Motion */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+      --dur-micro: 120ms;
+      --dur-short: 220ms;
+      --dur-long: 420ms;
+    }
+
+    /* Base reset */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body {
+      overflow-x: clip;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background);
+      color: var(--on-surface);
+      font-family: var(--font-body);
+      font-size: var(--body-size);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+    }
+    header { position: static !important; }
+
+    /* Focus rings */
+    :focus-visible {
+      outline: 2px solid var(--focus);
+      outline-offset: 2px;
+    }
+
+    /* Layout shell */
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: var(--space-2xl);
+      padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+      max-width: 1180px;
+      margin: 0 auto;
+    }
+    .page-grid * { min-width: 0; }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      letter-spacing: var(--heading-tracking);
+      color: var(--on-surface);
+      margin: 0;
+    }
+    p {
+      margin: 0 0 var(--space-md);
+      max-width: 65ch;
+      color: var(--on-surface);
+    }
+    p:last-child { margin-bottom: 0; }
+    .prose-muted { color: var(--on-surface-variant); }
+
+    .coord-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+    }
+    .deck-brass {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-top: var(--space-sm);
+    }
+    .mono {
+      font-family: var(--font-label);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Hero header */
+    .hero-header {
+      background-color: var(--background);
+      background-image: var(--brass-glow);
+      border-bottom: var(--hairline);
+      padding: var(--space-2xl) var(--space-lg) var(--space-xl);
+    }
+    .hero-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: var(--space-lg);
+    }
+    .hero-title {
+      font-size: var(--display-size);
+      line-height: 1.07;
+      max-width: 22ch;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--primary);
+    }
+    .hero-lede {
+      font-size: clamp(1.0625rem, 1rem + 0.35vw, 1.25rem);
+      line-height: 1.58;
+      color: var(--on-surface-variant);
+      max-width: 64ch;
+    }
+
+    /* Hero stat strip */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+      gap: var(--space-md);
+      margin-top: var(--space-sm);
+    }
+
+    /* Panels & observation wells */
+    .panel {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .panel-low {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-lg);
+    }
+    .observation-well {
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      font-family: var(--font-label);
+      color: var(--on-surface);
+    }
+
+    /* Stat card */
+    .stat-card {
+      background: var(--surface-container);
+      border: var(--hairline);
+      box-shadow: var(--panel-highlight);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .stat-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .stat-value {
+      font-family: var(--font-headline);
+      font-weight: 500;
+      font-size: clamp(1.6rem, 1.3rem + 1vw, 2.2rem);
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+      color: var(--on-surface);
+    }
+    .stat-value.brass { color: var(--primary); }
+    .stat-value.sky { color: var(--tertiary); }
+    .stat-value.mint { color: var(--positive); }
+    .stat-note {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--tertiary);
+    }
+
+    /* Section framing */
+    .narrative-section {
+      display: grid;
+      gap: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: var(--hairline);
+    }
+    .narrative-section:first-child {
+      border-top: none;
+      padding-top: 0;
+    }
+    .section-header {
+      display: grid;
+      gap: var(--space-xs);
+    }
+    .section-title {
+      font-size: var(--headline-size);
+      line-height: 1.14;
+      max-width: 28ch;
+    }
+    .section-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--primary);
+    }
+
+    /* Asymmetric two-column layouts */
+    .split-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+      gap: var(--space-lg);
+      align-items: start;
+    }
+    .split-prose {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+      gap: var(--space-xl);
+      align-items: start;
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      background: var(--sky-tint);
+      color: var(--tertiary);
+      border: 1px solid var(--sky-border);
+      border-radius: var(--rounded);
+      padding: var(--space-xs) var(--space-sm);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .badge-brass {
+      background: var(--brass-tint);
+      color: var(--primary);
+      border-color: var(--brass-border);
+    }
+    .badge-mint {
+      background: var(--mint-tint);
+      color: var(--positive);
+      border-color: var(--mint-border);
+    }
+    .badge-coral {
+      background: var(--coral-tint);
+      color: var(--data-4);
+      border-color: var(--coral-border);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-xs);
+      min-height: 44px;
+      padding: var(--space-sm) var(--space-md);
+      border-radius: var(--rounded);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  color var(--dur-micro) var(--ease-out),
+                  box-shadow var(--dur-micro) var(--ease-out),
+                  transform var(--dur-micro) var(--ease-out);
+      border: var(--hairline-strong);
+      background: transparent;
+      color: var(--on-surface);
+    }
+    .btn:hover:not(:disabled) {
+      background: var(--surface-container-high);
+    }
+    .btn:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--on-primary);
+      border-color: var(--primary);
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--on-primary-container);
+    }
+    .btn-active {
+      background: var(--brass-tint);
+      color: var(--primary);
+      border-color: var(--primary);
+      box-shadow: inset 0 0 0 1px var(--primary);
+    }
+    .btn-sm {
+      min-height: 36px;
+      padding: var(--space-xs) var(--space-sm);
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      align-items: center;
+    }
+
+    /* Form controls */
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+    .field-label {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+    }
+    .input-control, .select-control {
+      min-height: 44px;
+      background: var(--background);
+      border: var(--hairline-strong);
+      border-radius: var(--rounded);
+      color: var(--on-surface);
+      font-family: var(--font-label);
+      font-size: 0.875rem;
+      padding: var(--space-sm) var(--space-md);
+      width: 100%;
+    }
+    .select-control {
+      padding-right: var(--space-xl);
+      cursor: pointer;
+    }
+    .input-control:focus, .select-control:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    .input-control.is-invalid {
+      border-color: var(--error);
+      box-shadow: 0 0 0 1px var(--error);
+    }
+    .range-control {
+      width: 100%;
+      accent-color: var(--primary);
+      cursor: pointer;
+      min-height: 36px;
+    }
+    .control-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 110px;
+      gap: var(--space-sm);
+      align-items: end;
+    }
+    .inline-error {
+      background: var(--error-tint);
+      border: 1px solid var(--error-border);
+      color: var(--error);
+      border-radius: var(--rounded);
+      padding: var(--space-sm) var(--space-md);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      display: none;
+    }
+    .inline-error.visible { display: block; }
+
+    /* Toggle pills / checkboxes */
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(170px, 100%), 1fr));
+      gap: var(--space-sm);
+    }
+    .toggle-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      min-height: 44px;
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface);
+    }
+    .toggle-item input {
+      accent-color: var(--primary);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+
+    /* SVG Canvas styling */
+    .viz-frame {
+      position: relative;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      overflow: hidden;
+      min-height: 440px;
+      display: flex;
+      flex-direction: column;
+    }
+    .viz-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      user-select: none;
+      touch-action: none;
+    }
+    .viz-caption-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-md);
+      border-top: var(--hairline);
+      background: var(--surface-container-low);
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      color: var(--on-surface-variant);
+    }
+
+    /* SVG geometric classes */
+    .svg-grid { stroke: var(--outline-variant); stroke-width: 0.8; stroke-dasharray: 3 4; }
+    .svg-axis { stroke: var(--outline); stroke-width: 1; }
+    .svg-conic { stroke: var(--tertiary); stroke-width: 1.75; fill: none; }
+    .svg-secant { stroke: var(--outline); stroke-width: 1.1; opacity: 0.72; }
+    .svg-altitude { stroke: var(--data-4); stroke-width: 1.25; stroke-dasharray: 4 3; opacity: 0.9; }
+    .svg-diag-line { stroke: var(--positive); stroke-width: 1.2; stroke-dasharray: 2 3; opacity: 0.85; }
+    .svg-orthic-tri { fill: var(--brass-tint); stroke: var(--primary); stroke-width: 2.2; stroke-linejoin: round; }
+    .svg-polar-pt { fill: var(--surface-container-high); stroke: var(--data-4); stroke-width: 1.5; }
+    .svg-null-pt { fill: var(--background); stroke: var(--tertiary); stroke-width: 2.2; cursor: grab; }
+    .svg-null-pt:hover { fill: var(--tertiary); }
+    .svg-null-pt.active-drag { cursor: grabbing; fill: var(--primary); stroke: var(--on-surface); }
+    .svg-ortho-pt { fill: var(--primary); stroke: var(--background); stroke-width: 1.8; cursor: pointer; }
+    .svg-ortho-pt.inactive { fill: var(--secondary); opacity: 0.75; }
+    .svg-diag-pt { fill: var(--positive); stroke: var(--background); stroke-width: 1.5; }
+    .svg-label {
+      font-family: var(--font-label);
+      font-size: 12px;
+      font-weight: 600;
+      fill: var(--on-surface);
+      pointer-events: none;
+    }
+    .svg-label-sky { fill: var(--tertiary); }
+    .svg-label-brass { fill: var(--primary); }
+    .svg-label-mint { fill: var(--positive); }
+    .svg-label-coral { fill: var(--data-4); }
+    .svg-label-muted { fill: var(--on-surface-variant); font-weight: 400; font-size: 10.5px; }
+
+    /* Tables */
+    .data-table-wrap {
+      overflow-x: auto;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: var(--font-label);
+      font-size: 0.84rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .data-table th {
+      text-align: left;
+      font-weight: 500;
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--on-surface-variant);
+      padding: var(--space-sm) var(--space-sm);
+      border-bottom: var(--hairline-strong);
+    }
+    .data-table td {
+      padding: var(--space-sm) var(--space-sm);
+      border-bottom: var(--hairline);
+      color: var(--on-surface);
+      vertical-align: top;
+    }
+    .data-table th.num, .data-table td.num {
+      text-align: right;
+    }
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Formula display block */
+    .math-block {
+      background: var(--background);
+      border: var(--hairline);
+      border-left: 2px solid var(--primary);
+      border-radius: var(--rounded);
+      padding: var(--space-md) var(--space-lg);
+      overflow-x: auto;
+      margin: var(--space-sm) 0;
+    }
+
+    /* Construction stepper */
+    .stepper-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-sm);
+    }
+    .step-card {
+      text-align: left;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--surface-container);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      color: var(--on-surface-variant);
+      cursor: pointer;
+      min-height: 44px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+      transition: background-color var(--dur-micro) var(--ease-out),
+                  box-shadow var(--dur-micro) var(--ease-out);
+    }
+    .step-card:hover {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+    }
+    .step-card.is-active {
+      background: var(--surface-container-high);
+      color: var(--on-surface);
+      box-shadow: inset 0 2px 0 var(--primary);
+      border-color: var(--outline);
+    }
+    .step-num {
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      color: var(--primary);
+    }
+    .step-title {
+      font-family: var(--font-body);
+      font-size: 0.875rem;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    /* Cancellation bars & chart */
+    .bar-track {
+      height: 10px;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      background: var(--tertiary);
+      transition: width var(--dur-short) var(--ease-out);
+    }
+    .bar-fill.brass { background: var(--primary); }
+    .bar-fill.mint { background: var(--positive); }
+    .bar-fill.coral { background: var(--data-4); }
+
+    /* Collapsible details */
+    details.observatory-details {
+      background: var(--surface-container-low);
+      border: var(--hairline);
+      border-radius: var(--rounded-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+    details.observatory-details summary {
+      cursor: pointer;
+      font-family: var(--font-label);
+      font-size: var(--label-size);
+      letter-spacing: var(--label-tracking);
+      text-transform: uppercase;
+      color: var(--tertiary);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 36px;
+    }
+    details.observatory-details summary::-webkit-details-marker { display: none; }
+    details.observatory-details[open] summary {
+      margin-bottom: var(--space-md);
+      padding-bottom: var(--space-sm);
+      border-bottom: var(--hairline);
+    }
+
+    pre.code-well {
+      margin: 0;
+      background: var(--background);
+      border: var(--hairline);
+      border-radius: var(--rounded);
+      padding: var(--space-md);
+      font-family: var(--font-label);
+      font-size: 0.8rem;
+      line-height: 1.55;
+      color: var(--on-surface);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* Card grid */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(270px, 100%), 1fr));
+      gap: var(--space-lg);
+    }
+
+    .input-quad-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--space-md);
+      align-items: end;
+    }
+
+    /* Container queries for compact telemetry */
+    .telemetry-wrap { container-type: inline-size; }
+    @container (max-width: 420px) {
+      .data-table { font-size: 0.76rem; }
+    }
+
+    /* Footer */
+    .observatory-footer {
+      border-top: var(--hairline);
+      padding: var(--space-xl) var(--space-lg);
+      color: var(--on-surface-variant);
+      font-size: 0.875rem;
+    }
+    .footer-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: var(--space-md);
+    }
+
+    /* Responsive breakpoints */
+    @media (max-width: 920px) {
+      .split-layout,
+      .split-prose {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .stepper-tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .input-quad-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .page-grid {
+        padding: var(--space-lg) var(--space-md) var(--space-2xl);
+        gap: var(--space-xl);
+      }
+      .hero-header {
+        padding: var(--space-xl) var(--space-md) var(--space-lg);
+      }
+      .stepper-tabs,
+      .input-quad-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .viz-frame {
+        min-height: 320px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="hero-header">
+    <div class="hero-inner">
+      <div class="coord-label">Universal Hyperbolic Geometry &middot; Projective Plane $\mathbb{P}^2(F)$ &middot; $\operatorname{char} F \neq 2$</div>
+      <h1 class="hero-title"><em>Invariant</em> Quadrea of Orthocenter Triangles from Four Null Points</h1>
+      <div class="deck-brass">Based on John D. Coady (2026) &amp; N. J. Wildberger&rsquo;s Algebraic Formulation of Hyperbolic Geometry</div>
+      <p class="hero-lede">
+        Place any four distinct null points $\alpha_1, \alpha_2, \alpha_3, \alpha_4$ on the absolute conic $x^2 + y^2 - z^2 = 0$.
+        Omit one point at a time to construct four triply nil triangles, each with a polar orthocenter $h_i$.
+        No matter how the cross-ratio $\lambda$ deforms the configuration, the projective quadrea $\mathcal{A}$ of any triangle formed by three of these orthocenters remains identically locked to $\frac{16}{27}$.
+      </p>
+
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-label">Universal Orthic Quadrea</span>
+          <span class="stat-value brass">16 / 27</span>
+          <span class="stat-note">$\mathcal{A}(h_i h_j h_k)$ for all $\lambda \notin \{0, \pm 1\}$</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Null Conic Form</span>
+          <span class="stat-value sky">x&sup2; + y&sup2; &minus; z&sup2; = 0</span>
+          <span class="stat-note">Stereographic $\alpha(t) = [t^2 - 1 : 2t : t^2 + 1]$</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">Cancellation Degree</span>
+          <span class="stat-value mint">deg 24 / deg 24</span>
+          <span class="stat-note">$\det(N)^2$ vs. $Q(h_1)Q(h_2)Q(h_3)$</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-label">48 / 64 Companion</span>
+          <span class="stat-value">PR + RT + TP = 48</span>
+          <span class="stat-note">$PRT = 64 \;\implies\; \frac{1}{P} + \frac{1}{R} + \frac{1}{T} = \frac{3}{4}$</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-grid">
+
+    <!-- SECTION 1: CORE SETUP & INTERACTIVE CONIC EXPLORER -->
+    <section class="narrative-section" id="sec-explorer">
+      <div class="section-header">
+        <span class="coord-label">Section 01 &middot; Core Concept &amp; Live Projective Canvas</span>
+        <h2 class="section-title">Four points on the null conic yield four orthocenters whose triangle quadrea never moves</h2>
+      </div>
+
+      <div class="split-prose">
+        <div>
+          <p>
+            In N. J. Wildberger&rsquo;s Universal Hyperbolic Geometry (UHG), hyperbolic trigonometry leaves behind real-number metrics, logarithms, and hyperbolic sines. Instead, it operates algebraically inside the projective plane $\mathbb{P}^2(F)$ over any field $F$ with $\operatorname{char} F \neq 2$, governed by the Lorentzian quadratic form $Q(x, y, z) = x^2 + y^2 - z^2$ and symmetric bilinear form $B(v, w) = x_1 x_2 + y_1 y_2 - z_1 z_2$.
+          </p>
+          <p>
+            Points satisfying $Q(\alpha) = 0$ are <strong>null points</strong>&mdash;classical points at infinity on the unit circle $X^2 + Y^2 = 1$ in the affine chart $z = 1$. Any rational null point is parametrized stereographically by a proportion $t : u$ via $\alpha(t : u) = [t^2 - u^2 : 2tu : t^2 + u^2]$, with inverse affine parameter $t = \frac{y}{z - x}$.
+          </p>
+        </div>
+        <div class="panel-low">
+          <div class="coord-label" style="margin-bottom: var(--space-xs);">Cross-Ratio Parameterization</div>
+          <p style="font-size: 0.95rem;">
+            For four distinct null points $\alpha(t_i : 1)$, the projective cross-ratio
+          </p>
+          <div class="math-block">
+            $$\lambda = (\alpha_1, \alpha_2 : \alpha_3, \alpha_4) = \frac{(t_1 - t_3)(t_2 - t_4)}{(t_1 - t_4)(t_2 - t_3)}$$
+          </div>
+          <p style="font-size: 0.92rem;" class="prose-muted">
+            Under $\operatorname{PSL}(2, F)$ symmetry, we fix the canonical gauge $t_1 = -1,\; t_2 = 0,\; t_3 = 1,\; t_4 = \lambda$ ($\lambda \notin \{0, \pm 1\}$), leaving a single free parameter $\lambda$ that governs the entire four-point orbit.
+          </p>
+        </div>
+      </div>
+
+      <!-- INTERACTIVE CANVAS + TELEMETRY -->
+      <div class="split-layout">
+        <div class="viz-frame">
+          <svg id="conic-svg" class="viz-svg" viewBox="-260 -260 520 520" role="img" aria-label="Interactive Universal Hyperbolic Geometry null circle, four null points, polar altitudes, and orthocenter triangle">
+            <g id="svg-grid-layer"></g>
+            <g id="svg-secant-layer"></g>
+            <g id="svg-diag-layer"></g>
+            <g id="svg-altitude-layer"></g>
+            <g id="svg-orthic-layer"></g>
+            <g id="svg-points-layer"></g>
+            <g id="svg-labels-layer"></g>
+          </svg>
+          <div class="viz-caption-bar">
+            <span>Drag <strong style="color: var(--tertiary);">&alpha;<sub>4</sub></strong> along the unit null circle, or steer via <strong style="color: var(--primary);">&lambda;</strong></span>
+            <span id="svg-zoom-readout" class="mono">VIEW: 1.0&times; (UNIT DISK RADIUS = 1)</span>
+          </div>
+        </div>
+
+        <div class="panel telemetry-wrap" style="display: grid; gap: var(--space-md);">
+          <div class="field-group">
+            <label for="preset-select" class="field-label">Configuration Preset</label>
+            <select id="preset-select" class="select-control" onchange="applyPreset(this.value)">
+              <option value="canonical">Canonical Gauge (t1 = -1, t2 = 0, t3 = 1, &lambda; = 2)</option>
+              <option value="pythagorean">Pythagorean Triples (Coady Sec. 5.1, &lambda; = 3)</option>
+              <option value="half">Interior-Focused Gauge (&lambda; = 1/2)</option>
+              <option value="negative">Negative Cross-Ratio (&lambda; = -3/2)</option>
+              <option value="near_deg">Near-Coincident Stress Test (&lambda; = 5/4)</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="lambda-slider" class="field-label">Cross-Ratio Parameter &lambda; (in Canonical / Selected Gauge)</label>
+            <div class="control-row">
+              <input type="range" id="lambda-slider" class="range-control" min="-4" max="4" step="0.05" value="2" oninput="syncLambdaFromSlider(this.value)">
+              <input type="text" id="lambda-input" class="input-control" value="2" aria-label="Exact rational value of lambda" onchange="syncLambdaFromInput(this.value)">
+            </div>
+            <div id="lambda-error" class="inline-error" role="alert"></div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Active Orthocenter Triple</span>
+            <div class="btn-row" id="triple-selector">
+              <button type="button" class="btn btn-sm btn-active" data-triple="123" onclick="setTriple('123', this)">h&#8321;h&#8322;h&#8323;</button>
+              <button type="button" class="btn btn-sm" data-triple="124" onclick="setTriple('124', this)">h&#8321;h&#8322;h&#8324;</button>
+              <button type="button" class="btn btn-sm" data-triple="134" onclick="setTriple('134', this)">h&#8321;h&#8323;h&#8324;</button>
+              <button type="button" class="btn btn-sm" data-triple="234" onclick="setTriple('234', this)">h&#8322;h&#8323;h&#8324;</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <span class="field-label">Geometric Layers &amp; Scale</span>
+            <div class="toggle-grid">
+              <label class="toggle-item">
+                <input type="checkbox" id="chk-altitudes" checked onchange="renderAll()">
+                <span>Altitudes of h&#8324;</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="chk-diagonals" onchange="renderAll()">
+                <span>Diagonal efg</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="chk-secants" checked onchange="renderAll()">
+                <span>6 Join Lines</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="chk-zoom" onchange="renderAll()">
+                <span>Wide Field (0.45&times;)</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="observation-well" style="display: grid; gap: var(--space-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: var(--space-xs);">
+              <span class="coord-label" style="color: var(--primary);">Exact Quadrea Readout</span>
+              <span id="live-quadrea-badge" class="badge badge-brass">A = 16 / 27</span>
+            </div>
+            <div style="font-size: 0.82rem; color: var(--on-surface-variant);" id="live-triple-caption">
+              Triangle h&#8321;h&#8322;h&#8323; &middot; exact rational computation over &#8474;
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table" id="live-telemetry-table">
+                <thead>
+                  <tr>
+                    <th>Point</th>
+                    <th>Homogeneous [x : y : z]</th>
+                    <th class="num">Region</th>
+                  </tr>
+                </thead>
+                <tbody id="live-points-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: ORTHOCENTER CONSTRUCTION STEP BY STEP -->
+    <section class="narrative-section" id="sec-construction">
+      <div class="section-header">
+        <span class="coord-label">Section 02 &middot; Polar Altitude Construction</span>
+        <h2 class="section-title">How each triply nil triangle generates a well-defined orthocenter via polarity</h2>
+      </div>
+
+      <p>
+        In classical hyperbolic geometry inside the Beltrami-Klein disk, a triangle&rsquo;s orthocenter may wander outside the unit disk and vanish from the model. In UHG, every point and line in $\mathbb{P}^2(F)$ remains valid&mdash;interior ($Q &lt; 0$), null ($Q = 0$), or exterior ($Q &gt; 0$)&mdash;so every triply nil triangle $\alpha_a \alpha_b \alpha_c$ possesses an exact rational orthocenter.
+      </p>
+
+      <div class="stepper-tabs" role="tablist" aria-label="Orthocenter construction stages">
+        <button type="button" class="step-card is-active" role="tab" aria-selected="true" onclick="setConstructionStep(1, this)">
+          <span class="step-num">STEP 01</span>
+          <span class="step-title">Select 3 Null Points</span>
+        </button>
+        <button type="button" class="step-card" role="tab" aria-selected="false" onclick="setConstructionStep(2, this)">
+          <span class="step-num">STEP 02</span>
+          <span class="step-title">Join Sides &amp; Take Poles</span>
+        </button>
+        <button type="button" class="step-card" role="tab" aria-selected="false" onclick="setConstructionStep(3, this)">
+          <span class="step-num">STEP 03</span>
+          <span class="step-title">Draw Polar Altitudes</span>
+        </button>
+        <button type="button" class="step-card" role="tab" aria-selected="false" onclick="setConstructionStep(4, this)">
+          <span class="step-num">STEP 04</span>
+          <span class="step-title">Meet at h&#8324; &amp; Repeat</span>
+        </button>
+      </div>
+
+      <div class="split-layout">
+        <div class="viz-frame" style="min-height: 360px;">
+          <svg id="construction-svg" class="viz-svg" viewBox="-220 -220 440 440" role="img" aria-label="Step-by-step diagram of triply nil orthocenter construction"></svg>
+          <div class="viz-caption-bar">
+            <span id="step-caption-left">Stage 1 of 4 &middot; Triply nil triangle &alpha;&#8321;&alpha;&#8322;&alpha;&#8323;</span>
+            <span class="mono" style="color: var(--tertiary);">Dual: [x:y:z] &harr; (x:y:z)</span>
+          </div>
+        </div>
+
+        <div class="panel" id="step-explanation-panel" style="display: grid; gap: var(--space-md);">
+          <!-- Populated dynamically by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 3: MAIN THEOREM & DEGREE-24 CANCELLATION -->
+    <section class="narrative-section" id="sec-theorem">
+      <div class="section-header">
+        <span class="coord-label">Section 03 &middot; Theorem 4.1 &amp; Algebraic Proof</span>
+        <h2 class="section-title">Why the quadrea collapses to <em>16/27</em>: degree-24 homogeneous cancellation</h2>
+      </div>
+
+      <div class="split-prose">
+        <div>
+          <p>
+            For three non-null projective points $a_1, a_2, a_3$, the <strong>quadrea</strong> $\mathcal{A}(a_1 a_2 a_3)$ is the projective rational analog of $16 \times \text{Area}^2$, defined directly by the squared determinant over the product of vertex quadratic forms:
+          </p>
+          <div class="math-block">
+            $$\mathcal{A}(a_1 a_2 a_3) = -\frac{\det([a_1 \;\; a_2 \;\; a_3])^2}{Q(a_1)\,Q(a_2)\,Q(a_3)} = q(a_1, a_3)\,q(a_1, a_2)\,S(a_1 a_2, a_1 a_3)$$
+          </div>
+          <p>
+            Applying the canonical gauge $\alpha_1 = [0 : -2 : 2]$, $\alpha_2 = [-1 : 0 : 1]$, $\alpha_3 = [0 : 2 : 2]$, and $\alpha_4 = [\lambda^2 - 1 : 2\lambda : \lambda^2 + 1]$, direct join-and-meet computation yields explicit polynomial vectors for the orthocenters $h_1, h_2, h_3$ in terms of $\lambda$:
+          </p>
+        </div>
+
+        <div class="panel-low" style="display: grid; gap: var(--space-sm);">
+          <div class="coord-label" style="color: var(--primary);">Polynomial Coordinates in Canonical Gauge</div>
+          <div class="observation-well" style="font-size: 0.8rem; line-height: 1.65;">
+            <div><strong style="color: var(--primary);">h&#8321;(&lambda;)</strong> = [ 8&lambda;(&minus;&lambda;&sup2; + 2&lambda; &minus; 1) : 8&lambda;&sup2;(1 &minus; &lambda;&sup2;) : 8&lambda;(&minus;&lambda;&sup2; &minus; 2&lambda;(&lambda;&minus;1)&sup2; + 1) ]</div>
+            <div style="margin-top: var(--space-xs);"><strong style="color: var(--tertiary);">h&#8322;(&lambda;)</strong> = [ &minus;32&lambda;&#8308; + 64&lambda;&sup2; &minus; 32 : 128&lambda;(1 &minus; &lambda;&sup2;) : 64 &minus; 64&lambda;&#8308; ]</div>
+            <div style="margin-top: var(--space-xs);"><strong style="color: var(--positive);">h&#8323;(&lambda;)</strong> = [ 8&lambda;(&lambda;&sup2; + 2&lambda; + 1) : 8&lambda;&sup2;(&lambda;&sup2; &minus; 1) : 8&lambda;(&lambda;&sup2; &minus; 2&lambda;(&lambda;+1)&sup2; &minus; 1) ]</div>
+          </div>
+          <p style="font-size: 0.88rem;" class="prose-muted">
+            Notice that $\det(N)^2$ and the product $Q(h_1)Q(h_2)Q(h_3)$ both expand to degree-24 polynomials in $\lambda$ whose non-constant factors are identical powers of $\lambda$, $(\lambda - 1)$, and $(\lambda + 1)$:
+          </p>
+          <div class="math-block" style="font-size: 0.92rem;">
+            $$\frac{-\det(N)^2}{Q(h_1)Q(h_2)Q(h_3)} = \frac{-2^{26}\,\lambda^8(\lambda-1)^8(\lambda+1)^8}{-27 \cdot 2^{22}\,\lambda^8(\lambda-1)^8(\lambda+1)^8} = \frac{16}{27}$$
+          </div>
+        </div>
+      </div>
+
+      <!-- LIVE CANCELLATION & METRIC INVARIANCE PANEL -->
+      <div class="panel" style="display: grid; gap: var(--space-lg);">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: var(--space-md);">
+          <div>
+            <div class="coord-label">Live Algebraic Cancellation Inspector</div>
+            <h3 style="font-size: var(--subhead-size); margin-top: var(--space-xs);">Individual vertex norms and side quadrances vary wildly; their quadrea ratio does not</h3>
+          </div>
+          <span id="cancel-lambda-badge" class="badge badge-brass">Evaluating at &lambda; = 2</span>
+        </div>
+
+        <div class="split-layout">
+          <div style="display: grid; gap: var(--space-md);">
+            <div class="observation-well" style="display: grid; gap: var(--space-sm); font-size: 0.82rem;">
+              <div style="display: flex; justify-content: space-between; gap: var(--space-sm);">
+                <span class="prose-muted">&minus;det([h&#8321;, h&#8322;, h&#8323;])&sup2; (primitive integer norm):</span>
+                <span id="val-det-sq" class="mono" style="color: var(--tertiary);"></span>
+              </div>
+              <div style="display: flex; justify-content: space-between; gap: var(--space-sm);">
+                <span class="prose-muted">Q(h&#8321;) &middot; Q(h&#8322;) &middot; Q(h&#8323;):</span>
+                <span id="val-q-prod" class="mono" style="color: var(--data-4);"></span>
+              </div>
+              <div style="border-top: var(--hairline); padding-top: var(--space-sm); display: flex; justify-content: space-between; gap: var(--space-sm);">
+                <span style="color: var(--on-surface);">Reduced Exact Ratio &mathcal{A} = &minus;det&sup2; / (Q&#8321;Q&#8322;Q&#8323;):</span>
+                <span id="val-ratio-final" class="mono" style="color: var(--primary); font-weight: 600;">16 / 27</span>
+              </div>
+            </div>
+
+            <div style="display: grid; gap: var(--space-sm);">
+              <div class="coord-label">Edge Quadrances &amp; Vertex Spreads of Active Orthic Triangle</div>
+              <div class="data-table-wrap">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Invariant</th>
+                      <th>Exact Rational Value</th>
+                      <th class="num">Decimal</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orthic-metrics-tbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="observation-well" style="display: grid; gap: var(--space-sm);">
+            <div class="coord-label" style="color: var(--tertiary);">Quadrea Stability Curve across &lambda; &isin; [-3, 3]</div>
+            <svg id="stability-svg" class="viz-svg" viewBox="0 0 420 230" role="img" aria-label="Plot comparing varying edge quadrances against constant quadrea A = 16/27 across lambda"></svg>
+            <div style="font-size: 0.78rem; color: var(--on-surface-variant);">
+              Brass line: constant $\mathcal{A} = \frac{16}{27} \approx 0.5926$. Sky &amp; coral curves: varying edge quadrance $q(h_1, h_2)$ and spread $S_3$ (clamped for display).
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 4: EXACT RATIONAL VERIFICATION OVER Q -->
+    <section class="narrative-section" id="sec-rational-lab">
+      <div class="section-header">
+        <span class="coord-label">Section 04 &middot; Exact Rational Arithmetic over $\mathbb{Q}$</span>
+        <h2 class="section-title">Pythagorean triple verification and arbitrary rational parameter lab</h2>
+      </div>
+
+      <p>
+        Because Universal Hyperbolic Geometry avoids transcendental functions completely, every theorem can be verified exactly over $\mathbb{Q}$ with zero floating-point drift. In Section 5.1 of the paper, Coady tests the invariance using three classical Pythagorean triple null points and cross-ratio $\lambda = 3$:
+        $\alpha_1 = [-5 : -12 : 13]$ ($t_1 = -\frac{2}{3}$),
+        $\alpha_2 = [-15 : 8 : 17]$ ($t_2 = \frac{1}{4}$),
+        $\alpha_3 = [-3 : 4 : 5]$ ($t_3 = \frac{1}{2}$),
+        which forces $t_4 = \frac{19}{10}$ and $\alpha_4 = [261 : 380 : 461]$.
+      </p>
+
+      <div class="panel" style="display: grid; gap: var(--space-lg);">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: var(--space-sm);">
+          <div class="coord-label" style="color: var(--primary);">Interactive BigInt Exact Rational Calculator</div>
+          <div class="btn-row">
+            <button type="button" class="btn btn-sm" onclick="loadLabPreset('pythagorean')">Load Coady Sec. 5.1 (&lambda; = 3)</button>
+            <button type="button" class="btn btn-sm" onclick="loadLabPreset('canonical')">Load Canonical (&lambda; = 2)</button>
+            <button type="button" class="btn btn-sm" onclick="loadLabPreset('custom_frac')">Load Rational (-5/7, 1/3, 7/5, &lambda;=4/9)</button>
+          </div>
+        </div>
+
+        <div class="input-quad-grid">
+          <div class="field-group">
+            <label for="lab-t1" class="field-label">Parameter t&#8321; (p/q)</label>
+            <input type="text" id="lab-t1" class="input-control" value="-2/3">
+          </div>
+          <div class="field-group">
+            <label for="lab-t2" class="field-label">Parameter t&#8322; (p/q)</label>
+            <input type="text" id="lab-t2" class="input-control" value="1/4">
+          </div>
+          <div class="field-group">
+            <label for="lab-t3" class="field-label">Parameter t&#8323; (p/q)</label>
+            <input type="text" id="lab-t3" class="input-control" value="1/2">
+          </div>
+          <div class="field-group">
+            <label for="lab-lambda" class="field-label">Cross-Ratio &lambda; (p/q)</label>
+            <input type="text" id="lab-lambda" class="input-control" value="3">
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" onclick="runExactLab()">Compute Exact Rational Invariants</button>
+          <span id="lab-t4-derived" class="badge">Derived t&#8324; = 19/10</span>
+          <span id="lab-status-badge" class="badge badge-mint">All 4 Triples Verified = 16 / 27</span>
+        </div>
+
+        <div id="lab-error" class="inline-error" role="alert"></div>
+
+        <div class="split-prose">
+          <div class="observation-well">
+            <div class="coord-label" style="margin-bottom: var(--space-sm);">Null Points &amp; Orthocenters (Primitive Integer Representatives)</div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Object</th>
+                    <th>Exact Homogeneous Coordinates</th>
+                    <th class="num">Q(v)</th>
+                  </tr>
+                </thead>
+                <tbody id="lab-points-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="observation-well">
+            <div class="coord-label" style="margin-bottom: var(--space-sm);">All Four Orthocenter Triangles &amp; 48/64 Check</div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Configuration</th>
+                    <th>Exact Rational Value</th>
+                    <th class="num">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="lab-quadreas-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <details class="observatory-details">
+          <summary>
+            <span>SymPy Exact Symbolic Verification Script (Coady 2026)</span>
+            <span class="mono" style="color: var(--on-surface-variant);">CLICK TO EXPAND</span>
+          </summary>
+          <div style="display: grid; gap: var(--space-sm);">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-sm); flex-wrap: wrap;">
+              <span style="font-size: 0.85rem;" class="prose-muted">Reproduces Theorem 4.1 symbolically over $\mathbb{Q}(\lambda)$ and verifies the Pythagorean triple instance.</span>
+              <button type="button" class="btn btn-sm" id="copy-sympy-btn" onclick="copySympyCode(this)">Copy SymPy Script</button>
+            </div>
+            <pre class="code-well" id="sympy-code-block"></pre>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- SECTION 5: CONNECTIONS TO OTHER UHG UNIVERSAL INVARIANTS -->
+    <section class="narrative-section" id="sec-constellation">
+      <div class="section-header">
+        <span class="coord-label">Section 05 &middot; Constellation of Absolute UHG Invariants</span>
+        <h2 class="section-title">From 16/27 to the 48/64 theorem, triply nil pedals, and reciprocal parallax</h2>
+      </div>
+
+      <p>
+        Coady&rsquo;s $\frac{16}{27}$ orthic quadrea joins a growing constellation of absolute rational constants in Universal Hyperbolic Geometry&mdash;quantities fixed across all non-degenerate null configurations regardless of where the null points sit on the conic. Like Casimir operators in Lie theory, these numbers commute with the $\operatorname{PSL}(2, F)$ projective action on the null cone.
+      </p>
+
+      <div class="card-grid">
+        <article class="panel" style="display: grid; gap: var(--space-sm); align-content: start;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs);">
+            <span class="coord-label">Null Quadrangle Spreads</span>
+            <span class="badge badge-brass">48 / 64 Theorem</span>
+          </div>
+          <h3 style="font-size: var(--subhead-size);">Opposite-Side Spread Constants</h3>
+          <p style="font-size: 0.92rem;" class="prose-muted">
+            For the three pairs of opposite sides of $\alpha_1\alpha_2\alpha_3\alpha_4$ with spreads $P = S(\alpha_1\alpha_2, \alpha_3\alpha_4)$, $R = S(\alpha_1\alpha_3, \alpha_2\alpha_4)$, and $T = S(\alpha_1\alpha_4, \alpha_2\alpha_3)$, Wildberger (2013) proved:
+          </p>
+          <div class="math-block" style="font-size: 0.9rem;">
+            $$PR + RT + TP = 48, \quad PRT = 64, \quad \frac{1}{P}+\frac{1}{R}+\frac{1}{T} = \frac{3}{4}$$
+          </div>
+          <div class="observation-well" style="font-size: 0.78rem;" id="live-4864-box">
+            Live values from Explorer above: loading&hellip;
+          </div>
+        </article>
+
+        <article class="panel" style="display: grid; gap: var(--space-sm); align-content: start;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs);">
+            <span class="coord-label">Single Nil Triangle</span>
+            <span class="badge">UHG1 Thm. 84</span>
+          </div>
+          <h3 style="font-size: var(--subhead-size);">Equilateral Pedal Triangle of Bases</h3>
+          <p style="font-size: 0.92rem;" class="prose-muted">
+            When $\operatorname{char} F \notin \{2, 3, 5\}$, the three altitude feet $b_1, b_2, b_3$ of a single triply nil triangle $\alpha_1\alpha_2\alpha_3$ form an equilateral projective triangle sharing the same orthocenter $o$, with:
+          </p>
+          <div class="math-block" style="font-size: 0.9rem;">
+            $$q = -\frac{5}{4}, \quad S = \frac{16}{25}, \quad \mathcal{A}(b_1 b_2 b_3) = q^2 S = 1$$
+          </div>
+          <p style="font-size: 0.85rem;" class="prose-muted">
+            Omission of one vertex from four null points links four such orthocenters whose own mutual triangle carries $\mathcal{A} = \frac{16}{27}$.
+          </p>
+        </article>
+
+        <article class="panel" style="display: grid; gap: var(--space-sm); align-content: start;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: var(--space-xs);">
+            <span class="coord-label">Diagonal Triangle &amp; Parallax</span>
+            <span class="badge badge-mint">q &harr; 1/q Involution</span>
+          </div>
+          <h3 style="font-size: var(--subhead-size);">Fully-Right Diagonal &amp; Hyperbola xy = 1</h3>
+          <p style="font-size: 0.92rem;" class="prose-muted">
+            The diagonal points $e = (\alpha_1\alpha_2)(\alpha_3\alpha_4)$, $f = (\alpha_1\alpha_3)(\alpha_2\alpha_4)$, $g = (\alpha_1\alpha_4)(\alpha_2\alpha_3)$ form a self-polar fully-right triangle ($S = 1, q = 1$). Projecting $\alpha_4$ onto $ef$ and $eg$ yields complementary right parallax triangles with reciprocal quadrances:
+          </p>
+          <div class="math-block" style="font-size: 0.9rem;">
+            $$q_{23}\,q_{34} = 1, \quad \mathcal{A}(a_2 a_3 a_4) = 1, \quad \text{Fixed point: } q = -1,\; S = \frac{1}{2}$$
+          </div>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="observatory-footer">
+    <div class="footer-inner">
+      <div>
+        <strong style="color: var(--on-surface); font-family: var(--font-headline); font-weight: 500;">Sources &amp; Mathematical Grounding</strong><br>
+        John D. Coady, &ldquo;Invariant Quadrea of Orthocenter Triangles from Four Null Points in Universal Hyperbolic Geometry&rdquo; (2026);
+        John D. Coady, &ldquo;From Null Quadrangles to the Hyperbola xy = 1: Reciprocal Parallax Symmetry in Universal Hyperbolic Geometry&rdquo; (2026);
+        N. J. Wildberger, &ldquo;Universal Hyperbolic Geometry I: Trigonometry&rdquo; (Geometriae Dedicata, 2013) &amp; &ldquo;Universal Hyperbolic Geometry II: A Pictorial Overview&rdquo; (2010).
+      </div>
+      <div class="mono" style="font-size: var(--label-size); color: var(--tertiary);">
+        EXACT ARITHMETIC ENGINE &middot; BIGINT &#8474; &middot; ZERO FLOATING-POINT DRIFT
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       1. EXACT BIGINT RATIONAL ARITHMETIC ENGINE OVER Q
+       ============================================================ */
+    function absBig(a) {
+      return a < 0n ? -a : a;
+    }
+
+    function gcdBig(a, b) {
+      a = absBig(a);
+      b = absBig(b);
+      while (b !== 0n) {
+        const t = a % b;
+        a = b;
+        b = t;
+      }
+      return a === 0n ? 1n : a;
+    }
+
+    function lcmBig(a, b) {
+      if (a === 0n || b === 0n) return 1n;
+      return absBig((a / gcdBig(a, b)) * b);
+    }
+
+    function frac(n, d) {
+      if (d === undefined) d = 1n;
+      n = BigInt(n);
+      d = BigInt(d);
+      if (d === 0n) throw new Error(`Division by zero in rational number`);
+      if (n === 0n) return { n: 0n, d: 1n };
+      if (d < 0n) {
+        n = -n;
+        d = -d;
+      }
+      const g = gcdBig(n, d);
+      return { n: n / g, d: d / g };
+    }
+
+    function fAdd(a, b) { return frac(a.n * b.d + b.n * a.d, a.d * b.d); }
+    function fSub(a, b) { return frac(a.n * b.d - b.n * a.d, a.d * b.d); }
+    function fMul(a, b) { return frac(a.n * b.n, a.d * b.d); }
+    function fDiv(a, b) {
+      if (b.n === 0n) throw new Error(`Division by zero`);
+      return frac(a.n * b.d, a.d * b.n);
+    }
+    function fNeg(a) { return { n: -a.n, d: a.d }; }
+    function fSq(a) { return frac(a.n * a.n, a.d * a.d); }
+    function fEq(a, b) { return a.n === b.n && a.d === b.d; }
+    function fIsZero(a) { return a.n === 0n; }
+
+    function fToNumber(a) {
+      const sign = a.n < 0n ? -1 : 1;
+      const absN = absBig(a.n);
+      const q = absN / a.d;
+      const r = absN % a.d;
+      const dec = Number(r) / Number(a.d);
+      return sign * (Number(q) + dec);
+    }
+
+    function fToString(a) {
+      if (a.d === 1n) return a.n.toString();
+      return `${a.n.toString()}/${a.d.toString()}`;
+    }
+
+    function parseRational(str) {
+      const raw = String(str).trim();
+      if (!raw) throw new Error(`Empty value — enter an integer or fraction like 3/2.`);
+      if (raw.includes('/')) {
+        const parts = raw.split('/');
+        if (parts.length !== 2) throw new Error(`Invalid fraction "${raw}" — use p/q format.`);
+        const numStr = parts[0].trim();
+        const denStr = parts[1].trim();
+        if (!/^[+-]?\d+$/.test(numStr) || !/^[+-]?\d+$/.test(denStr)) {
+          throw new Error(`Invalid fraction "${raw}" — numerator and denominator must be integers.`);
+        }
+        const den = BigInt(denStr);
+        if (den === 0n) throw new Error(`Denominator cannot be zero in "${raw}".`);
+        return frac(BigInt(numStr), den);
+      }
+      if (/^[+-]?\d+(\.\d+)?$/.test(raw)) {
+        if (!raw.includes('.')) return frac(BigInt(raw), 1n);
+        const neg = raw.startsWith('-');
+        const clean = raw.replace(/^[+-]/, '');
+        const segs = clean.split('.');
+        const scale = 10n ** BigInt(segs[1].length);
+        const num = BigInt(segs[0]) * scale + BigInt(segs[1]);
+        return frac(neg ? -num : num, scale);
+      }
+      throw new Error(`Cannot parse "${raw}" — enter an integer, decimal, or p/q fraction.`);
+    }
+
+    /* ============================================================
+       2. UNIVERSAL HYPERBOLIC GEOMETRY ALGEBRAIC OPERATORS
+       ============================================================ */
+    const ONE = frac(1n, 1n);
+    const ZERO = frac(0n, 1n);
+
+    function nullPointFromT(t) {
+      const t2 = fSq(t);
+      const x = fSub(t2, ONE);
+      const y = fMul(frac(2n, 1n), t);
+      const z = fAdd(t2, ONE);
+      return primVec([x, y, z]);
+    }
+
+    function primVec(v) {
+      let commonDen = 1n;
+      for (let i = 0; i < 3; i++) {
+        commonDen = lcmBig(commonDen, v[i].d);
+      }
+      let ints = v.map(c => (c.n * (commonDen / c.d)));
+      let g = 0n;
+      for (let i = 0; i < 3; i++) {
+        if (ints[i] !== 0n) {
+          g = g === 0n ? absBig(ints[i]) : gcdBig(g, ints[i]);
+        }
+      }
+      if (g === 0n) return [ZERO, ZERO, ZERO];
+      ints = ints.map(x => x / g);
+      // Canonical sign: prefer positive z, else positive y, else positive x
+      let flip = false;
+      if (ints[2] !== 0n) flip = ints[2] < 0n;
+      else if (ints[1] !== 0n) flip = ints[1] < 0n;
+      else flip = ints[0] < 0n;
+      if (flip) ints = ints.map(x => -x);
+      return ints.map(x => frac(x, 1n));
+    }
+
+    function formatHomog(v) {
+      const p = primVec(v);
+      return `[${p[0].n.toString()} : ${p[1].n.toString()} : ${p[2].n.toString()}]`;
+    }
+
+    function formatAffineXY(v) {
+      if (fIsZero(v[2])) return `Point at infinity`;
+      const X = fToNumber(fDiv(v[0], v[2]));
+      const Y = fToNumber(fDiv(v[1], v[2]));
+      return `(${X.toFixed(3)}, ${Y.toFixed(3)})`;
+    }
+
+    function quadForm(v) {
+      return fSub(fAdd(fSq(v[0]), fSq(v[1])), fSq(v[2]));
+    }
+
+    function bilinForm(u, v) {
+      return fSub(fAdd(fMul(u[0], v[0]), fMul(u[1], v[1])), fMul(u[2], v[2]));
+    }
+
+    function joinPoints(a, b) {
+      const l = fSub(fMul(a[1], b[2]), fMul(b[1], a[2]));
+      const m = fSub(fMul(a[2], b[0]), fMul(b[2], a[0]));
+      const n = fSub(fMul(b[0], a[1]), fMul(a[0], b[1]));
+      return primVec([l, m, n]);
+    }
+
+    function meetLines(L1, L2) {
+      const x = fSub(fMul(L1[1], L2[2]), fMul(L2[1], L1[2]));
+      const y = fSub(fMul(L1[2], L2[0]), fMul(L2[2], L1[0]));
+      const z = fSub(fMul(L2[0], L1[1]), fMul(L1[0], L2[1]));
+      return primVec([x, y, z]);
+    }
+
+    function orthocenter(a, b, c) {
+      const L1 = joinPoints(b, c);
+      const N1 = joinPoints(a, L1); // pole of L1 has same homogeneous tuple
+      const L2 = joinPoints(a, c);
+      const N2 = joinPoints(b, L2);
+      const L3 = joinPoints(a, b);
+      const N3 = joinPoints(c, L3);
+      const h = meetLines(N1, N2);
+      return { h, altitudes: [N1, N2, N3], sides: [L1, L2, L3], poles: [L1, L2, L3] };
+    }
+
+    function quadrance(a, b) {
+      const qa = quadForm(a);
+      const qb = quadForm(b);
+      if (fIsZero(qa) || fIsZero(qb)) return null;
+      const B = bilinForm(a, b);
+      return fSub(ONE, fDiv(fSq(B), fMul(qa, qb)));
+    }
+
+    function spread(L1, L2) {
+      const q1 = quadForm(L1);
+      const q2 = quadForm(L2);
+      if (fIsZero(q1) || fIsZero(q2)) return null;
+      const B = bilinForm(L1, L2);
+      return fSub(ONE, fDiv(fSq(B), fMul(q1, q2)));
+    }
+
+    function det3(a, b, c) {
+      const t1 = fMul(a[0], fSub(fMul(b[1], c[2]), fMul(c[1], b[2])));
+      const t2 = fMul(b[0], fSub(fMul(c[1], a[2]), fMul(a[1], c[2])));
+      const t3 = fMul(c[0], fSub(fMul(a[1], b[2]), fMul(b[1], a[2])));
+      return fAdd(fAdd(t1, t2), t3);
+    }
+
+    function quadrea(a, b, c) {
+      const qa = quadForm(a);
+      const qb = quadForm(b);
+      const qc = quadForm(c);
+      if (fIsZero(qa) || fIsZero(qb) || fIsZero(qc)) return null;
+      const d = det3(a, b, c);
+      const num = fNeg(fSq(d));
+      const den = fMul(fMul(qa, qb), qc);
+      return {
+        A: fDiv(num, den),
+        negDetSq: num,
+        qProd: den,
+        det: d
+      };
+    }
+
+    function solveT4(t1, t2, t3, lambda) {
+      const t1_t3 = fSub(t1, t3);
+      const t2_t3 = fSub(t2, t3);
+      if (fIsZero(t1_t3) || fIsZero(t2_t3)) {
+        throw new Error(`Parameters t1, t2, t3 must be pairwise distinct.`);
+      }
+      const den = fSub(t1_t3, fMul(lambda, t2_t3));
+      if (fIsZero(den)) {
+        throw new Error(`This combination maps t4 to infinity; choose a different lambda.`);
+      }
+      const num = fSub(fMul(t2, t1_t3), fMul(lambda, fMul(t1, t2_t3)));
+      const t4 = fDiv(num, den);
+      if (fEq(t4, t1) || fEq(t4, t2) || fEq(t4, t3)) {
+        throw new Error(`Degenerate cross-ratio: t4 coincides with one of t1, t2, t3.`);
+      }
+      return t4;
+    }
+
+    /* ============================================================
+       3. EXPLORER APPLICATION STATE
+       ============================================================ */
+    const state = {
+      t1: frac(-1n, 1n),
+      t2: frac(0n, 1n),
+      t3: frac(1n, 1n),
+      lambda: frac(2n, 1n),
+      activeTriple: '123',
+      constructionStep: 1,
+      dragging: false
+    };
+
+    function computeSystem(t1, t2, t3, lambda) {
+      const t4 = solveT4(t1, t2, t3, lambda);
+      const a1 = nullPointFromT(t1);
+      const a2 = nullPointFromT(t2);
+      const a3 = nullPointFromT(t3);
+      const a4 = nullPointFromT(t4);
+
+      const o1 = orthocenter(a2, a3, a4); // omits a1 -> h1
+      const o2 = orthocenter(a1, a3, a4); // omits a2 -> h2
+      const o3 = orthocenter(a1, a2, a4); // omits a3 -> h3
+      const o4 = orthocenter(a1, a2, a3); // omits a4 -> h4
+
+      const h1 = o1.h;
+      const h2 = o2.h;
+      const h3 = o3.h;
+      const h4 = o4.h;
+
+      // Diagonal points e, f, g
+      const L12 = joinPoints(a1, a2);
+      const L34 = joinPoints(a3, a4);
+      const L13 = joinPoints(a1, a3);
+      const L24 = joinPoints(a2, a4);
+      const L14 = joinPoints(a1, a4);
+      const L23 = joinPoints(a2, a3);
+
+      const e = meetLines(L12, L34);
+      const f = meetLines(L13, L24);
+      const g = meetLines(L14, L23);
+
+      // 48/64 Theorem spreads
+      const P = spread(L12, L34);
+      const R = spread(L13, L24);
+      const T = spread(L14, L23);
+
+      return {
+        t1, t2, t3, t4, lambda,
+        alphas: [a1, a2, a3, a4],
+        orthos: [h1, h2, h3, h4],
+        orthoData: [o1, o2, o3, o4],
+        diagonals: [e, f, g],
+        secants: [L12, L34, L13, L24, L14, L23],
+        P, R, T
+      };
+    }
+
+    /* ============================================================
+       4. SVG COORDINATE & GEOMETRY DRAWING HELPERS
+       ============================================================ */
+    function toAffine(v) {
+      const z = fToNumber(v[2]);
+      if (Math.abs(z) < 1e-12) return null;
+      return {
+        x: fToNumber(v[0]) / z,
+        y: fToNumber(v[1]) / z
+      };
+    }
+
+    function clipLineToBox(L, bound) {
+      // Line: lx + my - nz = 0 -> in z=1: lx + my - n = 0
+      const l = fToNumber(L[0]);
+      const m = fToNumber(L[1]);
+      const n = fToNumber(L[2]);
+      const pts = [];
+      if (Math.abs(m) > 1e-9) {
+        const yLeft = (n - l * (-bound)) / m;
+        if (Math.abs(yLeft) <= bound + 1e-6) pts.push({ x: -bound, y: yLeft });
+        const yRight = (n - l * bound) / m;
+        if (Math.abs(yRight) <= bound + 1e-6) pts.push({ x: bound, y: yRight });
+      }
+      if (Math.abs(l) > 1e-9) {
+        const xBottom = (n - m * (-bound)) / l;
+        if (Math.abs(xBottom) <= bound + 1e-6) pts.push({ x: xBottom, y: -bound });
+        const xTop = (n - m * bound) / l;
+        if (Math.abs(xTop) <= bound + 1e-6) pts.push({ x: xTop, y: bound });
+      }
+      // Deduplicate close points
+      const uniq = [];
+      for (const p of pts) {
+        if (!uniq.some(u => Math.hypot(u.x - p.x, u.y - p.y) < 1e-5)) uniq.push(p);
+      }
+      return uniq.length >= 2 ? [uniq[0], uniq[1]] : null;
+    }
+
+    function svgEl(tag, attrs) {
+      const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (const k in attrs) {
+        el.setAttribute(k, attrs[k]);
+      }
+      return el;
+    }
+
+    /* ============================================================
+       5. RENDER PRIMARY INTERACTIVE CONIC EXPLORER
+       ============================================================ */
+    function renderExplorer() {
+      const errBox = document.getElementById('lambda-error');
+      const lambdaInput = document.getElementById('lambda-input');
+      let sys;
+      try {
+        sys = computeSystem(state.t1, state.t2, state.t3, state.lambda);
+        if (errBox) {
+          errBox.classList.remove('visible');
+          errBox.textContent = ``;
+        }
+        if (lambdaInput) lambdaInput.classList.remove('is-invalid');
+      } catch (e) {
+        if (errBox) {
+          errBox.textContent = e.message;
+          errBox.classList.add('visible');
+        }
+        if (lambdaInput) lambdaInput.classList.add('is-invalid');
+        return;
+      }
+
+      const wideZoom = document.getElementById('chk-zoom')?.checked;
+      const scale = wideZoom ? 72 : 148; // pixels per unit
+      const bound = 260 / scale;
+
+      const zoomReadout = document.getElementById('svg-zoom-readout');
+      if (zoomReadout) {
+        zoomReadout.textContent = wideZoom
+          ? `VIEW: 0.45x (WIDE EXTERIOR FIELD, R = 1)`
+          : `VIEW: 1.0x (UNIT NULL CIRCLE RADIUS = 1)`;
+      }
+
+      const px = x => (x * scale).toFixed(2);
+      const py = y => (-y * scale).toFixed(2); // math Y up -> SVG Y down
+
+      const gGrid = document.getElementById('svg-grid-layer');
+      const gSec = document.getElementById('svg-secant-layer');
+      const gDiag = document.getElementById('svg-diag-layer');
+      const gAlt = document.getElementById('svg-altitude-layer');
+      const gOrthic = document.getElementById('svg-orthic-layer');
+      const gPts = document.getElementById('svg-points-layer');
+      const gLbl = document.getElementById('svg-labels-layer');
+      if (!gGrid || !gSec || !gDiag || !gAlt || !gOrthic || !gPts || !gLbl) return;
+
+      [gGrid, gSec, gDiag, gAlt, gOrthic, gPts, gLbl].forEach(g => { g.innerHTML = ''; });
+
+      // Grid & unit conic
+      for (let k = -3; k <= 3; k++) {
+        if (k === 0) continue;
+        const pos = k * scale;
+        if (Math.abs(pos) <= 255) {
+          gGrid.appendChild(svgEl('line', { x1: -260, y1: pos, x2: 260, y2: pos, class: 'svg-grid' }));
+          gGrid.appendChild(svgEl('line', { x1: pos, y1: -260, x2: pos, y2: 260, class: 'svg-grid' }));
+        }
+      }
+      gGrid.appendChild(svgEl('line', { x1: -260, y1: 0, x2: 260, y2: 0, class: 'svg-axis' }));
+      gGrid.appendChild(svgEl('line', { x1: 0, y1: -260, x2: 0, y2: 260, class: 'svg-axis' }));
+      gGrid.appendChild(svgEl('circle', { cx: 0, cy: 0, r: scale, class: 'svg-conic' }));
+
+      // 6 Join lines between alpha_i
+      if (document.getElementById('chk-secants')?.checked) {
+        sys.secants.forEach(L => {
+          const seg = clipLineToBox(L, bound);
+          if (seg) {
+            gSec.appendChild(svgEl('line', {
+              x1: px(seg[0].x), y1: py(seg[0].y),
+              x2: px(seg[1].x), y2: py(seg[1].y),
+              class: 'svg-secant'
+            }));
+          }
+        });
+      }
+
+      // Diagonal triangle efg
+      if (document.getElementById('chk-diagonals')?.checked) {
+        const dLines = [
+          joinPoints(sys.diagonals[0], sys.diagonals[1]),
+          joinPoints(sys.diagonals[1], sys.diagonals[2]),
+          joinPoints(sys.diagonals[2], sys.diagonals[0])
+        ];
+        dLines.forEach(L => {
+          const seg = clipLineToBox(L, bound);
+          if (seg) {
+            gDiag.appendChild(svgEl('line', {
+              x1: px(seg[0].x), y1: py(seg[0].y),
+              x2: px(seg[1].x), y2: py(seg[1].y),
+              class: 'svg-diag-line'
+            }));
+          }
+        });
+        const dNames = ['e', 'f', 'g'];
+        sys.diagonals.forEach((pt, idx) => {
+          const aff = toAffine(pt);
+          if (aff && Math.abs(aff.x) <= bound && Math.abs(aff.y) <= bound) {
+            gPts.appendChild(svgEl('circle', { cx: px(aff.x), cy: py(aff.y), r: 4.5, class: 'svg-diag-pt' }));
+            const t = svgEl('text', { x: Number(px(aff.x)) + 7, y: Number(py(aff.y)) - 7, class: 'svg-label svg-label-mint' });
+            t.textContent = dNames[idx];
+            gLbl.appendChild(t);
+          }
+        });
+      }
+
+      // Altitudes of h4 (triply nil triangle a1 a2 a3)
+      if (document.getElementById('chk-altitudes')?.checked) {
+        sys.orthoData[3].altitudes.forEach(L => {
+          const seg = clipLineToBox(L, bound);
+          if (seg) {
+            gAlt.appendChild(svgEl('line', {
+              x1: px(seg[0].x), y1: py(seg[0].y),
+              x2: px(seg[1].x), y2: py(seg[1].y),
+              class: 'svg-altitude'
+            }));
+          }
+        });
+      }
+
+      // Active orthic triangle
+      const tripleIdx = state.activeTriple.split('').map(c => Number(c) - 1);
+      const triPts = tripleIdx.map(i => toAffine(sys.orthos[i]));
+      if (triPts.every(p => p !== null)) {
+        // Draw projective sides so even if a vertex is far outside viewbox, lines appear cleanly
+        for (let k = 0; k < 3; k++) {
+          const Lside = joinPoints(sys.orthos[tripleIdx[k]], sys.orthos[tripleIdx[(k + 1) % 3]]);
+          const seg = clipLineToBox(Lside, bound);
+          if (seg) {
+            gOrthic.appendChild(svgEl('line', {
+              x1: px(seg[0].x), y1: py(seg[0].y),
+              x2: px(seg[1].x), y2: py(seg[1].y),
+              stroke: 'var(--primary)',
+              'stroke-width': '1.2',
+              opacity: '0.45'
+            }));
+          }
+        }
+        if (triPts.every(p => Math.abs(p.x) < bound * 1.4 && Math.abs(p.y) < bound * 1.4)) {
+          const ptsAttr = triPts.map(p => `${px(p.x)},${py(p.y)}`).join(' ');
+          gOrthic.appendChild(svgEl('polygon', { points: ptsAttr, class: 'svg-orthic-tri' }));
+        }
+      }
+
+      // Draw null points alpha_1..4
+      const alphaLabels = ['\u03b1\u2081', '\u03b1\u2082', '\u03b1\u2083', '\u03b1\u2084'];
+      sys.alphas.forEach((pt, idx) => {
+        const aff = toAffine(pt);
+        if (!aff) return;
+        const cx = Number(px(aff.x));
+        const cy = Number(py(aff.y));
+        const r = idx === 3 ? 7 : 5.5;
+        const circle = svgEl('circle', {
+          cx, cy, r,
+          class: idx === 3 ? 'svg-null-pt' : 'svg-null-pt',
+          'data-role': idx === 3 ? 'drag-a4' : `null-${idx + 1}`
+        });
+        if (idx === 3) {
+          circle.setAttribute('stroke', 'var(--primary)');
+          circle.setAttribute('stroke-width', '2.6');
+        }
+        gPts.appendChild(circle);
+
+        const lx = cx + (aff.x >= 0 ? 11 : -24);
+        const ly = cy + (aff.y >= 0 ? -10 : 16);
+        const lbl = svgEl('text', {
+          x: lx, y: ly,
+          class: idx === 3 ? 'svg-label svg-label-brass' : 'svg-label svg-label-sky'
+        });
+        lbl.textContent = alphaLabels[idx];
+        gLbl.appendChild(lbl);
+      });
+
+      // Draw orthocenters h1..h4
+      const hLabels = ['h\u2081', 'h\u2082', 'h\u2083', 'h\u2084'];
+      sys.orthos.forEach((pt, idx) => {
+        const aff = toAffine(pt);
+        const inActive = tripleIdx.includes(idx);
+        if (aff && Math.abs(aff.x) <= bound * 0.96 && Math.abs(aff.y) <= bound * 0.96) {
+          const cx = Number(px(aff.x));
+          const cy = Number(py(aff.y));
+          gPts.appendChild(svgEl('circle', {
+            cx, cy,
+            r: inActive ? 5.5 : 4,
+            class: inActive ? 'svg-ortho-pt' : 'svg-ortho-pt inactive'
+          }));
+          const lbl = svgEl('text', {
+            x: cx + 8,
+            y: cy - 7,
+            class: inActive ? 'svg-label svg-label-brass' : 'svg-label svg-label-muted'
+          });
+          lbl.textContent = hLabels[idx];
+          gLbl.appendChild(lbl);
+        } else if (aff) {
+          // Edge pointer if orthocenter lies outside current zoom frame
+          const ang = Math.atan2(aff.y, aff.x);
+          const rx = Math.cos(ang) * 238;
+          const ry = -Math.sin(ang) * 238;
+          const badgeLbl = svgEl('text', {
+            x: rx - (rx > 0 ? 34 : 0),
+            y: ry + (ry > 0 ? 0 : 10),
+            class: 'svg-label svg-label-muted'
+          });
+          badgeLbl.textContent = `${hLabels[idx]} \u2192`;
+          gLbl.appendChild(badgeLbl);
+        }
+      });
+
+      // Update live telemetry table
+      updateTelemetryAndCancellation(sys, tripleIdx);
+    }
+
+    function updateTelemetryAndCancellation(sys, tripleIdx) {
+      const tbody = document.getElementById('live-points-tbody');
+      if (tbody) {
+        const rows = [];
+        const aNames = ['&alpha;&#8321;', '&alpha;&#8322;', '&alpha;&#8323;', '&alpha;&#8324;'];
+        sys.alphas.forEach((pt, idx) => {
+          rows.push(`<tr>
+            <td style="color: ${idx === 3 ? 'var(--primary)' : 'var(--tertiary)'}; font-weight: 600;">${aNames[idx]}</td>
+            <td>${formatHomog(pt)}</td>
+            <td class="num"><span class="badge" style="padding: 2px 6px;">Null</span></td>
+          </tr>`);
+        });
+        const hNames = ['h&#8321;', 'h&#8322;', 'h&#8323;', 'h&#8324;'];
+        sys.orthos.forEach((pt, idx) => {
+          const qVal = quadForm(pt);
+          const isNeg = qVal.n < 0n;
+          const regionBadge = fIsZero(qVal)
+            ? `<span class="badge">Null</span>`
+            : isNeg
+              ? `<span class="badge badge-mint">Interior</span>`
+              : `<span class="badge badge-coral">Exterior</span>`;
+          const activeMark = tripleIdx.includes(idx) ? 'color: var(--primary); font-weight: 600;' : 'color: var(--on-surface-variant);';
+          rows.push(`<tr>
+            <td style="${activeMark}">${hNames[idx]}</td>
+            <td>${formatHomog(pt)}</td>
+            <td class="num">${regionBadge}</td>
+          </tr>`);
+        });
+        tbody.innerHTML = rows.join('');
+      }
+
+      const triA = sys.orthos[tripleIdx[0]];
+      const triB = sys.orthos[tripleIdx[1]];
+      const triC = sys.orthos[tripleIdx[2]];
+      const qRes = quadrea(triA, triB, triC);
+
+      const badge = document.getElementById('live-quadrea-badge');
+      const cap = document.getElementById('live-triple-caption');
+      const hSub = ['h\u2081', 'h\u2082', 'h\u2083', 'h\u2084'];
+      const triName = `${hSub[tripleIdx[0]]}${hSub[tripleIdx[1]]}${hSub[tripleIdx[2]]}`;
+
+      if (qRes && badge) {
+        badge.textContent = `A(${triName}) = ${fToString(qRes.A)}`;
+      }
+      if (cap) {
+        cap.textContent = `Triangle ${triName} \u00b7 \u03bb = ${fToString(sys.lambda)} \u00b7 t\u2084 = ${fToString(sys.t4)}`;
+      }
+
+      // Section 3 cancellation inspector
+      const cancelBadge = document.getElementById('cancel-lambda-badge');
+      const elDetSq = document.getElementById('val-det-sq');
+      const elQProd = document.getElementById('val-q-prod');
+      const elRatio = document.getElementById('val-ratio-final');
+      if (cancelBadge) cancelBadge.textContent = `Evaluating ${triName} at \u03bb = ${fToString(sys.lambda)}`;
+      if (qRes && elDetSq && elQProd && elRatio) {
+        elDetSq.textContent = fToString(qRes.negDetSq);
+        elQProd.textContent = fToString(qRes.qProd);
+        elRatio.textContent = fToString(qRes.A);
+      }
+
+      // Orthic triangle edge quadrances & spreads
+      const metricsTbody = document.getElementById('orthic-metrics-tbody');
+      if (metricsTbody) {
+        const q12 = quadrance(triA, triB);
+        const q23 = quadrance(triB, triC);
+        const q13 = quadrance(triA, triC);
+        const La = joinPoints(triB, triC);
+        const Lb = joinPoints(triA, triC);
+        const Lc = joinPoints(triA, triB);
+        const S1 = spread(Lb, Lc);
+        const S2 = spread(La, Lc);
+        const S3 = spread(La, Lb);
+
+        const items = [
+          { name: `q(${hSub[tripleIdx[0]]}, ${hSub[tripleIdx[1]]})`, val: q12 },
+          { name: `q(${hSub[tripleIdx[1]]}, ${hSub[tripleIdx[2]]})`, val: q23 },
+          { name: `q(${hSub[tripleIdx[0]]}, ${hSub[tripleIdx[2]]})`, val: q13 },
+          { name: `S at ${hSub[tripleIdx[0]]}`, val: S1 },
+          { name: `S at ${hSub[tripleIdx[1]]}`, val: S2 },
+          { name: `S at ${hSub[tripleIdx[2]]}`, val: S3 },
+          { name: `Quadrea A = q13\u00b7q12\u00b7S1`, val: qRes ? qRes.A : null, highlight: true }
+        ];
+        metricsTbody.innerHTML = items.map(it => {
+          if (!it.val) return `<tr><td>${it.name}</td><td>Undefined (null)</td><td class="num">&mdash;</td></tr>`;
+          const style = it.highlight ? `color: var(--primary); font-weight: 600;` : ``;
+          return `<tr>
+            <td style="${style}">${it.name}</td>
+            <td style="${style}">${fToString(it.val)}</td>
+            <td class="num" style="${style}">${fToNumber(it.val).toFixed(6)}</td>
+          </tr>`;
+        }).join('');
+      }
+
+      // 48/64 live readout in Section 5
+      const box4864 = document.getElementById('live-4864-box');
+      if (box4864 && sys.P && sys.R && sys.T) {
+        const sumProd = fAdd(fAdd(fMul(sys.P, sys.R), fMul(sys.R, sys.T)), fMul(sys.T, sys.P));
+        const tripleProd = fMul(fMul(sys.P, sys.R), sys.T);
+        box4864.innerHTML = `
+          <div><strong>P</strong> = ${fToString(sys.P)} &nbsp;&middot;&nbsp; <strong>R</strong> = ${fToString(sys.R)} &nbsp;&middot;&nbsp; <strong>T</strong> = ${fToString(sys.T)}</div>
+          <div style="margin-top: 4px; color: var(--primary);">PR + RT + TP = ${fToString(sumProd)} &nbsp;&middot;&nbsp; PRT = ${fToString(tripleProd)}</div>
+        `;
+      }
+
+      renderStabilityChart();
+    }
+
+    /* ============================================================
+       6. STABILITY CHART ACROSS LAMBDA
+       ============================================================ */
+    function renderStabilityChart() {
+      const svg = document.getElementById('stability-svg');
+      if (!svg) return;
+      svg.innerHTML = '';
+
+      const W = 420, H = 230;
+      const padL = 42, padR = 16, padT = 18, padB = 28;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const xMin = -3, xMax = 3;
+      const yMin = -2, yMax = 2;
+
+      const sx = x => padL + ((x - xMin) / (xMax - xMin)) * plotW;
+      const sy = y => padT + ((yMax - Math.max(yMin, Math.min(yMax, y))) / (yMax - yMin)) * plotH;
+
+      // Gridlines
+      [-2, -1, 0, 1, 2].forEach(y => {
+        const py = sy(y);
+        svg.appendChild(svgEl('line', {
+          x1: padL, y1: py, x2: W - padR, y2: py,
+          stroke: y === 0 ? 'var(--outline)' : 'var(--outline-variant)',
+          'stroke-width': y === 0 ? 1 : 0.8,
+          'stroke-dasharray': y === 0 ? 'none' : '2 3'
+        }));
+        const lbl = svgEl('text', { x: padL - 6, y: py + 4, 'text-anchor': 'end', class: 'svg-label-muted', style: 'font-family: var(--font-label); font-size: 10px;' });
+        lbl.textContent = y.toString();
+        svg.appendChild(lbl);
+      });
+
+      [-3, -2, -1, 0, 1, 2, 3].forEach(x => {
+        const px = sx(x);
+        const lbl = svgEl('text', { x: px, y: H - 8, 'text-anchor': 'middle', class: 'svg-label-muted', style: 'font-family: var(--font-label); font-size: 10px;' });
+        lbl.textContent = x.toString();
+        svg.appendChild(lbl);
+      });
+
+      // Sample canonical q12 and S3 across lambda in [-3, 3]
+      const segsQ = [[]];
+      const segsS = [[]];
+      for (let i = 0; i <= 120; i++) {
+        const lam = xMin + (i / 120) * (xMax - xMin);
+        if (Math.abs(lam) < 0.08 || Math.abs(lam - 1) < 0.08 || Math.abs(lam + 1) < 0.08) {
+          if (segsQ[segsQ.length - 1].length > 0) segsQ.push([]);
+          if (segsS[segsS.length - 1].length > 0) segsS.push([]);
+          continue;
+        }
+        try {
+          const lamF = frac(BigInt(Math.round(lam * 100)), 100n);
+          const s = computeSystem(frac(-1n, 1n), frac(0n, 1n), frac(1n, 1n), lamF);
+          const q12 = quadrance(s.orthos[0], s.orthos[1]);
+          const S3 = spread(joinPoints(s.orthos[0], s.orthos[2]), joinPoints(s.orthos[1], s.orthos[2]));
+          if (q12) {
+            const qNum = fToNumber(q12);
+            if (Math.abs(qNum) <= 2.4) segsQ[segsQ.length - 1].push(`${sx(lam).toFixed(1)},${sy(qNum).toFixed(1)}`);
+            else if (segsQ[segsQ.length - 1].length > 0) segsQ.push([]);
+          }
+          if (S3) {
+            const sNum = fToNumber(S3);
+            if (Math.abs(sNum) <= 2.4) segsS[segsS.length - 1].push(`${sx(lam).toFixed(1)},${sy(sNum).toFixed(1)}`);
+            else if (segsS[segsS.length - 1].length > 0) segsS.push([]);
+          }
+        } catch (err) {
+          // ignore singular points
+        }
+      }
+
+      segsQ.forEach(pts => {
+        if (pts.length > 1) {
+          svg.appendChild(svgEl('polyline', {
+            points: pts.join(' '),
+            fill: 'none',
+            stroke: 'var(--tertiary)',
+            'stroke-width': 1.5,
+            opacity: 0.78
+          }));
+        }
+      });
+
+      segsS.forEach(pts => {
+        if (pts.length > 1) {
+          svg.appendChild(svgEl('polyline', {
+            points: pts.join(' '),
+            fill: 'none',
+            stroke: 'var(--data-4)',
+            'stroke-width': 1.5,
+            opacity: 0.72
+          }));
+        }
+      });
+
+      // Constant A = 16/27 line
+      const yA = sy(16 / 27);
+      svg.appendChild(svgEl('line', {
+        x1: padL, y1: yA, x2: W - padR, y2: yA,
+        stroke: 'var(--primary)',
+        'stroke-width': 2.5
+      }));
+
+      // Active lambda marker
+      const curLam = fToNumber(state.lambda);
+      if (curLam >= xMin && curLam <= xMax) {
+        svg.appendChild(svgEl('line', {
+          x1: sx(curLam), y1: padT, x2: sx(curLam), y2: H - padB,
+          stroke: 'var(--on-surface)',
+          'stroke-width': 1,
+          'stroke-dasharray': '3 3',
+          opacity: 0.55
+        }));
+        svg.appendChild(svgEl('circle', {
+          cx: sx(curLam), cy: yA, r: 4.5,
+          fill: 'var(--primary)',
+          stroke: 'var(--background)',
+          'stroke-width': 1.5
+        }));
+      }
+
+      // Direct labels
+      const lblA = svgEl('text', { x: W - padR - 4, y: yA - 7, 'text-anchor': 'end', class: 'svg-label svg-label-brass', style: 'font-size: 10.5px;' });
+      lblA.textContent = `A = 16/27 (invariant)`;
+      svg.appendChild(lblA);
+
+      const lblQ = svgEl('text', { x: padL + 6, y: padT + 12, class: 'svg-label svg-label-sky', style: 'font-size: 10px;' });
+      lblQ.textContent = `q(h\u2081, h\u2082)`;
+      svg.appendChild(lblQ);
+
+      const lblS = svgEl('text', { x: padL + 72, y: padT + 12, class: 'svg-label svg-label-coral', style: 'font-size: 10px;' });
+      lblS.textContent = `S\u2083`;
+      svg.appendChild(lblS);
+    }
+
+    /* ============================================================
+       7. SECTION 2: STEP-BY-STEP ORTHOCENTER CONSTRUCTION
+       ============================================================ */
+    const CONSTRUCTION_STEPS = [
+      {
+        num: 1,
+        caption: `Stage 1 of 4 \u00b7 Triply nil triangle \u03b1\u2081\u03b1\u2082\u03b1\u2083`,
+        title: `Start with Three Distinct Null Points`,
+        body: `Omit \u03b1\u2084 from the four-point configuration. The remaining three points \u03b1\u2081, \u03b1\u2082, \u03b1\u2083 lie on the absolute conic Q(x, y, z) = x\u00b2 + y\u00b2 \u2212 z\u00b2 = 0 (the blue circle in the z = 1 chart). Because they are distinct, their join lines are guaranteed to be non-null.`
+      },
+      {
+        num: 2,
+        caption: `Stage 2 of 4 \u00b7 Side lines L\u1d62 and their dual poles L\u1d62\u22a5`,
+        title: `Compute Side Lines and Swap Brackets for Poles`,
+        body: `Form each opposite side L\u2081 = \u03b1\u2082\u03b1\u2083, L\u2082 = \u03b1\u2081\u03b1\u2083, L\u2083 = \u03b1\u2081\u03b1\u2082 via the hyperbolic join formula. Because the conic is diagonal diag(1, 1, \u22121), the polar pole L\u1d62\u22a5 of any line (l : m : n) is simply the exterior point [l : m : n]\u2014the intersection of the two null tangents at its endpoints.`
+      },
+      {
+        num: 3,
+        caption: `Stage 3 of 4 \u00b7 Polar altitudes N\u1d62 = \u03b1\u1d62L\u1d62\u22a5`,
+        title: `Join Each Vertex to Its Opposite Pole`,
+        body: `By projective polarity, every line passing through the pole L\u1d62\u22a5 is perpendicular to L\u1d62. Thus the altitude from null vertex \u03b1\u1d62 to opposite side L\u1d62 requires no angle measurement\u2014it is simply the straight join line N\u1d62 = \u03b1\u1d62 L\u1d62\u22a5.`
+      },
+      {
+        num: 4,
+        caption: `Stage 4 of 4 \u00b7 Concurrency at orthocenter h\u2084`,
+        title: `Intersect Altitudes at Orthocenter h\u2084 (and Repeat)`,
+        body: `The three polar altitudes N\u2081, N\u2082, N\u2083 are always concurrent at a unique projective point h\u2084 = N\u2081 N\u2082. Repeating this exact procedure while omitting \u03b1\u2081, \u03b1\u2082, \u03b1\u2083 in turn produces the four orthocenters h\u2081, h\u2082, h\u2083, h\u2084.`
+      }
+    ];
+
+    function setConstructionStep(stepNum, btnEl) {
+      state.constructionStep = stepNum;
+      document.querySelectorAll('.step-card').forEach(btn => {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-selected', 'false');
+      });
+      if (btnEl) {
+        btnEl.classList.add('is-active');
+        btnEl.setAttribute('aria-selected', 'true');
+      }
+      renderConstructionDiagram();
+    }
+
+    function renderConstructionDiagram() {
+      const svg = document.getElementById('construction-svg');
+      const panel = document.getElementById('step-explanation-panel');
+      const capLeft = document.getElementById('step-caption-left');
+      if (!svg || !panel) return;
+
+      const step = state.constructionStep;
+      const info = CONSTRUCTION_STEPS[step - 1];
+      if (capLeft) capLeft.textContent = info.caption;
+
+      // Fixed clean Pythagorean triple triangle for crystal-clear pedagogy
+      const a1 = nullPointFromT(frac(-2n, 3n));
+      const a2 = nullPointFromT(frac(1n, 4n));
+      const a3 = nullPointFromT(frac(1n, 2n));
+      const o = orthocenter(a1, a2, a3);
+
+      const scale = 88;
+      const bound = 220 / scale;
+      const px = x => (x * scale).toFixed(2);
+      const py = y => (-y * scale).toFixed(2);
+
+      svg.innerHTML = '';
+      svg.appendChild(svgEl('line', { x1: -220, y1: 0, x2: 220, y2: 0, class: 'svg-axis', opacity: '0.45' }));
+      svg.appendChild(svgEl('line', { x1: 0, y1: -220, x2: 0, y2: 220, class: 'svg-axis', opacity: '0.45' }));
+      svg.appendChild(svgEl('circle', { cx: 0, cy: 0, r: scale, class: 'svg-conic' }));
+
+      // Sides
+      const aff1 = toAffine(a1), aff2 = toAffine(a2), aff3 = toAffine(a3);
+      svg.appendChild(svgEl('polygon', {
+        points: `${px(aff1.x)},${py(aff1.y)} ${px(aff2.x)},${py(aff2.y)} ${px(aff3.x)},${py(aff3.y)}`,
+        fill: 'var(--sky-tint)',
+        stroke: 'var(--tertiary)',
+        'stroke-width': '1.6'
+      }));
+
+      // Step >= 2: show poles L_i^\perp and tangent rays
+      if (step >= 2) {
+        const pNames = ['L\u2081\u22a5', 'L\u2082\u22a5', 'L\u2083\u22a5'];
+        o.poles.forEach((polePt, idx) => {
+          const affP = toAffine(polePt);
+          if (affP && Math.abs(affP.x) <= bound && Math.abs(affP.y) <= bound) {
+            svg.appendChild(svgEl('circle', { cx: px(affP.x), cy: py(affP.y), r: 5, class: 'svg-polar-pt' }));
+            const lbl = svgEl('text', { x: Number(px(affP.x)) + 8, y: Number(py(affP.y)) - 6, class: 'svg-label svg-label-coral' });
+            lbl.textContent = pNames[idx];
+            svg.appendChild(lbl);
+          } else if (affP) {
+            // Draw direction indicator if pole is far outside circle
+            const ang = Math.atan2(affP.y, affP.x);
+            const ex = Math.cos(ang) * 195;
+            const ey = -Math.sin(ang) * 195;
+            const lbl = svgEl('text', { x: ex - (ex > 0 ? 28 : 0), y: ey, class: 'svg-label svg-label-coral' });
+            lbl.textContent = `${pNames[idx]} \u2192`;
+            svg.appendChild(lbl);
+          }
+        });
+      }
+
+      // Step >= 3: show altitudes N1, N2, N3
+      if (step >= 3) {
+        o.altitudes.forEach(N => {
+          const seg = clipLineToBox(N, bound);
+          if (seg) {
+            svg.appendChild(svgEl('line', {
+              x1: px(seg[0].x), y1: py(seg[0].y),
+              x2: px(seg[1].x), y2: py(seg[1].y),
+              class: 'svg-altitude'
+            }));
+          }
+        });
+      }
+
+      // Step 4: show orthocenter h
+      if (step >= 4) {
+        const affH = toAffine(o.h);
+        if (affH) {
+          svg.appendChild(svgEl('circle', { cx: px(affH.x), cy: py(affH.y), r: 6.5, class: 'svg-ortho-pt' }));
+          const lbl = svgEl('text', { x: Number(px(affH.x)) + 10, y: Number(py(affH.y)) - 8, class: 'svg-label svg-label-brass' });
+          lbl.textContent = `h\u2084`;
+          svg.appendChild(lbl);
+        }
+      }
+
+      // Draw vertices alpha1..3 on top
+      [[aff1, '\u03b1\u2081'], [aff2, '\u03b1\u2082'], [aff3, '\u03b1\u2083']].forEach(([aff, name]) => {
+        svg.appendChild(svgEl('circle', { cx: px(aff.x), cy: py(aff.y), r: 5.5, class: 'svg-null-pt' }));
+        const lbl = svgEl('text', { x: Number(px(aff.x)) + (aff.x >= 0 ? 8 : -20), y: Number(py(aff.y)) + (aff.y >= 0 ? -8 : 14), class: 'svg-label svg-label-sky' });
+        lbl.textContent = name;
+        svg.appendChild(lbl);
+      });
+
+      panel.innerHTML = `
+        <div class="coord-label" style="color: var(--primary);">Stage 0${info.num}</div>
+        <h3 style="font-size: var(--subhead-size);">${info.title}</h3>
+        <p style="font-size: 0.95rem;">${info.body}</p>
+        <div class="observation-well" style="font-size: 0.8rem; display: grid; gap: var(--space-xs);">
+          <div><span style="color: var(--tertiary);">\u03b1\u2081</span> = ${formatHomog(a1)} &nbsp;&middot;&nbsp; <span style="color: var(--tertiary);">\u03b1\u2082</span> = ${formatHomog(a2)} &nbsp;&middot;&nbsp; <span style="color: var(--tertiary);">\u03b1\u2083</span> = ${formatHomog(a3)}</div>
+          ${step >= 2 ? `<div><span style="color: var(--data-4);">L\u2081\u22a5</span> = ${formatHomog(o.poles[0])} &nbsp;&middot;&nbsp; <span style="color: var(--data-4);">L\u2082\u22a5</span> = ${formatHomog(o.poles[1])}</div>` : ``}
+          ${step >= 3 ? `<div><span style="color: var(--on-surface-variant);">Altitude N\u2081</span> = (${o.altitudes[0].map(c => c.n.toString()).join(' : ')})</div>` : ``}
+          ${step >= 4 ? `<div><span style="color: var(--primary);">Orthocenter h\u2084</span> = ${formatHomog(o.h)} &nbsp;(Q = ${fToString(quadForm(o.h))})</div>` : ``}
+        </div>
+      `;
+    }
+
+    /* ============================================================
+       8. INTERACTIVE CONTROLS & DRAG-ON-CONIC
+       ============================================================ */
+    function syncLambdaFromSlider(val) {
+      const elInput = document.getElementById('lambda-input');
+      if (elInput) elInput.value = val;
+      try {
+        const f = parseRational(val);
+        if (fEq(f, ZERO) || fEq(f, ONE) || fEq(f, frac(-1n, 1n))) return;
+        state.lambda = f;
+        renderExplorer();
+      } catch (err) {
+        // wait for valid number
+      }
+    }
+
+    function syncLambdaFromInput(val) {
+      const elSlider = document.getElementById('lambda-slider');
+      const errBox = document.getElementById('lambda-error');
+      const elInput = document.getElementById('lambda-input');
+      try {
+        const f = parseRational(val);
+        if (fEq(f, ZERO) || fEq(f, ONE) || fEq(f, frac(-1n, 1n))) {
+          throw new Error(`Degenerate value \u03bb = ${fToString(f)}: \u03bb cannot be 0, 1, or \u22121.`);
+        }
+        state.lambda = f;
+        if (elSlider) {
+          const num = fToNumber(f);
+          if (num >= -4 && num <= 4) elSlider.value = String(num);
+        }
+        if (errBox) errBox.classList.remove('visible');
+        if (elInput) elInput.classList.remove('is-invalid');
+        renderExplorer();
+      } catch (e) {
+        if (errBox) {
+          errBox.textContent = e.message;
+          errBox.classList.add('visible');
+        }
+        if (elInput) elInput.classList.add('is-invalid');
+      }
+    }
+
+    function applyPreset(key) {
+      if (key === 'canonical') {
+        state.t1 = frac(-1n, 1n); state.t2 = frac(0n, 1n); state.t3 = frac(1n, 1n); state.lambda = frac(2n, 1n);
+      } else if (key === 'pythagorean') {
+        state.t1 = frac(-2n, 3n); state.t2 = frac(1n, 4n); state.t3 = frac(1n, 2n); state.lambda = frac(3n, 1n);
+      } else if (key === 'half') {
+        state.t1 = frac(-1n, 1n); state.t2 = frac(0n, 1n); state.t3 = frac(1n, 1n); state.lambda = frac(1n, 2n);
+      } else if (key === 'negative') {
+        state.t1 = frac(-1n, 1n); state.t2 = frac(0n, 1n); state.t3 = frac(1n, 1n); state.lambda = frac(-3n, 2n);
+      } else if (key === 'near_deg') {
+        state.t1 = frac(-1n, 1n); state.t2 = frac(0n, 1n); state.t3 = frac(1n, 1n); state.lambda = frac(5n, 4n);
+      }
+      const sl = document.getElementById('lambda-slider');
+      const inp = document.getElementById('lambda-input');
+      if (sl) sl.value = String(fToNumber(state.lambda));
+      if (inp) inp.value = fToString(state.lambda);
+      renderExplorer();
+    }
+
+    function setTriple(tripleKey, btnEl) {
+      state.activeTriple = tripleKey;
+      document.querySelectorAll('#triple-selector button').forEach(b => b.classList.remove('btn-active'));
+      if (btnEl) btnEl.classList.add('btn-active');
+      renderExplorer();
+    }
+
+    function renderAll() {
+      renderExplorer();
+    }
+
+    function initConicDragging() {
+      const svg = document.getElementById('conic-svg');
+      if (!svg) return;
+
+      function clientToAngleT(evt) {
+        const rect = svg.getBoundingClientRect();
+        const ptX = ((evt.clientX - rect.left) / rect.width) * 520 - 260;
+        const ptY = -(((evt.clientY - rect.top) / rect.height) * 520 - 260);
+        const ang = Math.atan2(ptY, ptX);
+        const X = Math.cos(ang);
+        const Y = Math.sin(ang);
+        if (1 - X < 1e-4) return null;
+        const tApprox = Y / (1 - X);
+        // Snap t4 to clean rational step 1/20 so BigInt stays crisp and fast
+        const tNum = Math.round(tApprox * 20);
+        const t4 = frac(BigInt(tNum), 20n);
+        if (fEq(t4, state.t1) || fEq(t4, state.t2) || fEq(t4, state.t3)) return null;
+        // lambda = ((t1 - t3)(t2 - t4)) / ((t1 - t4)(t2 - t3))
+        const num = fMul(fSub(state.t1, state.t3), fSub(state.t2, t4));
+        const den = fMul(fSub(state.t1, t4), fSub(state.t2, state.t3));
+        if (fIsZero(den)) return null;
+        const lam = fDiv(num, den);
+        if (fEq(lam, ZERO) || fEq(lam, ONE) || fEq(lam, frac(-1n, 1n))) return null;
+        return lam;
+      }
+
+      svg.addEventListener('pointerdown', evt => {
+        const target = evt.target;
+        if (target && target.getAttribute && target.getAttribute('data-role') === 'drag-a4') {
+          state.dragging = true;
+          svg.setPointerCapture(evt.pointerId);
+        }
+      });
+      svg.addEventListener('pointermove', evt => {
+        if (!state.dragging) return;
+        const lam = clientToAngleT(evt);
+        if (lam) {
+          state.lambda = lam;
+          const inp = document.getElementById('lambda-input');
+          const sl = document.getElementById('lambda-slider');
+          if (inp) inp.value = fToString(lam);
+          const num = fToNumber(lam);
+          if (sl && num >= -4 && num <= 4) sl.value = String(num);
+          renderExplorer();
+        }
+      });
+      const stopDrag = () => { state.dragging = false; };
+      svg.addEventListener('pointerup', stopDrag);
+      svg.addEventListener('pointercancel', stopDrag);
+    }
+
+    /* ============================================================
+       9. SECTION 4: EXACT RATIONAL LAB & SYMPY SCRIPT
+       ============================================================ */
+    function loadLabPreset(name) {
+      const t1El = document.getElementById('lab-t1');
+      const t2El = document.getElementById('lab-t2');
+      const t3El = document.getElementById('lab-t3');
+      const lEl = document.getElementById('lab-lambda');
+      if (!t1El || !t2El || !t3El || !lEl) return;
+
+      if (name === 'pythagorean') {
+        t1El.value = '-2/3'; t2El.value = '1/4'; t3El.value = '1/2'; lEl.value = '3';
+      } else if (name === 'canonical') {
+        t1El.value = '-1'; t2El.value = '0'; t3El.value = '1'; lEl.value = '2';
+      } else if (name === 'custom_frac') {
+        t1El.value = '-5/7'; t2El.value = '1/3'; t3El.value = '7/5'; lEl.value = '4/9';
+      }
+      runExactLab();
+    }
+
+    function runExactLab() {
+      const t1El = document.getElementById('lab-t1');
+      const t2El = document.getElementById('lab-t2');
+      const t3El = document.getElementById('lab-t3');
+      const lEl = document.getElementById('lab-lambda');
+      const errEl = document.getElementById('lab-error');
+      const ptsBody = document.getElementById('lab-points-tbody');
+      const qBody = document.getElementById('lab-quadreas-tbody');
+      const t4Badge = document.getElementById('lab-t4-derived');
+      const statusBadge = document.getElementById('lab-status-badge');
+      if (!t1El || !t2El || !t3El || !lEl || !ptsBody || !qBody) return;
+
+      [t1El, t2El, t3El, lEl].forEach(el => el.classList.remove('is-invalid'));
+      if (errEl) { errEl.classList.remove('visible'); errEl.textContent = ``; }
+
+      try {
+        const t1 = parseRational(t1El.value);
+        const t2 = parseRational(t2El.value);
+        const t3 = parseRational(t3El.value);
+        const lam = parseRational(lEl.value);
+        if (fEq(lam, ZERO) || fEq(lam, ONE) || fEq(lam, frac(-1n, 1n))) {
+          throw new Error(`Cross-ratio \u03bb cannot be 0, 1, or \u22121 (would make two null points coincide).`);
+        }
+        const sys = computeSystem(t1, t2, t3, lam);
+        if (t4Badge) t4Badge.textContent = `Derived t\u2084 = ${fToString(sys.t4)}`;
+
+        const aNames = ['&alpha;&#8321;', '&alpha;&#8322;', '&alpha;&#8323;', '&alpha;&#8324;'];
+        const hNames = ['h&#8321;', 'h&#8322;', 'h&#8323;', 'h&#8324;'];
+
+        const pRows = [];
+        sys.alphas.forEach((p, idx) => {
+          pRows.push(`<tr>
+            <td style="color: var(--tertiary);">${aNames[idx]}</td>
+            <td>${formatHomog(p)}</td>
+            <td class="num">${fToString(quadForm(p))}</td>
+          </tr>`);
+        });
+        sys.orthos.forEach((h, idx) => {
+          pRows.push(`<tr>
+            <td style="color: var(--primary);">${hNames[idx]}</td>
+            <td>${formatHomog(h)}</td>
+            <td class="num">${fToString(quadForm(h))}</td>
+          </tr>`);
+        });
+        ptsBody.innerHTML = pRows.join('');
+
+        const triples = [
+          { label: `A(h&#8321;h&#8322;h&#8323;)`, idx: [0, 1, 2] },
+          { label: `A(h&#8321;h&#8322;h&#8324;)`, idx: [0, 1, 3] },
+          { label: `A(h&#8321;h&#8323;h&#8324;)`, idx: [0, 2, 3] },
+          { label: `A(h&#8322;h&#8323;h&#8324;)`, idx: [1, 2, 3] }
+        ];
+        let allExact = true;
+        const target = frac(16n, 27n);
+        const qRows = triples.map(tr => {
+          const res = quadrea(sys.orthos[tr.idx[0]], sys.orthos[tr.idx[1]], sys.orthos[tr.idx[2]]);
+          const ok = res && fEq(res.A, target);
+          if (!ok) allExact = false;
+          return `<tr>
+            <td style="color: var(--primary);">${tr.label}</td>
+            <td>${res ? fToString(res.A) : 'Undefined'}</td>
+            <td class="num"><span class="badge ${ok ? 'badge-mint' : 'badge-coral'}">${ok ? 'Exact 16/27' : 'Mismatch'}</span></td>
+          </tr>`;
+        });
+
+        const sum48 = fAdd(fAdd(fMul(sys.P, sys.R), fMul(sys.R, sys.T)), fMul(sys.T, sys.P));
+        const prod64 = fMul(fMul(sys.P, sys.R), sys.T);
+        qRows.push(`<tr>
+          <td>PR + RT + TP</td>
+          <td>${fToString(sum48)}</td>
+          <td class="num"><span class="badge badge-mint">${fEq(sum48, frac(48n, 1n)) ? 'Exact 48' : 'Check'}</span></td>
+        </tr>`);
+        qRows.push(`<tr>
+          <td>PRT</td>
+          <td>${fToString(prod64)}</td>
+          <td class="num"><span class="badge badge-mint">${fEq(prod64, frac(64n, 1n)) ? 'Exact 64' : 'Check'}</span></td>
+        </tr>`);
+        qBody.innerHTML = qRows.join('');
+
+        if (statusBadge) {
+          statusBadge.textContent = allExact ? `All 4 Triples Verified = 16 / 27` : `Check Degeneracy`;
+        }
+      } catch (e) {
+        if (errEl) {
+          errEl.textContent = e.message;
+          errEl.classList.add('visible');
+        }
+      }
+    }
+
+    const SYMPY_SOURCE = `import sympy as sp
+
+lam = sp.Symbol('lam')
+
+def alpha(t):
+    return sp.Matrix([t**2 - 1, 2*t, t**2 + 1])
+
+def Q(v):
+    return v[0]**2 + v[1]**2 - v[2]**2
+
+def join(a, b):
+    return sp.Matrix([
+        a[1]*b[2] - b[1]*a[2],
+        a[2]*b[0] - b[2]*a[0],
+        b[0]*a[1] - a[0]*b[1]
+    ])
+
+def meet(L1, L2):
+    return join(L1, L2)  # identical algebraic dual form
+
+def orthocenter(a, b, c):
+    N1 = join(a, join(b, c))  # pole of bc has same tuple as bc
+    N2 = join(b, join(a, c))
+    return sp.simplify(meet(N1, N2))
+
+a1, a2, a3, a4 = alpha(-1), alpha(0), alpha(1), alpha(lam)
+h1 = orthocenter(a2, a3, a4)
+h2 = orthocenter(a1, a3, a4)
+h3 = orthocenter(a1, a2, a4)
+
+N = sp.Matrix.hstack(h1, h2, h3)
+A = sp.simplify(-(N.det()**2) / (Q(h1) * Q(h2) * Q(h3)))
+print("Symbolic Quadrea A(h1, h2, h3) =", A)  # -> 16/27`;
+
+    function copySympyCode(btn) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(SYMPY_SOURCE).then(() => {
+          btn.textContent = `Copied to clipboard`;
+          setTimeout(() => { btn.textContent = `Copy SymPy Script`; }, 1800);
+        }).catch(() => {
+          btn.textContent = `Select script below`;
+        });
+      } else {
+        btn.textContent = `Select script below`;
+      }
+    }
+
+    /* ============================================================
+       10. INITIALIZATION
+       ============================================================ */
+    document.addEventListener('DOMContentLoaded', () => {
+      const codeBlock = document.getElementById('sympy-code-block');
+      if (codeBlock) codeBlock.textContent = SYMPY_SOURCE;
+
+      initConicDragging();
+      renderExplorer();
+      renderConstructionDiagram();
+      runExactLab();
+
+      if (typeof renderMathInElement === 'function') {
+        renderMathInElement(document.body, {
+          delimiters: [
+            { left: '$$', right: '$$', display: true },
+            { left: '$', right: '$', display: false }
+          ],
+          throwOnError: false
+        });
+      }
+    });
+  </script>
+</body>
+</html>
